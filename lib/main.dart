@@ -26,7 +26,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
   int _selectedIndex = 0;
 
   static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
@@ -43,18 +42,36 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  // void _incrementCounter() {
-  //   setState(() {
-  //     _counter++;
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     
     return Scaffold(
       appBar: AppBar(
         title: const Text('ChristOurKing Global'),
+      ),
+
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              child: Text('Drawer Header'),
+              decoration: BoxDecoration(color: Colors.blue)
+            ),
+            ListTile(
+              title: Text('Item 1'),
+              onTap: () {
+                Navigator.pop(context);
+              }
+            ),
+            ListTile(
+              title: Text('Item 2'),
+              onTap: () {
+                Navigator.pop(context);
+              }
+            ),
+          ],
+          )
       ),
       
       body: Center(
