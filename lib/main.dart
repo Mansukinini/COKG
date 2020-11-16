@@ -54,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
     
     return Scaffold(
       appBar: AppBar(
-        title: const Text('BottomNavigationBar Sample'),
+        title: const Text('ChristOurKing Global'),
       ),
       
       body: Center(
@@ -62,6 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.event),
