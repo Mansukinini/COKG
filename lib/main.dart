@@ -34,7 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Text('Index 0: Events', style: optionStyle),
     Text('Index 1: Groups', style: optionStyle),
     Text('Index 2: Sermons', style: optionStyle),
-    // Text('Index 3: Live', style: optionStyle),
+    Text('Index 3: Live', style: optionStyle),
   ];
 
   void _onItemTapped(int index) {
@@ -75,10 +75,10 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: Icon(Icons.record_voice_over),
             label: 'Sermons'
           ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.tv),
-          //   label: 'Live'
-          // ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.tv),
+            label: 'Live'
+          ),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.amber[800],
