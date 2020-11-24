@@ -1,3 +1,4 @@
+import 'package:cokg/models/Event.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:io';
@@ -6,9 +7,11 @@ import 'dart:async';
 
 class DbHelper {
   static final DbHelper _dbHelper = DbHelper._internal();
+  String tblEvent = "event";
   String colId = "id";
-  String colTitle = "title";
+  String colName = "name";
   String colDescription = "description";
+  String colPriority = "priority";
   String colDate = "date";
 
   static Database _database;
@@ -35,8 +38,21 @@ class DbHelper {
 
   void _createDb(Database db, int newVersion) async {
     await db.execute(
-      "CREATE TABLE EVENT($colId INTEGER PRIMARY KEY, $colTitle TEXT, " +
-      "$colDescription TEXT, $colDate TEXT)"
+      "CREATE TABLE $tblEvent($colId INTEGER PRIMARY KEY, $colName TEXT, " +
+      "$colDescription TEXT, $colPriority INTEGER, $colDate TEXT)"
     );
+  }
+
+  Future<int> insertEvent(Event event) async {
+    Database db = await this.db;
+    var result = await db.insert(tblEvent, event.toMap());
+
+    return result;
+  }
+
+  getEvents() async {
+    Database db = await this.db;
+    var result = await db.rawQuery("SELECT * FROM $tblEvent");
+    return result;
   }
 }

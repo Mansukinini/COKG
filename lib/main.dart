@@ -1,16 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:cokg/models/Event.dart';
+import 'package:cokg/utils/dbhelper.dart';
+import 'package:cokg/screens/eventlist.dart';
 
 void main() => runApp(MyApp());
 
 
 class MyApp extends StatelessWidget {
+
+
   @override
   Widget build(BuildContext context) {
+  // List<Event> events = List<Event>();
+  // DbHelper helper = DbHelper();
+  // helper.initializeDatabase();
+
+  // DateTime today = DateTime.now();
+  // Event event = Event("Faith & Imagination", "Talk about faith", today.toString());
+  // helper.insertEvent(event);
 
     return MaterialApp(
       title: 'ChristOurKing Global',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.deepOrange,
       ),
       home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -74,30 +86,33 @@ class _MyHomePageState extends State<MyHomePage> {
           )
       ),
       
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex)
-      ),
+      body: EventList(),
       
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
+        
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.event),
             label: 'Events'
           ),
+
           BottomNavigationBarItem(
             icon: Icon(Icons.people),
             label: 'Groups'
           ),
+
           BottomNavigationBarItem(
             icon: Icon(Icons.record_voice_over),
             label: 'Sermons'
           ),
+
           BottomNavigationBarItem(
             icon: Icon(Icons.tv),
             label: 'Live'
           ),
         ],
+
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.amber[800],
         onTap: _onItemTapped,
