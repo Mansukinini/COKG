@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cokg/models/Event.dart';
-import 'package:cokg/utils/dbhelper.dart';
 import 'package:cokg/screens/eventlist.dart';
 
 void main() => runApp(MyApp());

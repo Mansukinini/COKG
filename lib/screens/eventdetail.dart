@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:cokg/models/Event.dart';
 import 'package:flutter/material.dart';
 
@@ -14,11 +12,11 @@ const menuDelete = 'Delete';
 const menuBack = 'Back';
 
 class EventDetail extends StatefulWidget {
-  final Event event;
-  EventDetail(this.event);
+  // final Event event;
+  // EventDetail(this.event);
 
   @override
-  State<StatefulWidget> createState() => EventDetailState(event);
+  State<StatefulWidget> createState() => EventDetailState();
 }
 
 class EventDetailState extends State {
@@ -26,18 +24,18 @@ class EventDetailState extends State {
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   
-  EventDetailState(this.event);
+  EventDetailState();
 
   @override
   Widget build(BuildContext context) {
     TextStyle textStyle = Theme.of(context).textTheme.headline6;
-    titleController.text = event.name;
-    descriptionController.text = event.description;
+    // titleController.text = event.name;
+    // descriptionController.text = event.description;
 
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text(event.name),
+        title: Text("Add Event"),
         actions: <Widget>[
           PopupMenuButton<String>(
             onSelected: select,
@@ -51,8 +49,9 @@ class EventDetailState extends State {
         padding: EdgeInsets.only(top: 35.0, left: 10.0, right: 10.0),
         child: ListView(children: <Widget>[ Column(
           children: <Widget>[
+            
             TextField(
-              controller: titleController,
+              // controller: titleController,
               style: textStyle,
               onChanged: null,
               decoration: InputDecoration(
@@ -60,7 +59,23 @@ class EventDetailState extends State {
                 labelStyle: textStyle,
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
               ),
-             ),
+            ),
+
+            Padding(
+              padding: EdgeInsets.only(top: 15.0), 
+              child: TextField(
+                // controller: titleController,
+                style: textStyle,
+                onChanged: null,
+                decoration: InputDecoration(
+                  labelText: "Description",
+                  labelStyle: textStyle,
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
+                ),
+              ),
+            )
+            
+            
            ], 
             )
           ],

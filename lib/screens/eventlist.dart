@@ -1,4 +1,5 @@
 import 'package:cokg/models/Event.dart';
+import 'package:cokg/screens/eventdetail.dart';
 import 'package:cokg/utils/dbhelper.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +22,9 @@ class EventListState extends State {
     return Scaffold( 
       body: eventListItems(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          addEvent();
+        },
         
         tooltip: "Add new Event", child: new Icon(Icons.add),
       ),
@@ -30,6 +33,7 @@ class EventListState extends State {
 
   ListView eventListItems() {
     return ListView.builder(
+      itemCount: events.length,
       itemBuilder: (BuildContext context, int position){
         return Card(
           color: Colors.white,
@@ -46,23 +50,27 @@ class EventListState extends State {
   }
 
   void getData() {
-    final dbFuture = helper.initializeDatabase();
+    // final dbFuture = helper.initializeDatabase();
 
-    dbFuture.then((result) {
-      final eventFuture = helper.getEvents();
+    // dbFuture.then((result) {
+    //   final eventFuture = helper.getEvents();
 
-      eventFuture.then((result){
-        List<Event> eventList = List<Event>();
+    //   eventFuture.then((result){
+    //     List<Event> eventList = List<Event>();
 
-        for(int i = 0; i < result.length; i++) {
-          eventList.add(Event.fromObject(result[i]));
-          debugPrint(eventList[i].name);
-        }
+    //     for(int i = 0; i < result.length; i++) {
+    //       eventList.add(Event.fromObject(result[i]));
+    //     }
 
-        setState(() {
-          events = eventList;
-        });
-      });
-    });
+    //     setState(() {
+    //       events = eventList;
+    //     });
+    //   });
+    // });
+  }
+  
+  void addEvent() async {
+    bool result = await Navigator.push(context, MaterialPageRoute(builder: (context) => EventDetail()));
+    debugPrint("Add Event");
   }
 }
