@@ -1,5 +1,6 @@
-import 'package:cokg/models/Event.dart';
 import 'package:flutter/material.dart';
+import 'package:cokg/models/Event.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 final List<String> options = const <String>[
   'Save & Back',
@@ -11,37 +12,44 @@ const menuSave = 'Save & Back';
 const menuDelete = 'Delete';
 const menuBack = 'Back';
 
-class EventDetail extends StatefulWidget {
-  // final Event event;
-  // EventDetail(this.event);
 
+class EventDetail extends StatefulWidget {
+  
   @override
-  State<StatefulWidget> createState() => EventDetailState();
+  _EventDetailState createState() => _EventDetailState();
 }
 
-class EventDetailState extends State {
-  Event event;
-  TextEditingController titleController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
-  
-  EventDetailState();
+class _EventDetailState extends State<EventDetail> {
 
+  Event event;
+  final nameController = TextEditingController();
+  final descriptionController = TextEditingController();
+  
+  final ref = FirebaseFirestore.instance.collection('event');
+  
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context)  {
+  
     TextStyle textStyle = Theme.of(context).textTheme.headline6;
-    // titleController.text = event.name;
-    // descriptionController.text = event.description;
 
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_sharp),
+          iconSize: 30.0,
+          color: Colors.white,
+          onPressed: (){
+            Navigator.pop(context);
+          },
+        ),
         title: Text("Add Event"),
         actions: <Widget>[
-          PopupMenuButton<String>(
-            onSelected: select,
-            itemBuilder: (BuildContext context) => options
-              .map((e) => PopupMenuItem<String>(value: e, child: Text(e))).toList(),
-          )
+          IconButton(
+            icon: Icon(Icons.save),
+            iconSize: 30.0,
+            color: Colors.white,
+            onPressed: (){save();},
+          ),
         ],
       ),
 
@@ -49,9 +57,21 @@ class EventDetailState extends State {
         padding: EdgeInsets.only(top: 35.0, left: 10.0, right: 10.0),
         child: ListView(children: <Widget>[ Column(
           children: <Widget>[
-            
+            Container(
+              height: 240,
+              decoration: BoxDecoration(borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(50.0),
+                bottomRight: Radius.circular(50.0)),
+                gradient: LinearGradient(
+                  colors: [Colors.orange, Colors.yellow],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight
+                ),
+                ),
+            ),
+
             TextField(
-              // controller: titleController,
+              controller: nameController,
               style: textStyle,
               onChanged: null,
               decoration: InputDecoration(
@@ -64,7 +84,7 @@ class EventDetailState extends State {
             Padding(
               padding: EdgeInsets.only(top: 15.0), 
               child: TextField(
-                // controller: titleController,
+                controller: descriptionController,
                 style: textStyle,
                 onChanged: null,
                 decoration: InputDecoration(
@@ -75,7 +95,6 @@ class EventDetailState extends State {
               ),
             )
             
-            
            ], 
             )
           ],
@@ -85,6 +104,18 @@ class EventDetailState extends State {
   }
 
   void select(String value) {
+    switch (value) {
+      case menuSave:
+        save();
+        break;
+      default:
+    }
+  }
 
+  void save() {
+    FirebaseFirestore.instance.collection('event').add({
+      "name": nameController.text,
+      "description": descriptionController.text
+    }).then((value) => print(value.id));
   }
 }

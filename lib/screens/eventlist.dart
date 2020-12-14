@@ -50,6 +50,8 @@ class EventListState extends State {
   }
 
   void getData() {
+    // CollectionReference events = FirebaseFirestore.instance.collection('event');
+
     // final dbFuture = helper.initializeDatabase();
 
     // dbFuture.then((result) {
@@ -70,7 +72,6 @@ class EventListState extends State {
   }
   
   void addEvent() async {
-    bool result = await Navigator.push(context, MaterialPageRoute(builder: (context) => EventDetail()));
-    debugPrint("Add Event");
+    await Navigator.push(context, MaterialPageRoute(builder: (context) => EventDetail()));
   }
 }
