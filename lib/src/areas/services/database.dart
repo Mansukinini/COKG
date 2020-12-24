@@ -12,4 +12,13 @@ class DatabaseService {
     .map((doc) => Event.fromJson(doc.data()))
     .toList());
   }
+
+  // Create
+  Future saveChanges(Event event) {
+    var option = SetOptions(merge: true);
+    
+    return _db.collection('event')
+    .doc(event.id)
+    .set(event.toMap(), option);
+  }
 }

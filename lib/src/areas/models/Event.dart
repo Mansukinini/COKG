@@ -15,7 +15,6 @@ class Event {
   // String get description => description;
   // String get date => date;
 
-
   set name(String name) {
     this.name = name;
   }
@@ -45,11 +44,4 @@ class Event {
       'date': date
     };
   }
-
-  // Event.fromObject(dynamic e) {
-  //   this._id = e["id"];
-  //   this._name = e["name"];
-  //   this._description = e["description"];
-  //   // this._date = e["date"];
-  // }
 }

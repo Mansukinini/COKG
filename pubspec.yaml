@@ -37,6 +37,8 @@ dependencies:
   uuid: ^2.2.2
   google_fonts: ^1.1.1
   provider: ^4.3.2+3
+  date_field: ^0.3.3
+  date_format: ^1.0.9
 
 dev_dependencies:
   flutter_test:

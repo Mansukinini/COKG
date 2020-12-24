@@ -9,7 +9,7 @@ class App extends StatelessWidget {
   
     return ChangeNotifierProvider(
       create: (context) => EventProvider(), 
-      child:  MaterialApp(
+      child: MaterialApp(
         title: 'ChristOurKing Global',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

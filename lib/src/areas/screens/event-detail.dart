@@ -1,30 +1,41 @@
+import 'package:date_field/date_field.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
 import 'package:cokg/src/areas/models/Event.dart';
+import 'package:cokg/src/areas/services/event-provider.dart';
 
 
 class EventDetail extends StatefulWidget {
+  final Event event;
+  EventDetail({this.event});
+
   @override
   _EventDetailState createState() => _EventDetailState();
 }
 
 class _EventDetailState extends State<EventDetail> {
-  Event event;
+
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
+  DateTime dateController;
   
- 
-  FirebaseFirestore storage = FirebaseFirestore.instance;
-  List<AssetImage> listOfImage;
-  bool clicked = false;
-  List<String> listOfStr = List();
-  String images;
-  bool isLoading = false;
 
+  List<AssetImage> listOfImage;
   
+  @override
   void initState() {
+    final eventProvider = Provider.of<EventProvider>(context, listen: false);
+    
+    if (widget.event != null) {
+      nameController.text = widget.event.name;
+      descriptionController.text = widget.event.description;
+      dateController = DateTime.parse(widget.event.date);
+
+      eventProvider.setChanges(widget.event);
+    } 
+
     super.initState();
-    // getImages();
   }
 
   void getImages() {
@@ -34,27 +45,11 @@ class _EventDetailState extends State<EventDetail> {
     }
     print('$listOfImage');
   }
-
-  // Future getImage() async {
-  //   var image = await ImagePicker().getImage(source: ImageSource.gallery);
-
-  //   setState(() {
-  //     _image = image as File;
-  //   });
-  // }
-
-  Future uploadImageToFirebase() async {
-    // File path = File('assests/images/Image0.jpeg');
-    // File path = File(_image.path);
-    // String fileName = basename(_image.path);
-    // firebase_storage.Reference firestoreRef = firebase_storage.FirebaseStorage.instance.ref().child(fileName);
-    // firebase_storage.UploadTask uploadTask = firestoreRef.putFile(_image);
-    // firebase_storage.TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => print('Done'));
-  }
   
   @override
   Widget build(BuildContext context)  {
     TextStyle textStyle = Theme.of(context).textTheme.headline6;
+    final eventProvider = Provider.of<EventProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -72,7 +67,10 @@ class _EventDetailState extends State<EventDetail> {
             icon: Icon(Icons.save),
             iconSize: 30.0,
             color: Colors.white,
-            onPressed: (){save(context);},
+            onPressed: () {
+              eventProvider.save();
+              Navigator.of(context).pop();
+            },
           ),
         ],
       ),
@@ -95,12 +93,12 @@ class _EventDetailState extends State<EventDetail> {
                     ),
                   ),
                 ),
+                // Add Photo
                 Padding(
                   padding: EdgeInsets.only(top:60.0),
                   child: IconButton(icon: Icon(Icons.add_a_photo), iconSize: 30.0,
                   onPressed: (){
-                    // getImage();
-                    uploadImageToFirebase();
+                  
                   },
                   ),
                 )
@@ -108,52 +106,68 @@ class _EventDetailState extends State<EventDetail> {
             ),
             
             TextField(
-              controller: nameController,
-              style: textStyle,
-              onChanged: null,
               decoration: InputDecoration(
                 labelText: "Title",
                 labelStyle: textStyle,
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
               ),
+              style: textStyle,
+              controller: nameController,
+              onChanged: (String value) => eventProvider.name = value,
             ),
 
             Padding(
               padding: EdgeInsets.only(top: 15.0), 
               child: TextField(
-                controller: descriptionController,
-                style: textStyle,
-                onChanged: null,
                 decoration: InputDecoration(
                   labelText: "Description",
                   labelStyle: textStyle,
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
                 ),
+                controller: descriptionController,
+                onChanged: (String value) => eventProvider.description = value,
+                style: textStyle,
               ),
-            )
+            ),
+            
+            Padding(
+              padding: const EdgeInsets.only(top:15.0),
+              child: DateTimeField(
+                onDateSelected: (DateTime dateTime) {
+                  setState(() {
+                    if (dateTime != null)
+                      eventProvider.date = dateTime;
+                  });
+                },
+                decoration: InputDecoration(labelStyle: textStyle,
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
+                selectedDate: eventProvider.date,
+                label: 'Date Time',
+                firstDate: DateTime.now().subtract(new Duration(days: 365)),
+                lastDate: DateTime.now().add(new Duration(days: 365)),
+                dateFormat: null,
+              ),
+            ),
             
           ],)
-          ],
-        ),
+        ],),
       ),
     );
   }
 
-  // void select(String value) {
-  //   switch (value) {
-  //     case menuSave:
-  //       save();
-  //       break;
-  //     default:
-  //   }
-  // }
+  Future<DateTime> datePicker(BuildContext context) async {
+    final DateTime datePicker = await showDatePicker(context: context, initialDate: DateTime.now(), 
+    firstDate: DateTime(2018), lastDate: DateTime(2050), fieldHintText: 'YYYY/MM/DD');
+     
+    if (datePicker == null) return null;
 
-  void save(BuildContext context) {
-    storage.collection('event').add({
-      "name": nameController.text,
-      "description": descriptionController.text
-    }).then((value) {
-      Navigator.pop(context);
-    });
+    return datePicker;
+  }
+  
+  @override 
+  void dispose() {
+    nameController.dispose();
+    descriptionController.dispose();
+    super.dispose();
   }
 }

@@ -28,10 +28,6 @@ class BottomNavigation extends StatelessWidget{
               label: 'Live'
             ),
           ],
-
-          // currentIndex: _selectedIndex,
-          // selectedItemColor: Colors.amber[800],
-          // onTap: _onItemTapped,
     );
   }
 }
