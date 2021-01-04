@@ -9,7 +9,7 @@ class DatabaseService {
     return _db.collection('event')
     .snapshots()
     .map((event) => event.docs
-    .map((doc) => Event.fromJson(doc.data()))
+    .map((doc) => Event.fromFirestore(doc.data()))
     .toList());
   }
 
@@ -17,6 +17,11 @@ class DatabaseService {
   Future saveChanges(Event event) {
     var option = SetOptions(merge: true);
     
+    //Todo: Implemente the lastUpdateBy and LastUpdatedOn
+    if (event.createdOn != null) {
+      // print(event.toMap());
+    }
+
     return _db.collection('event')
     .doc(event.id)
     .set(event.toMap(), option);

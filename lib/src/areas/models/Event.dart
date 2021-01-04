@@ -5,34 +5,30 @@ class Event {
   final String name;
   final String description;
   final String date;
+  final String imageUrl;
+  final bool isUploaded;
+  final String createdBy;
+  final String createdOn;
+  final String lastUploadBy;
+  final String lastUploadOn;
+  
 
-  Event({@required this.id, this.name, this.description, this.date});
+  Event({@required this.id, @required this.name, this.description, 
+    this.date, this.imageUrl = "", this.isUploaded = false, this.createdBy, this.createdOn,
+    this.lastUploadBy, this.lastUploadOn});
 
-  // Event.withId(this.id, this.name, this.description, this.date);
-
-  // String get id => id;
-  // String get name => name;
-  // String get description => description;
-  // String get date => date;
-
-  set name(String name) {
-    this.name = name;
-  }
-
-  set description(String description) {
-    this.description = description;
-  }
-
-  set date(String date) {
-    this.date = date;
-  }
-
-  factory Event.fromJson(Map<String, dynamic> json) {
+  factory Event.fromFirestore(Map<String, dynamic> firestore) {
     return Event(
-      id: json['id'],
-      name: json['name'],
-      description: json['description'],
-      date: json['date']
+      id: firestore['id'],
+      name: firestore['name'],
+      description: firestore['description'],
+      date: firestore['date'],
+      imageUrl: firestore['imageUrl'],
+      isUploaded: firestore['isUploaded'],
+      createdBy: firestore['createdBy'],
+      createdOn: firestore['createdOn'],
+      lastUploadBy: firestore['lastUpdatedBy'],
+      lastUploadOn: firestore['lastUpdatedOn']
     );
   }
 
@@ -41,7 +37,13 @@ class Event {
       'id': id,
       'name': name,
       'description': description,
-      'date': date
+      'date': date,
+      'imageUrl': imageUrl,
+      'isUploaded': isUploaded,
+      'createdBy': createdBy,
+      'createdOn': createdOn,
+      'lastUpdatedBy': lastUploadBy,
+      'lastUpdatedOn': lastUploadOn
     };
   }
 }

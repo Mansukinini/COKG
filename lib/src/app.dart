@@ -3,19 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:cokg/src/areas/screens/home.dart';
 import 'package:provider/provider.dart';
 
+
 class App extends StatelessWidget {
+  final eventProvider = EventProvider();
   @override
   Widget build(BuildContext context) {
   
-    return ChangeNotifierProvider(
-      create: (context) => EventProvider(), 
-      child: MaterialApp(
-        title: 'ChristOurKing Global',
+    return MultiProvider(
+      providers: [
+        Provider(create: (context) => eventProvider)
+    ],
+    child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.deepOrange,
         ),
+        
         home: Home(),
-    ),);
+    ));
   }
 }

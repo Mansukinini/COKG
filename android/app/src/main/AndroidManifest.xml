@@ -2,6 +2,7 @@
     package="com.example.cokg">
    <application
         android:label="cokg"
+        android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
