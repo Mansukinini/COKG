@@ -13,6 +13,14 @@ class DatabaseService {
     .toList());
   }
 
+  Future<Event> getEventById(String id) {
+    print(id);
+    
+    return _db.collection('event')
+      .doc(id).get()
+      .then((event) => Event.fromFirestore(event.data()));
+  }
+
   // Create
   Future saveChanges(Event event) {
     var option = SetOptions(merge: true);

@@ -69,6 +69,10 @@ class EventProvider {
   
   Stream<List<Event>> get events => databaseService.getEvents();
 
+  Future<Event> getEventByIdForDisplay(String id) {
+    return databaseService.getEventById(id);
+  }
+
   setChanges(Event event) {
 
     if (event.id != null) {
@@ -86,7 +90,7 @@ class EventProvider {
       setId(null);
       setName(null);
       setDescription(null);
-      setDate(DateTime.parse(''));
+      setDate(DateTime.parse(event.date));
       setImageUrl(null);
       setIsUploaded(event.isUploaded);
       setCreatedBy(null);
@@ -106,8 +110,10 @@ class EventProvider {
     //Upload to Firebase
     if (image != null) {
       var imageUrlDb = await storageService.uploadEventImage(File(image.path), uuid.v4());
-      setImageUrl(imageUrlDb);
-      _isUploaded.sink.add(true);
+      if (imageUrlDb != null) {
+        setImageUrl(imageUrlDb);
+        _isUploaded.sink.add(true);
+      }
 
     } else {
       print('No path Received');

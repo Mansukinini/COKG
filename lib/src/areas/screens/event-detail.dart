@@ -1,3 +1,4 @@
+import 'package:cokg/src/areas/services/database.dart';
 import 'package:cokg/src/styles/base.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:cokg/src/areas/services/event-provider.dart';
 
 
 class EventDetail extends StatefulWidget {
+  // final String id;
   final Event event;
   EventDetail({this.event});
 
@@ -16,7 +18,7 @@ class EventDetail extends StatefulWidget {
 }
 
 class _EventDetailState extends State<EventDetail> {
-
+  final dbService = DatabaseService();
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
   DateTime dateController;
@@ -30,7 +32,7 @@ class _EventDetailState extends State<EventDetail> {
   @override
   Widget build(BuildContext context)  {
     final eventProvider = Provider.of<EventProvider>(context);
-
+    
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -45,7 +47,7 @@ class _EventDetailState extends State<EventDetail> {
         title: Center(child: Text("Add Event")),
         actions: <Widget>[
           RaisedButton(
-            child: Text('Save',),
+            child: Text('Save', style: TextStyle(fontSize: 18.0, color: Colors.white, fontWeight: FontWeight.bold),),
             color: Theme.of(context).accentColor,
             onPressed: () {
               eventProvider.save();
@@ -59,8 +61,11 @@ class _EventDetailState extends State<EventDetail> {
 
   Widget _pageBody(BuildContext context, EventProvider eventProvider) {
     TextStyle textStyle = Theme.of(context).textTheme.headline6;
+    // Event event;
 
     if (widget.event != null) {
+      // dbService.getEventById(widget.id).then((result) => event = result);
+
       nameController.text = widget.event.name;
       descriptionController.text = widget.event.description;
       dateController = DateTime.parse(widget.event.date);
@@ -134,7 +139,7 @@ class _EventDetailState extends State<EventDetail> {
                     child: DateTimePicker(
                     type: DateTimePickerType.dateTimeSeparate,
                     dateMask: 'yyyy-MM-dd',
-                    // initialValue: String(date.toIso8601String()) ,
+                    initialValue: eventProvider.date.toString(),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
                     icon: Icon(Icons.event),

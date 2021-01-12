@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 abstract class AppNavbar {
   static SliverAppBar materialNavBar({@required String title, bool pinned, TabBar tabBar}){
     return SliverAppBar(
-      title: Text(title, style: TestStyles.navTitleMaterial),
+      title: Text(title, style: TextStyles.navTitleMaterial),
       backgroundColor:  AppColors.orange,
       bottom: tabBar,
       floating: true,

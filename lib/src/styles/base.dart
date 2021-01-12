@@ -7,14 +7,14 @@ abstract class BaseStyles {
 
   static double get borderWith => 2.0;
 
-  static double get listFielHorizontal => 25.0;
+  static double get listFieldHorizontal => 15.0;
 
   static double get listFieldVertical => 8.0;
 
   static double get animationOffset => 2.0;
 
   static EdgeInsets get listPadding {
-    return EdgeInsets.symmetric(horizontal: listFielHorizontal, vertical: listFieldVertical);
+    return EdgeInsets.symmetric(horizontal: listFieldHorizontal, vertical: listFieldVertical);
   }
 
   static List<BoxShadow> get boxShadow {
