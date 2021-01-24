@@ -1,8 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cokg/src/areas/models/Event.dart';
+import 'package:cokg/src/areas/models/user.dart';
 
 class DatabaseService {
   FirebaseFirestore _db = FirebaseFirestore.instance;
+
+  //create user
+  Future<void> createUser(Users user) {
+    return _db.collection('user').doc(user.id).set(user.toMap());
+  }
+
+  Future<Users> getUserById(String id) {
+    return _db.collection('user').doc(id).get()
+    .then((user) => Users.fromFirestore(user.data()));
+  }
 
   // Get Event
   Stream<List<Event>> getEvents() {

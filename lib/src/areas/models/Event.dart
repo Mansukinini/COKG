@@ -15,7 +15,8 @@ class Event {
 
   Event({@required this.id, @required this.name, this.description, 
     this.date, this.imageUrl = "", this.isUploaded = false, this.createdBy, this.createdOn,
-    this.lastUploadBy, this.lastUploadOn});
+    this.lastUploadBy, this.lastUploadOn
+  });
 
   factory Event.fromFirestore(Map<String, dynamic> firestore) {
     return Event(

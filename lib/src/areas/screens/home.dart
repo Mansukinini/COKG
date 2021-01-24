@@ -1,6 +1,8 @@
 import 'package:cokg/src/areas/screens/event-detail.dart';
 import 'package:cokg/src/areas/screens/event-list.dart';
+import 'package:cokg/src/resources/widgets/button.dart';
 import 'package:cokg/src/resources/widgets/navigatorBar.dart';
+import 'package:cokg/src/styles/color.dart';
 import 'package:flutter/material.dart';
 
 
@@ -45,31 +47,15 @@ class _HomeState extends State<Home> {
       child: ListView(
       padding: EdgeInsets.zero,
       children: <Widget>[
-        // UserAccountsDrawerHeader(
-        //   currentAccountPicture: CircleAvatar(
-        //     backgroundColor: AppColors.lightgray,
-        //     child: Text('V', style: TextStyle(color: Colors.black, fontSize: 24.0, fontWeight: FontWeight.bold)),
-        //   ),
-        //   accountName: Text('Visi Mansukinini'),
-        //   accountEmail: Text('visi05mansukinini@gmail.com'),
-        // ),
-        DrawerHeader(
-          child: ListTile(
-            leading: CircleAvatar(
-              backgroundColor: Colors.grey,
-              radius: 30.0,
-            ),
-            title: Text('Name'),
-            subtitle: Text('View profile'),
-            onTap: () {
-              print('login');
-              Navigator.of(context).pushNamed("/login");
-            },
+        UserAccountsDrawerHeader(
+          currentAccountPicture: CircleAvatar(
+            backgroundColor: AppColors.lightgray,
+            child: Text('V', style: TextStyle(color: Colors.black, fontSize: 24.0, fontWeight: FontWeight.bold)),
           ),
-          decoration: BoxDecoration(
-            color: Colors.deepOrange,
-          ),
+          accountName: Text('Visi Mansukinini'),
+          accountEmail: Text('visi05mansukinini@gmail.com'),
         ),
+        
         ListTile(
           title: Text('Search', textAlign: TextAlign.center, style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),),
           trailing: Icon(Icons.search, size: 35.0, color: Colors.black),
@@ -88,7 +74,15 @@ class _HomeState extends State<Home> {
         ListTile(
           title: Text('Giving', textAlign: TextAlign.center, style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold)),
           trailing: Icon(Icons.inbox_sharp, size: 35.0, color: Colors.black),
-          onTap: () {},
+          onTap: () { },
+        ),
+
+        SizedBox(height: MediaQuery.of(context).size.height * .25),
+
+        AppButton(
+          labelText: "Log In or Sign Up",
+          // buttonType: ButtonType.LightBlue, 
+          onPressed: () => Navigator.of(context).pushNamed("/login"),
         ),
         
       ],
@@ -98,6 +92,7 @@ class _HomeState extends State<Home> {
     
   Widget bottomNavigationBar() {
     return BottomNavigationBar(
+      backgroundColor: AppColors.brown,
           type: BottomNavigationBarType.fixed,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(

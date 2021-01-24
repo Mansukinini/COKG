@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:cokg/src/areas/models/Event.dart';
-import 'package:cokg/src/areas/services/database.dart';
-import 'package:cokg/src/areas/services/firebase-storage.dart';
+import 'package:cokg/src/areas/services/data/database.dart';
+import 'package:cokg/src/areas/services/data/firebase-storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 

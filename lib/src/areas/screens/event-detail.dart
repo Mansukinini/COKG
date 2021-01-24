@@ -1,11 +1,11 @@
-import 'package:cokg/src/areas/services/database.dart';
+import 'package:cokg/src/areas/services/data/database.dart';
 import 'package:cokg/src/styles/base.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cokg/src/areas/models/Event.dart';
-import 'package:cokg/src/areas/services/event-provider.dart';
+import 'package:cokg/src/areas/services/reprositories/event-provider.dart';
 
 
 class EventDetail extends StatefulWidget {
@@ -39,7 +39,7 @@ class _EventDetailState extends State<EventDetail> {
           icon: Icon(Icons.arrow_back),
           iconSize: 30.0,
           color: Colors.white,
-          onPressed: (){
+          onPressed: () {
             Navigator.pop(context);
           },
         ),

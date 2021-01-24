@@ -12,27 +12,32 @@ abstract class TextFieldStyles {
 
   static Widget iconPrefix(IconData icon) => BaseStyles.iconPrefix(icon);
 
-  static InputDecoration materialDecoration(String hintText, IconData icon, String errorText) 
+  static InputDecoration materialDecoration(String labelText, String hintText, IconData icon, String errorText) 
   {
     return InputDecoration(
-      contentPadding: EdgeInsets.all(8.0),
-      hintText: hintText,
+      contentPadding: EdgeInsets.all(10.0),
+      labelText: labelText != null ? labelText : null,
+      hintText: hintText != null ? hintText : null,
       hintStyle: TextFieldStyles.placeholder,
-      border: InputBorder.none,
       errorText: errorText,
       errorStyle: TextStyles.error,
+      
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(BaseStyles.borderRadius)
+      ),
+
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: AppColors.straw, width: BaseStyles.borderWith),
+        borderSide: BorderSide(color: AppColors.brown, width: BaseStyles.borderWith),
         borderRadius: BorderRadius.circular(BaseStyles.borderRadius)
       ),
 
       enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: AppColors.straw, width: BaseStyles.borderWith),
+        borderSide: BorderSide(color: AppColors.brown, width: BaseStyles.borderWith),
         borderRadius: BorderRadius.circular(BaseStyles.borderRadius)
       ),
 
       focusedErrorBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: AppColors.straw, width: BaseStyles.borderWith),
+        borderSide: BorderSide(color: AppColors.brown, width: BaseStyles.borderWith),
         borderRadius: BorderRadius.circular(BaseStyles.borderRadius)
       ),
 
