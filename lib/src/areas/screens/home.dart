@@ -1,10 +1,15 @@
 import 'package:cokg/src/areas/screens/event-detail.dart';
 import 'package:cokg/src/areas/screens/event-list.dart';
+import 'package:cokg/src/areas/services/providers/authentication.dart';
 import 'package:cokg/src/resources/widgets/button.dart';
 import 'package:cokg/src/resources/widgets/navigatorBar.dart';
 import 'package:cokg/src/styles/color.dart';
+import 'package:cokg/src/styles/text.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+final _auth = FirebaseAuth.instance;
 
 class Home extends StatefulWidget {
   @override
@@ -13,6 +18,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
+  User user;
 
   final List<Widget> _children = [
     EventList(),
@@ -20,6 +26,12 @@ class _HomeState extends State<Home> {
     Center(child: Text('Sermons'),),
     Center(child: Text('Live'))
   ];
+
+  @override
+  void initState() {
+    user = _auth.currentUser;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +43,7 @@ class _HomeState extends State<Home> {
           return <Widget>[AppNavbar.materialNavBar(title: '', pinned: false)];
         },
         body: _children[_selectedIndex],
-        ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
         Navigator.of(context).push(MaterialPageRoute(builder: (context) => EventDetail()));
@@ -43,17 +55,26 @@ class _HomeState extends State<Home> {
   }
 
   Widget drawer(BuildContext context) { 
+
+    final authenticate = Provider.of<Authentication>(context);
+    
     return Drawer(
       child: ListView(
       padding: EdgeInsets.zero,
       children: <Widget>[
+        
         UserAccountsDrawerHeader(
           currentAccountPicture: CircleAvatar(
             backgroundColor: AppColors.lightgray,
             child: Text('V', style: TextStyle(color: Colors.black, fontSize: 24.0, fontWeight: FontWeight.bold)),
           ),
-          accountName: Text('Visi Mansukinini'),
-          accountEmail: Text('visi05mansukinini@gmail.com'),
+          accountName: (user != null) ? Text(user.displayName) : null,
+          accountEmail: (user != null) 
+          ? Text(user.email) 
+          : Text('Log In or Sign Up', style: TextStyles.buttonTextLight),
+          onDetailsPressed: (user != null) 
+          ? () => Navigator.of(context).pushNamed("/profile/" + user.uid) 
+          : () => Navigator.of(context).pushNamed("/login"),
         ),
         
         ListTile(
@@ -61,16 +82,19 @@ class _HomeState extends State<Home> {
           trailing: Icon(Icons.search, size: 35.0, color: Colors.black),
           onTap: () {},
         ),
+
         ListTile(
           title: Text('Download', textAlign: TextAlign.center, style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold)),
           trailing: Icon(Icons.arrow_circle_down, size: 35.0, color: Colors.black),
           onTap: () { },
         ),
+
         ListTile(
           title: Text('Inbox', textAlign: TextAlign.center, style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold)),
           trailing: Icon(Icons.inbox_rounded, size: 35.0, color: Colors.black),
           onTap: () {},
         ),
+
         ListTile(
           title: Text('Giving', textAlign: TextAlign.center, style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold)),
           trailing: Icon(Icons.inbox_sharp, size: 35.0, color: Colors.black),
@@ -80,9 +104,12 @@ class _HomeState extends State<Home> {
         SizedBox(height: MediaQuery.of(context).size.height * .25),
 
         AppButton(
-          labelText: "Log In or Sign Up",
-          // buttonType: ButtonType.LightBlue, 
-          onPressed: () => Navigator.of(context).pushNamed("/login"),
+          labelText: "Sign out", 
+          onPressed: () => authenticate.signOut().then((value){
+            if (value != null) {
+              Navigator.pushReplacementNamed(context, '/home');
+            }
+          }),
         ),
         
       ],

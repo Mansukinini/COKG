@@ -1,4 +1,5 @@
-import 'package:cokg/src/areas/services/reprositories/authentication.dart';
+
+import 'package:cokg/src/areas/services/providers/authentication.dart';
 import 'package:cokg/src/resources/widgets/button.dart';
 import 'package:cokg/src/resources/widgets/textfield.dart';
 import 'package:cokg/src/styles/color.dart';
@@ -22,21 +23,44 @@ class _SignupState extends State<Signup> {
 
   @override
   Widget build(BuildContext context) {
-    final authenticate = Provider.of<AuthenticationBloc>(context);
+    final authenticate = Provider.of<Authentication>(context);
 
     return Scaffold( body: _pageBody(context, authenticate));
   }
 
-  Widget _pageBody(BuildContext context, AuthenticationBloc authenticate) {
+  Widget _pageBody(BuildContext context, Authentication authenticate) {
     return ListView(
       children: <Widget>[
-        SizedBox(height: 50.0,),
+        SizedBox(height: 30.0,),
 
         Padding(
           padding: const EdgeInsets.all(9.0),
-          child: Text("Create your ChristOurKing Account", style: TextStyles.title),
+          child: Text("Create your Christ Our King Account", style: TextStyles.title),
         ),
 
+        StreamBuilder<String>(
+          stream: authenticate.firstName,
+          builder: (context, snapshot) {
+
+            return AppTextField(
+              hintText: 'Name ',
+              textInputType: TextInputType.emailAddress,
+              onChanged: authenticate.setFirstName,
+            );
+          }
+        ),
+
+        StreamBuilder<String>(
+          stream: authenticate.lastName,
+          builder: (context, snapshot) {
+
+            return AppTextField(
+              hintText: 'Surname ',
+              textInputType: TextInputType.emailAddress,
+              onChanged: authenticate.setLastName,
+            );
+          }
+        ),
         StreamBuilder<String>(
           stream: authenticate.email,
           builder: (context, snapshot) {
@@ -76,7 +100,13 @@ class _SignupState extends State<Signup> {
         AppButton(
           labelText: 'Sign Up', 
           buttonType: ButtonType.LightBlue,
-          onPressed: authenticate.signup,
+          onPressed: () { 
+            authenticate.signup().then((value) {
+              if (value != null) {
+                Navigator.pushReplacementNamed(context, '/login');
+              }
+            });
+          },
         ),
 
         Container(

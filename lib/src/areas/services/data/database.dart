@@ -1,13 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cokg/src/areas/models/Event.dart';
 import 'package:cokg/src/areas/models/user.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class DatabaseService {
   FirebaseFirestore _db = FirebaseFirestore.instance;
+  FirebaseAuth _auth = FirebaseAuth.instance;
 
   //create user
-  Future<void> createUser(Users user) {
-    return _db.collection('user').doc(user.id).set(user.toMap());
+  Future<Users> createUser(Users userApp) {
+    
+    
+    return _db.collection('user').doc(userApp.id).set(userApp.toMap()).then((value) {
+      if (userApp.firstName != null) {
+        _auth.currentUser.updateProfile(displayName: userApp.firstName + ' '+ userApp.lastName);
+        _auth.currentUser.reload();
+      }
+      return null;
+    });
   }
 
   Future<Users> getUserById(String id) {
@@ -38,6 +48,7 @@ class DatabaseService {
     
     //Todo: Implemente the lastUpdateBy and LastUpdatedOn
     if (event.createdOn != null) {
+      
       // print(event.toMap());
     }
 

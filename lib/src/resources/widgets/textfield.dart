@@ -27,7 +27,27 @@ class AppTextField extends StatefulWidget {
 }
 
 class _AppTextFieldState extends State<AppTextField> {
+  FocusNode _node;
   TextEditingController _controller;
+
+  @override
+  void initState() {
+    _node = FocusNode();
+    _controller = TextEditingController();
+    if (widget.initialText != null) {
+      _controller.text = widget.initialText;
+    }
+
+    // _node.addListener(_handleFocusChange);
+    super.initState();
+  }
+
+  void _handleFocusChange() {
+    if (_node.hasFocus == false && widget.initialText != null) {
+
+    }
+    widget.onChanged(_controller.text);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,5 +62,13 @@ class _AppTextFieldState extends State<AppTextField> {
         controller: _controller,
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _node.removeListener(_handleFocusChange);
+    _node.dispose();
+    _controller.dispose();
+    super.dispose();
   }
 }
