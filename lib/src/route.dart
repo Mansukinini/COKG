@@ -22,9 +22,14 @@ abstract class Routes {
         return MaterialPageRoute(builder: (context) => EventDetail());
       default:
         var routeArray = route.name.split("/");
+
         if (route.name.contains("/profile/")) {
           return MaterialPageRoute(
             builder: (context) => Profile(userId: routeArray[2]));
+        }
+
+        if (route.name.contains("/eventDetail/")) {
+          return MaterialPageRoute(builder: (context) => EventDetail(id: routeArray[2]));
         }
     }
     

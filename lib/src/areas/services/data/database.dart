@@ -9,11 +9,9 @@ class DatabaseService {
 
   //create user
   Future<Users> createUser(Users userApp) {
-    
-    
     return _db.collection('user').doc(userApp.id).set(userApp.toMap()).then((value) {
       if (userApp.firstName != null) {
-        _auth.currentUser.updateProfile(displayName: userApp.firstName + ' '+ userApp.lastName);
+        _auth.currentUser.updateProfile(displayName: userApp.firstName + ' '+ userApp.lastName, photoURL: userApp.imageUrl);
         _auth.currentUser.reload();
       }
       return null;
@@ -35,11 +33,11 @@ class DatabaseService {
   }
 
   Future<Event> getEventById(String id) {
-    print(id);
-    
-    return _db.collection('event')
-      .doc(id).get()
-      .then((event) => Event.fromFirestore(event.data()));
+   
+    return _db
+      .collection('event')
+      .doc(id)
+      .get().then((event) => Event.fromFirestore(event.data()));
   }
 
   // Create

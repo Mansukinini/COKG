@@ -1,13 +1,19 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cokg/src/areas/models/user.dart';
 import 'package:cokg/src/areas/services/data/database.dart';
+import 'package:cokg/src/areas/services/data/firebase-storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:uuid/uuid.dart';
 
 var result;
 class UserProvider {
   final DatabaseService dbService = DatabaseService();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final storageService = FirebaseStorageService();
+  var uuid = Uuid();
   
   //Declare variables
   final _id = BehaviorSubject<String>();
@@ -63,10 +69,25 @@ class UserProvider {
     return result;
   }
 
+  Future pickImage() async {
+    final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
+
+    //Upload to Firebase
+    if (pickedFile != null) {
+      var imageUrlDb = await storageService.uploadProfileImage(File(pickedFile.path), uuid.v4());
+      if (imageUrlDb != null) {
+        setImageUrl(imageUrlDb);
+      } 
+    }else {
+      print('fail');
+    }
+  }
+
   Future<Users> save() async {
     try{
     var user = Users(id: _auth.currentUser.uid, firstName: _firstName.value, lastName: _lastName.value, contactNo: _contactNo.value,
-                isValid: true, email: _email.value);
+      imageUrl: _imageUrl.value, isValid: true, email: _email.value);
+
     return await dbService.createUser(user);
     }on FirebaseException catch (e) {
       print(e);

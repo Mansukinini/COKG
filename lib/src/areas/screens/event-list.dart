@@ -17,13 +17,12 @@ class EventList extends StatelessWidget {
       children: <Widget>[
         Flexible(
           child: Stack(children: <Widget>[
-            Positioned(child: Image.asset('assests/images/cokg.PNG')),
-            // Positioned(child: GestureDetector(child: Container(),),)
+            Positioned(child: Image.asset('assests/images/logo0.jpg')),
           ],),flex: 2,
         ),
 
         Flexible(
-          child:StreamBuilder<List<Event>>(
+          child: StreamBuilder<List<Event>>(
             stream: eventProvider.events,
             builder: (context, event) {
               if (!event.hasData) return Center(child: CircularProgressIndicator());
@@ -38,8 +37,7 @@ class EventList extends StatelessWidget {
                     subtitle: event.data[index].description,
                     imageUrl: event.data[index].imageUrl,
                     date: new DateFormat('MMM-dd').format(DateTime.parse(event.data[index].date)),
-                    time: new DateFormat('hh:mm').format(DateTime.parse(event.data[index].date)), 
-                    event: event.data[index],
+                    time: new DateFormat('hh:mm').format(DateTime.parse(event.data[index].date)),
                   );
                 }
               );

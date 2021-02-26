@@ -1,12 +1,10 @@
 import 'package:cokg/src/areas/models/user.dart';
-import 'package:cokg/src/areas/services/data/database.dart';
 import 'package:cokg/src/areas/services/providers/userProvider.dart';
 import 'package:cokg/src/resources/widgets/button.dart';
+import 'package:cokg/src/resources/widgets/file-upload.dart';
 import 'package:cokg/src/resources/widgets/textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-final dbService = DatabaseService();
 
 class Profile extends StatefulWidget {
   final String userId;
@@ -43,7 +41,7 @@ class _ProfileState extends State<Profile> {
                 onPressed: () => Navigator.pop(context),
               ),
 
-            title: Center(child: Text("Profile"))
+            title: Text("Profile")
           ),
 
           body: _pageBody(context, userProvider, userData.data),
@@ -61,11 +59,13 @@ class _ProfileState extends State<Profile> {
         StreamBuilder<String>(
           stream: userProvider.getImageUrl,
           builder: (context, snapshot) {
+            
             return Container(
               height: MediaQuery.of(context).size.height * .25,
               child: CircleAvatar(
-                backgroundImage: AssetImage('assests/images/Image0.jpeg'),
                 radius: 50.0,
+                backgroundImage: (snapshot.data != null) ? NetworkImage(snapshot.data) : AssetImage('assests/images/Image0.jpeg'),
+                child: FileUpload(icon: Icons.camera_alt, onPressed: userProvider.pickImage),
               ),
             );
           }
@@ -127,8 +127,6 @@ class _ProfileState extends State<Profile> {
   }
 
   loadData(UserProvider userProvider, Users user) {
-    // userProvider.setUsers(user);
-
     if (user != null) {
       userProvider.setFirstName(user.firstName);
       userProvider.setLastName(user.lastName);

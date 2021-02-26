@@ -24,7 +24,7 @@ abstract class TextStyles {
 
   static TextStyle get body {
     return GoogleFonts.roboto(
-        textStyle: TextStyle(color: AppColors.black, fontSize: 20.0));
+        textStyle: TextStyle(color: AppColors.black, fontSize: 20.0, height: 1.4));
   }
 
   static TextStyle get subtitle {

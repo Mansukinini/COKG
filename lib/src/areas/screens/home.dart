@@ -1,5 +1,5 @@
-import 'package:cokg/src/areas/screens/event-detail.dart';
 import 'package:cokg/src/areas/screens/event-list.dart';
+import 'package:cokg/src/areas/screens/group/groups-list.dart';
 import 'package:cokg/src/areas/services/providers/authentication.dart';
 import 'package:cokg/src/resources/widgets/button.dart';
 import 'package:cokg/src/resources/widgets/navigatorBar.dart';
@@ -9,7 +9,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../app-state.dart';
+
 final _auth = FirebaseAuth.instance;
+final appState = AppState();
 
 class Home extends StatefulWidget {
   @override
@@ -22,7 +25,7 @@ class _HomeState extends State<Home> {
 
   final List<Widget> _children = [
     EventList(),
-    Center(child: Text('Groups')),
+    GroupList(),
     Center(child: Text('Sermons'),),
     Center(child: Text('Live'))
   ];
@@ -46,7 +49,7 @@ class _HomeState extends State<Home> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => EventDetail()));
+        Navigator.of(context).pushNamed("/eventDetail");
         }, 
         child: new Icon(Icons.add),
       ),
@@ -55,9 +58,9 @@ class _HomeState extends State<Home> {
   }
 
   Widget drawer(BuildContext context) { 
-
     final authenticate = Provider.of<Authentication>(context);
-    
+    // appState.userFullName();
+
     return Drawer(
       child: ListView(
       padding: EdgeInsets.zero,
@@ -66,7 +69,10 @@ class _HomeState extends State<Home> {
         UserAccountsDrawerHeader(
           currentAccountPicture: CircleAvatar(
             backgroundColor: AppColors.lightgray,
-            child: Text('V', style: TextStyle(color: Colors.black, fontSize: 24.0, fontWeight: FontWeight.bold)),
+            backgroundImage: (user.photoURL != null) ? NetworkImage(user.photoURL) : AssetImage('assests/images/Image0.jpeg'),
+            // child: (user.photoURL != null) 
+            // ? NetworkImage(user.photoURL)
+            // : Text('V', style: TextStyle(color: Colors.black, fontSize: 24.0, fontWeight: FontWeight.bold)),
           ),
           accountName: (user != null) ? Text(user.displayName) : null,
           accountEmail: (user != null) 

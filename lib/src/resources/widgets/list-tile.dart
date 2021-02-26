@@ -1,5 +1,3 @@
-import 'package:cokg/src/areas/models/Event.dart';
-import 'package:cokg/src/areas/screens/event-detail.dart';
 import 'package:cokg/src/styles/base.dart';
 import 'package:cokg/src/styles/color.dart';
 import 'package:cokg/src/styles/text.dart';
@@ -13,7 +11,7 @@ class AppListTile extends StatelessWidget {
   final String date;
   final String time;
   final String id;
-  final Event event;
+  final Widget Function(BuildContext) builder;
 
   AppListTile({
     @required this.title,
@@ -22,26 +20,26 @@ class AppListTile extends StatelessWidget {
     this.date,
     this.time,
     this.id,
-    this.event
+    this.builder
   });
 
   @override
   Widget build(BuildContext context) {
 
-    return Row(
+    return Card(child: Row(
       children: <Widget>[
           Expanded(
-            child: ListTile(
+            child:  ListTile(
               leading: CircleAvatar(
                 radius: 30.0,
-                backgroundImage: NetworkImage(imageUrl),
+                // backgroundImage: NetworkImage(imageUrl),
               ),
               title: Text(title, style: TextStyles.subtitle,),
               subtitle: Text(subtitle, style: TextStyle(fontSize: 12.0, color: Colors.black),),
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => EventDetail(event: event)));
-                // (id != null) ? () => Navigator.of(context).pushNamed("/eventDetail/$id") : null
+                if (id != null){
+                  Navigator.of(context).pushNamed("/eventDetail/$id");
+                }
               },
             ),
           ), 
@@ -59,6 +57,6 @@ class AppListTile extends StatelessWidget {
           ),
           Divider(height: 1, thickness: 1, color: Colors.blueGrey[900])
       ],
-    );
+    ));
   }
 }

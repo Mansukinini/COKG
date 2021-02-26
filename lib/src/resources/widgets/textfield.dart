@@ -9,6 +9,7 @@ class AppTextField extends StatefulWidget {
   final String errorText;
   final String initialText;
   final bool obscureText;
+  final int maxLines;
   final void Function(String) onChanged;
 
   AppTextField({
@@ -18,6 +19,7 @@ class AppTextField extends StatefulWidget {
     this.textInputType = TextInputType.text,
     this.initialText,
     this.obscureText = false,
+    this.maxLines = 1,
     this.onChanged,
     this.errorText
   });
@@ -52,8 +54,9 @@ class _AppTextFieldState extends State<AppTextField> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(12.0),
+      padding: const EdgeInsets.only(top:12.0, left: 10.0, right: 10.0, bottom: 12.0),
       child: TextField(
+        maxLines: widget.maxLines,
         keyboardType: widget.textInputType,
         onChanged: widget.onChanged,
         decoration: TextFieldStyles.materialDecoration(widget.labelText, widget.hintText, widget.materialIcon, widget.errorText),

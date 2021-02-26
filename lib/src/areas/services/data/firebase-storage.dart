@@ -11,4 +11,12 @@ class FirebaseStorageService {
 
     return await storegeRef.ref.getDownloadURL();
   }
+
+  Future<String> uploadProfileImage(File file, String filename) async {
+    var storegeRef = await storage.ref()
+        .child('profileImages/$filename')
+        .putFile(file);
+
+    return await storegeRef.ref.getDownloadURL();
+  }
 }
