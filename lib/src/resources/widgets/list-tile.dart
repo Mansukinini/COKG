@@ -11,15 +11,17 @@ class AppListTile extends StatelessWidget {
   final String date;
   final String time;
   final String id;
+  final void Function() onTap;
   final Widget Function(BuildContext) builder;
 
   AppListTile({
     @required this.title,
     this.subtitle,
     this.imageUrl,
-    this.date,
-    this.time,
+    this.date = '',
+    this.time = '',
     this.id,
+    this.onTap,
     this.builder
   });
 
@@ -29,18 +31,21 @@ class AppListTile extends StatelessWidget {
     return Card(child: Row(
       children: <Widget>[
           Expanded(
-            child:  ListTile(
+            child: ListTile(
               leading: CircleAvatar(
                 radius: 30.0,
-                // backgroundImage: NetworkImage(imageUrl),
+                backgroundImage: (imageUrl != null) ? NetworkImage(imageUrl) : AssetImage('assets/images/user.jpg'),
+                
               ),
               title: Text(title, style: TextStyles.subtitle,),
               subtitle: Text(subtitle, style: TextStyle(fontSize: 12.0, color: Colors.black),),
-              onTap: () {
-                if (id != null){
-                  Navigator.of(context).pushNamed("/eventDetail/$id");
-                }
-              },
+              onTap: onTap
+              // () {
+              //   if (id != null){
+              //     Navigator.of(context).pushNamed("/eventDetail/$id");
+              //   }
+              // }
+              ,
             ),
           ), 
          

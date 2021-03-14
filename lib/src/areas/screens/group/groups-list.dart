@@ -1,5 +1,4 @@
 import 'package:cokg/src/resources/widgets/list-tile.dart';
-import 'package:cokg/src/styles/base.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -10,8 +9,8 @@ class GroupList extends StatelessWidget {
       children: <Widget>[
         Column(children: <Widget>[
           Padding(
-            padding: BaseStyles.listPadding,
-            child: Image.asset('assests/images/logo0.jpg'))
+            padding: EdgeInsets.zero,
+            child: Image.asset('assets/images/logo0.jpg', fit: BoxFit.cover,))
         ]),
 
         AppListTile(

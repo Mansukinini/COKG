@@ -1,4 +1,4 @@
-import 'package:cokg/src/areas/screens/event-detail.dart';
+import 'package:cokg/src/areas/screens/event/event-detail.dart';
 import 'package:cokg/src/resources/widgets/navigatorBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

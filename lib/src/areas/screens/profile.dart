@@ -64,7 +64,7 @@ class _ProfileState extends State<Profile> {
               height: MediaQuery.of(context).size.height * .25,
               child: CircleAvatar(
                 radius: 50.0,
-                backgroundImage: (snapshot.data != null) ? NetworkImage(snapshot.data) : AssetImage('assests/images/Image0.jpeg'),
+                backgroundImage: (snapshot.data != null) ? NetworkImage(snapshot.data) : AssetImage('assets/images/Image0.jpeg'),
                 child: FileUpload(icon: Icons.camera_alt, onPressed: userProvider.pickImage),
               ),
             );

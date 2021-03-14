@@ -7,7 +7,7 @@ abstract class AppNavbar {
   static SliverAppBar materialNavBar({@required String title, bool pinned, TabBar tabBar}){
     return SliverAppBar(
       title: Text(title, style: TextStyles.navTitleMaterial),
-      backgroundColor:  Colors.brown,
+      backgroundColor: Colors.brown,
       bottom: tabBar,
       floating: true,
       pinned: (pinned == null) ? true : pinned,

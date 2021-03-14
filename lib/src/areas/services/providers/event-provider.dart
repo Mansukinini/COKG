@@ -65,14 +65,13 @@ class EventProvider {
     _description.close();
     _imageUrl.close();
     _isUploaded.close();
-    _createdBy.close();
+    _createdBy.close(); 
     _createdOn.close();
     _lastUpdatedBy.close();
     _lastUpdatedOn.close();
 
     _event.close();
   }
-
   
   Stream<List<Event>> get events => databaseService.getEvents();
 

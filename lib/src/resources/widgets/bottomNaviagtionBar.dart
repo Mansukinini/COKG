@@ -1,12 +1,12 @@
 import 'package:cokg/src/styles/color.dart';
 import 'package:flutter/material.dart';
 
-class BottomNavigation extends StatefulWidget{
+class AppBottomNavigation extends StatefulWidget{
   @override
-  _BottomNavigationState createState() => _BottomNavigationState();
+  _AppBottomNavigationState createState() => _AppBottomNavigationState();
 }
 
-class _BottomNavigationState extends State<BottomNavigation> {
+class _AppBottomNavigationState extends State<AppBottomNavigation> {
   int _selectedIndex = 0;
 
   @override
@@ -42,9 +42,10 @@ class _BottomNavigationState extends State<BottomNavigation> {
     );
   }
 
-  void onItemTapped(int index) {
+  int onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+    return _selectedIndex;
   }
 }

@@ -1,6 +1,7 @@
 import 'package:cokg/src/areas/services/data/database.dart';
 import 'package:cokg/src/areas/services/providers/authentication.dart';
 import 'package:cokg/src/areas/services/providers/event-provider.dart';
+import 'package:cokg/src/areas/services/providers/groupProvider.dart';
 import 'package:cokg/src/areas/services/providers/userProvider.dart';
 import 'package:cokg/src/resources/authorization/authorize-step.dart';
 import 'package:cokg/src/route.dart';
@@ -13,6 +14,7 @@ import 'package:provider/provider.dart';
 final authentication = Authentication();
 final userProvider = UserProvider();
 final eventProvider = EventProvider();
+final groupProvider = GroupProvider();
 final _auth = FirebaseAuth.instance;
 final farebase = DatabaseService();
 final authorizeStep = AuthorizeStep();
@@ -38,7 +40,8 @@ class _AppState extends State<App> {
       providers: [
         Provider(create: (context) => authentication),
         Provider(create: (context) => userProvider),
-        Provider(create: (context) => eventProvider)
+        Provider(create: (context) => eventProvider),
+        Provider(create: (context) => groupProvider)
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -57,5 +60,6 @@ class _AppState extends State<App> {
     authentication.dispose();
     userProvider.dispose();
     eventProvider.dispose();
+    groupProvider.dispose();
   }
 }

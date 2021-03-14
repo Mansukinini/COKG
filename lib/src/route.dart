@@ -1,10 +1,14 @@
 import 'package:cokg/src/areas/screens/Sign-up.dart';
-import 'package:cokg/src/areas/screens/event-detail.dart';
-import 'package:cokg/src/areas/screens/event-list.dart';
+import 'package:cokg/src/areas/screens/event/event-detail.dart';
+import 'package:cokg/src/areas/screens/event/event-list.dart';
+import 'package:cokg/src/areas/screens/group/group-detail.dart';
 import 'package:cokg/src/areas/screens/home.dart';
 import 'package:cokg/src/areas/screens/login.dart';
 import 'package:cokg/src/areas/screens/profile.dart';
 import 'package:flutter/material.dart';
+
+import 'areas/screens/sermons/sermon-detail.dart';
+import 'areas/screens/sermons/sermon.dart';
 
 
 abstract class Routes {
@@ -12,14 +16,20 @@ abstract class Routes {
     switch (route.name) {
       case "/home":
         return MaterialPageRoute(builder: (context) => Home());
-      case "/eventList":
-        return MaterialPageRoute(builder: (context) => EventList());
       case "/signup":
-      return MaterialPageRoute(builder: (context) => Signup());
+        return MaterialPageRoute(builder: (context) => Signup());
       case "/login":
         return MaterialPageRoute(builder: (context) => Login());
+      case "/eventList":
+        return MaterialPageRoute(builder: (context) => EventList());
       case "/eventDetail":
         return MaterialPageRoute(builder: (context) => EventDetail());
+      case "/groupDetail":
+        return MaterialPageRoute(builder: (context) => GroupDetail());
+      case "/SermonDetail":
+        return MaterialPageRoute(builder: (context) => SermonDetail());
+      case "/Sermon":
+        return MaterialPageRoute(builder: (context) => Sermon());
       default:
         var routeArray = route.name.split("/");
 

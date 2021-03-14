@@ -1,6 +1,8 @@
-import 'package:cokg/src/areas/screens/event-list.dart';
+import 'package:cokg/src/areas/screens/event/event-list.dart';
 import 'package:cokg/src/areas/screens/group/groups-list.dart';
+import 'package:cokg/src/areas/screens/sermons/sermon-list.dart';
 import 'package:cokg/src/areas/services/providers/authentication.dart';
+import 'package:cokg/src/resources/utils/floatingActionButton.dart';
 import 'package:cokg/src/resources/widgets/button.dart';
 import 'package:cokg/src/resources/widgets/navigatorBar.dart';
 import 'package:cokg/src/styles/color.dart';
@@ -11,7 +13,7 @@ import 'package:provider/provider.dart';
 
 import '../../app-state.dart';
 
-final _auth = FirebaseAuth.instance;
+final _auth = FirebaseAuth.instance; 
 final appState = AppState();
 
 class Home extends StatefulWidget {
@@ -26,7 +28,7 @@ class _HomeState extends State<Home> {
   final List<Widget> _children = [
     EventList(),
     GroupList(),
-    Center(child: Text('Sermons'),),
+    SermonList(),
     Center(child: Text('Live'))
   ];
 
@@ -41,19 +43,15 @@ class _HomeState extends State<Home> {
 
     return Scaffold(
       drawer: drawer(context),
+      
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[AppNavbar.materialNavBar(title: '', pinned: false)];
         },
-        body: _children[_selectedIndex],
+        body: _children[_selectedIndex]
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-        Navigator.of(context).pushNamed("/eventDetail");
-        }, 
-        child: new Icon(Icons.add),
-      ),
-        bottomNavigationBar: bottomNavigationBar(),
+      floatingActionButton: AppFloatingActionButton(tapNo: _selectedIndex),
+      bottomNavigationBar: bottomNavigationBar(),
     );
   }
 
@@ -69,15 +67,14 @@ class _HomeState extends State<Home> {
         UserAccountsDrawerHeader(
           currentAccountPicture: CircleAvatar(
             backgroundColor: AppColors.lightgray,
-            backgroundImage: (user.photoURL != null) ? NetworkImage(user.photoURL) : AssetImage('assests/images/Image0.jpeg'),
-            // child: (user.photoURL != null) 
-            // ? NetworkImage(user.photoURL)
-            // : Text('V', style: TextStyle(color: Colors.black, fontSize: 24.0, fontWeight: FontWeight.bold)),
+            backgroundImage: (user != null) ? NetworkImage(user.photoURL) : AssetImage('assets/images/user.jpg'),
           ),
+
           accountName: (user != null) ? Text(user.displayName) : null,
           accountEmail: (user != null) 
           ? Text(user.email) 
           : Text('Log In or Sign Up', style: TextStyles.buttonTextLight),
+          
           onDetailsPressed: (user != null) 
           ? () => Navigator.of(context).pushNamed("/profile/" + user.uid) 
           : () => Navigator.of(context).pushNamed("/login"),
@@ -103,7 +100,7 @@ class _HomeState extends State<Home> {
 
         ListTile(
           title: Text('Giving', textAlign: TextAlign.center, style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold)),
-          trailing: Icon(Icons.inbox_sharp, size: 35.0, color: Colors.black),
+          trailing: Icon(Icons.favorite_rounded, size: 35.0, color: Colors.brown),
           onTap: () { },
         ),
 

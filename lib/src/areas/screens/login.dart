@@ -36,12 +36,22 @@ class _LoginState extends State<Login> {
     return ListView(
       children: <Widget>[
         SizedBox(height: MediaQuery.of(context).size.height * .1),
+          //Todo : Image container Don't delete
+        // Container(
+        //   decoration: BoxDecoration(
+        //     color: Colors.grey.shade100.withOpacity(0.55),
+        //     image: DecorationImage(
+        //       image: AssetImage("assets/images/color1.jpg"),
+        //       fit: BoxFit.fill,
+        //     ),
+        //   ),
+        // ),
 
         Container(
           height: MediaQuery.of(context).size.height * .25,
           child: CircleAvatar(
-            backgroundImage: AssetImage('assests/images/Image0.jpeg'),
-            radius: 50.0,
+            // radius: 20.0,
+            backgroundImage: AssetImage('assets/images/user.jpg',),
           ),
         ),
         
