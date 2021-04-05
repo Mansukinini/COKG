@@ -74,7 +74,7 @@ class UserProvider {
 
     //Upload to Firebase
     if (pickedFile != null) {
-      var imageUrlDb = await storageService.uploadProfileImage(File(pickedFile.path), uuid.v4());
+      var imageUrlDb = await FirebaseStorageService.uploadProfileImage(File(pickedFile.path), uuid.v4());
       if (imageUrlDb != null) {
         setImageUrl(imageUrlDb);
       } 

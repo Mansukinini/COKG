@@ -58,6 +58,7 @@ class _LoginState extends State<Login> {
         StreamBuilder<String>(
           stream: authenticate.email,
           builder: (context, user) {
+
             return AppTextField(hintText: 'Email', textInputType: TextInputType.emailAddress, onChanged: authenticate.setEmail);
           }
         ),
@@ -65,10 +66,12 @@ class _LoginState extends State<Login> {
         StreamBuilder<String>(
           stream: authenticate.password,
           builder: (context, user){
+
             return AppTextField(hintText: 'Password', onChanged: authenticate.setPassword, obscureText: true);
           },
         ),
-
+        
+        // Todo: Add forgot password functionality
         FlatButton(
           onPressed: (){},
           textColor: AppColors.black,
@@ -81,9 +84,9 @@ class _LoginState extends State<Login> {
             return AppButton(labelText: 'Log In', buttonType: ButtonType.LightBlue, 
               onPressed: () {
                 authenticate.login().then((response) {
-                    if (response != null) {
-                      Navigator.pop(context);
-                    }
+                  if (response != null) {
+                    Navigator.pop(context);
+                  }
                 });
               },
             );
@@ -95,6 +98,7 @@ class _LoginState extends State<Login> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text('Does not have account?', style: TextStyles.suggestion),
+
               FlatButton(
                 child: Text('Sign up', style: TextStyle(fontSize: 20.0)),
                 textColor: AppColors.brown,

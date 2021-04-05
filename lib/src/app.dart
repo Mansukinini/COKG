@@ -9,12 +9,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cokg/src/areas/screens/home.dart';
 import 'package:provider/provider.dart';
+import 'areas/services/providers/devotionRepositry.dart';
 
 
 final authentication = Authentication();
 final userProvider = UserProvider();
 final eventProvider = EventProvider();
 final groupProvider = GroupProvider();
+final devotionProvider = DevotionRepositry();
 final _auth = FirebaseAuth.instance;
 final farebase = DatabaseService();
 final authorizeStep = AuthorizeStep();
@@ -41,7 +43,8 @@ class _AppState extends State<App> {
         Provider(create: (context) => authentication),
         Provider(create: (context) => userProvider),
         Provider(create: (context) => eventProvider),
-        Provider(create: (context) => groupProvider)
+        Provider(create: (context) => groupProvider),
+        Provider(create: (context) => devotionProvider)
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -61,5 +64,6 @@ class _AppState extends State<App> {
     userProvider.dispose();
     eventProvider.dispose();
     groupProvider.dispose();
+    devotionProvider.dispose();
   }
 }

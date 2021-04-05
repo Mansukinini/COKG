@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ProgressIndicator extends StatelessWidget {
-  
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(child: CircularProgressIndicator()),
-    );
+class ProgressIndicator  {
+  static Center circularProgressIndicator() {
+    return Center(child: CircularProgressIndicator());
   }
 } 

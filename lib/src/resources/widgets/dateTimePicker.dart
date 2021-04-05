@@ -18,6 +18,8 @@ class AppDateTimePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+   
     return Padding(
       padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 12.0),
       child: DateTimePicker(
@@ -30,6 +32,7 @@ class AppDateTimePicker extends StatelessWidget {
         dateLabelText: dateLabelText,
         timeLabelText: timeLabelText,
         onChanged: onChanged,
+        
         // validator: (val) {    
         //   print(val);
         //   return null;

@@ -25,7 +25,7 @@ class _SignupState extends State<Signup> {
   Widget build(BuildContext context) {
     final authenticate = Provider.of<Authentication>(context);
 
-    return Scaffold( body: _pageBody(context, authenticate));
+    return Scaffold(body: _pageBody(context, authenticate));
   }
 
   Widget _pageBody(BuildContext context, Authentication authenticate) {
@@ -43,7 +43,7 @@ class _SignupState extends State<Signup> {
           builder: (context, snapshot) {
 
             return AppTextField(
-              hintText: 'Name ',
+              hintText: 'Name',
               textInputType: TextInputType.emailAddress,
               onChanged: authenticate.setFirstName,
             );
@@ -55,18 +55,19 @@ class _SignupState extends State<Signup> {
           builder: (context, snapshot) {
 
             return AppTextField(
-              hintText: 'Surname ',
+              hintText: 'Surname',
               textInputType: TextInputType.emailAddress,
               onChanged: authenticate.setLastName,
             );
           }
         ),
+
         StreamBuilder<String>(
           stream: authenticate.email,
           builder: (context, snapshot) {
 
             return AppTextField(
-              hintText: 'Email ',
+              hintText: 'Email',
               textInputType: TextInputType.emailAddress,
               onChanged: authenticate.setEmail,
             );

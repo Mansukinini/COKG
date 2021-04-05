@@ -1,4 +1,6 @@
 import 'package:cokg/src/areas/screens/Sign-up.dart';
+import 'package:cokg/src/areas/screens/devotion/devotion-detail.dart';
+import 'package:cokg/src/areas/screens/devotion/devotion-sub-page.dart';
 import 'package:cokg/src/areas/screens/event/event-detail.dart';
 import 'package:cokg/src/areas/screens/event/event-list.dart';
 import 'package:cokg/src/areas/screens/group/group-detail.dart';
@@ -7,8 +9,6 @@ import 'package:cokg/src/areas/screens/login.dart';
 import 'package:cokg/src/areas/screens/profile.dart';
 import 'package:flutter/material.dart';
 
-import 'areas/screens/sermons/sermon-detail.dart';
-import 'areas/screens/sermons/sermon.dart';
 
 
 abstract class Routes {
@@ -26,23 +26,29 @@ abstract class Routes {
         return MaterialPageRoute(builder: (context) => EventDetail());
       case "/groupDetail":
         return MaterialPageRoute(builder: (context) => GroupDetail());
-      case "/SermonDetail":
-        return MaterialPageRoute(builder: (context) => SermonDetail());
-      case "/Sermon":
-        return MaterialPageRoute(builder: (context) => Sermon());
-      default:
-        var routeArray = route.name.split("/");
+      case "/devotionDetail":
+        return MaterialPageRoute(builder: (context) => DevotionDetail());
+      // case "/devotionSubPage":
+      //   return MaterialPageRoute(builder: (context) => DevotionSubPage());
+              default:
+                var routeArray = route.name.split("/");
+        
+                if (route.name.contains("/profile/")) {
+                  return MaterialPageRoute(
+                    builder: (context) => Profile(userId: routeArray[2]));
+                }
+        
+                if (route.name.contains("/eventDetail/")) {
+                  return MaterialPageRoute(builder: (context) => EventDetail(id: routeArray[2]));
+                }
 
-        if (route.name.contains("/profile/")) {
-          return MaterialPageRoute(
-            builder: (context) => Profile(userId: routeArray[2]));
+                if (route.name.contains("/devotionSubPage/")) {
+                  return MaterialPageRoute(builder: (context) =>  DevotionSubPage(id: routeArray[2]));
+                }
+            
+            
+            return MaterialPageRoute(builder: (context) => Login());
+          }
         }
-
-        if (route.name.contains("/eventDetail/")) {
-          return MaterialPageRoute(builder: (context) => EventDetail(id: routeArray[2]));
-        }
-    }
-    
-    return MaterialPageRoute(builder: (context) => Login());
-  }
+        
 }

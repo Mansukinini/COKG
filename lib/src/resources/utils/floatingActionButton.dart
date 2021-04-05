@@ -9,14 +9,13 @@ class AppFloatingActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(tapNo.toString());
     switch(tapNo) {
       case 0:
         return FloatingActionButton(child: Icon(Icons.add), onPressed:() => Navigator.of(context).pushNamed("/eventDetail"));
       case 1:
         return FloatingActionButton(child: Icon(Icons.add), onPressed:() => Navigator.of(context).pushNamed("/groupDetail"));
       case 2:
-        return FloatingActionButton(child: Icon(Icons.add), onPressed:() => Navigator.of(context).pushNamed("/SermonDetail"));
+        return FloatingActionButton(child: Icon(Icons.add), onPressed:() => Navigator.of(context).pushNamed("/devotionDetail"));
       case 3:
         return FloatingActionButton(child: Icon(Icons.add), onPressed:() => Navigator.of(context).pushNamed("/groupDetail"));
 

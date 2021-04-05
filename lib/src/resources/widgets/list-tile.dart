@@ -28,40 +28,33 @@ class AppListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return Card(child: Row(
+    return Row(
       children: <Widget>[
-          Expanded(
-            child: ListTile(
-              leading: CircleAvatar(
-                radius: 30.0,
-                backgroundImage: (imageUrl != null) ? NetworkImage(imageUrl) : AssetImage('assets/images/user.jpg'),
-                
-              ),
-              title: Text(title, style: TextStyles.subtitle,),
-              subtitle: Text(subtitle, style: TextStyle(fontSize: 12.0, color: Colors.black),),
-              onTap: onTap
-              // () {
-              //   if (id != null){
-              //     Navigator.of(context).pushNamed("/eventDetail/$id");
-              //   }
-              // }
-              ,
+        Expanded(
+          child: ListTile(
+            leading: CircleAvatar(
+              radius: 30.0,
+              backgroundImage: (imageUrl != null) ? NetworkImage(imageUrl) : AssetImage('assets/images/user.jpg'),
             ),
-          ), 
+            title: Text(title, style: TextStyles.subtitle),
+            subtitle: Text(subtitle, style: TextStyle(fontSize: 12.0, color: Colors.black),),
+            onTap: onTap,
+          ),
+        ), 
          
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
             Text(date, style: TextStyle(color: Colors.black, fontSize: 14.0),),
             Text(time, style: TextStyle(color: Colors.black, fontSize: 14.0))
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: BaseStyles.listFieldHorizontal),
-            child: Divider(color:AppColors.lightgray),
-          ),
-          Divider(height: 1, thickness: 1, color: Colors.blueGrey[900])
+          ],
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: BaseStyles.listFieldHorizontal),
+          child: Divider(color:AppColors.lightgray),
+        ),
+        Divider(height: 1, thickness: 1, color: Colors.blueGrey[900])
       ],
-    ));
+    );
   }
 }

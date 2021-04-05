@@ -1,5 +1,4 @@
 import 'package:cokg/src/areas/models/Event.dart';
-import 'package:cokg/src/areas/services/data/database.dart';
 import 'package:cokg/src/areas/services/providers/event-provider.dart';
 import 'package:cokg/src/resources/widgets/dateTimePicker.dart';
 import 'package:cokg/src/resources/widgets/file-upload.dart';
@@ -17,175 +16,167 @@ class EventDetail extends StatefulWidget {
 }
 
 class _EventDetailState extends State<EventDetail> {
-  final dbService = DatabaseService();
-  final nameController = TextEditingController();
-  final descriptionController = TextEditingController();
-  DateTime dateController;
+  // final nameController = TextEditingController();
+  // final descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context)  {
     var eventProvider = Provider.of<EventProvider>(context);
     
     if (widget.id != null) {
-      return FutureBuilder<Event>(
-        future: eventProvider.getEventById(widget.id),
-        builder: (context, event) {
-        
-        
-        if (!event.hasData && widget.id != null) 
-          return Center(child: CircularProgressIndicator());
-
-        loadEvents(eventProvider, event.data, widget.id);
-
-        return Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back), iconSize: 30.0, color: Colors.white,
-              onPressed: () => Navigator.pop(context),
-            ),
-
-          title: Center(child: Text("Add Event")),
-          actions: <Widget>[
-            RaisedButton(
-              child: Text('Save', style: TextStyle(fontSize: 18.0, color: Colors.white, fontWeight: FontWeight.bold)),
-              color: Theme.of(context).accentColor,
-              onPressed: () {
-                eventProvider.save();
-                Navigator.of(context).pop();
-              }
-            )
-          ]),
-          body: _pageBody(context, eventProvider, event.data),
-        );
-      });
+     return _editEvent(context, eventProvider);
     } else {
-      return StreamBuilder<Event>(
-      stream: eventProvider.getEvent,
-      builder: (context, event) 
-      {
-        return Scaffold(
-          appBar: AppBar(
-            leading: IconButton(icon: Icon(Icons.arrow_back), iconSize: 30.0, color: Colors.white,
-              onPressed: () => Navigator.pop(context),
-            ),
-
-            title: Center(child: Text("Add Event")),
-            actions: <Widget>[
-              RaisedButton(
-                child: Text('Save', style: TextStyle(fontSize: 18.0, color: Colors.white, fontWeight: FontWeight.bold)),
-                color: Theme.of(context).accentColor,
-                onPressed: () {
-                  eventProvider.save();
-                  Navigator.of(context).pop();
-                }
-              )
-            ]),
-            body: _pageBody(context, eventProvider, event.data),
-          );
-        },
-      );
+      return _addEvent(context, eventProvider);
     }
   }
 
+  StreamBuilder _addEvent(BuildContext context, EventProvider eventProvider) {
+   
+    return StreamBuilder<Event>(
+      stream: eventProvider.getEvent,
+      builder: (context, event) => _scafford(context, eventProvider, event),
+    );
+  }
+
+  FutureBuilder _editEvent(BuildContext context, EventProvider eventProvider) {
+    
+    return FutureBuilder<Event>(
+      future: eventProvider.getEventById(widget.id),
+      builder: (context, event) {
+
+      if (!event.hasData && widget.id != null) 
+        return Center(child: CircularProgressIndicator());
+
+      return  _scafford(context, eventProvider, event);
+    });
+  }
+
+  Scaffold _scafford(BuildContext context, EventProvider eventProvider, AsyncSnapshot<Event> event) {
+    var action = event.data != null ? "Edit Event" : "Add Event";
+
+    _setEvent(eventProvider, event.data, widget.id);
+
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(icon: Icon(Icons.arrow_back), iconSize: 30.0, color: Colors.white,
+          onPressed: () => Navigator.pop(context),
+        ),
+
+        title: Center(child: Text(action)),
+        actions: <Widget>[
+          RaisedButton(
+            child: Text('Save', style: TextStyle(fontSize: 18.0, color: Colors.white, fontWeight: FontWeight.bold)),
+            color: Theme.of(context).accentColor,
+            onPressed: () {eventProvider.saveEvent().then((value) => Navigator.of(context).pop());},
+          )
+        ]
+      ),
+      body: _pageBody(context, eventProvider, event.data),
+    );
+  }
+
   Widget _pageBody(BuildContext context, EventProvider eventProvider, Event event) {
-     
+      
     return Padding(
-        padding: EdgeInsets.only(top: 10.0, bottom: 20.0),
-        child: ListView(children: <Widget>[ Column(
-          children: <Widget>[
+      padding: EdgeInsets.only(top: 10.0, bottom: 20.0),
+      child: ListView(
+          children: <Widget>[ 
             SizedBox(height: 20.0,),
 
-            StreamBuilder<String>(
-              stream: eventProvider.getImageUrl,
-              builder: (context, event) {
-
-                if (!event.hasData){
+          StreamBuilder<String>(
+            stream: eventProvider.getImageUrl,
+            builder: (context, event) {
+              
+              if (event.data != null){
+                if (!event.hasData)
                   return Center(child: CircularProgressIndicator());
-                }
+                
                 return Container(
                   height: MediaQuery.of(context).size.height * .25,
                   child: CircleAvatar(
                     radius: 150.0,
-                    backgroundImage: (event.data != null) ? NetworkImage(event.data) : AssetImage('assests/images/Image0.jpeg'),
+                    backgroundImage: (event.data != null) ? NetworkImage(event.data) : AssetImage('assets/images/user.jpg'),
                     child: FileUpload(icon: Icons.camera_alt, onPressed: eventProvider.pickImage),
                   ),
                 );
+              } else {
+                return FileUpload(icon: Icons.camera_alt, onPressed: eventProvider.pickImage);
               }
-            ),
+            }
+          ),
 
-            StreamBuilder<String>(
-              stream: eventProvider.getName,
-              builder: (context, snapshot) {
-                  
-                return AppTextField(
-                  labelText: 'Title',
-                  initialText: (event != null) ? event.name.toString() : null,
-                  onChanged: eventProvider.setName,
-                );
-              }
-            ),
+          StreamBuilder<String>(
+            stream: eventProvider.getName,
+            builder: (context, snapshot) {
+                
+              return AppTextField(
+                labelText: 'Title',
+                initialText: (event != null) ? event.name.toString() : null,
+                onChanged: eventProvider.setName,
+              );
+            }
+          ),
             
-            StreamBuilder<String>(
-              stream: eventProvider.getDescription,
-              builder: (context, snapshot) {
-                  
-                return AppTextField(
-                  labelText: 'Enter Description',
-                  maxLines: 3,
-                  initialText: (event != null) ? event.description.toString() : null,
-                  onChanged: eventProvider.setDescription,
-                );
-              }
-            ),
+          StreamBuilder<String>(
+            stream: eventProvider.getDescription,
+            builder: (context, snapshot) {
+                
+              return AppTextField(
+                labelText: 'Enter Description',
+                maxLines: 3,
+                initialText: (event != null) ? event.description.toString() : null,
+                onChanged: eventProvider.setDescription,
+              );
+            }
+          ),
             
-            StreamBuilder<DateTime>(
-              stream: eventProvider.getDateTime,
-              builder: (context, event) {
+          StreamBuilder<DateTime>(
+            stream: eventProvider.getDateTime,
+            builder: (context, event) {
+              
+              if (!event.hasData)
+                return Center(child: CircularProgressIndicator());
 
-                if (!event.hasData){
-                  return Center(child: CircularProgressIndicator());
+              return AppDateTimePicker(
+                dateLabelText: 'Date', 
+                timeLabelText: "Hour", 
+                initialValue: (event.hasData) ? event.data.toString() : null,
+                onChanged: (val) {
+                  setState(() {
+                    eventProvider.setDateTime(DateTime.parse(val));
+                  });
                 }
-
-                return AppDateTimePicker(
-                  dateLabelText: 'Date', 
-                  timeLabelText: "Hour", 
-                  initialValue: (event != null) ? event.data.toIso8601String() : null,
-                  onChanged: (val) {eventProvider.setDateTime(DateTime.parse(val));}
-                );
-              }
-            ),
-          ],)
-        ],),
-      );
+              );
+            }
+          ),
+        ],
+      ),
+    );
   }
 
-  loadEvents(EventProvider eventProvider, Event event, String eventId) {
-    eventProvider.setId(eventId);
+  void _setEvent(EventProvider eventProvider, Event event, String eventId) {
+    eventProvider.setId(widget.id);
     
-    if (eventId != null) {
-      eventProvider.setImageUrl(event.imageUrl);
+    if (widget.id != null && event.toMap() != null) {
+      // eventProvider.setChanges(event);
+      eventProvider.setImageUrl(event.imageUrl ?? '');
       eventProvider.setName(event.name);
       eventProvider.setDescription(event.description);
-      eventProvider.setDateTime(DateTime.parse(event.date.toString()));
+      print(event.date);
+      eventProvider.setDateTime(DateTime.parse(event.date));
     } else {
+      eventProvider.setImageUrl(null);
       eventProvider.setName(null);
       eventProvider.setDescription(null);
+      eventProvider.setDateTime(null);
     }
-  }
-
-  Future<DateTime> datePicker(BuildContext context) async {
-    final DateTime datePicker = await showDatePicker(context: context, initialDate: DateTime.now(), 
-    firstDate: DateTime(2018), lastDate: DateTime(2050), fieldHintText: 'YYYY/MM/DD');
-     
-    if (datePicker == null) return null;
-
-    return datePicker;
   }
   
   @override 
   void dispose() {
-    nameController.dispose();
-    descriptionController.dispose();
+    // eventProvider.dispose();
+    // nameController.dispose();
+    // descriptionController.dispose();
     super.dispose();
   }
 }

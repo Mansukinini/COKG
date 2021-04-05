@@ -1,6 +1,6 @@
+import 'package:cokg/src/areas/screens/devotion/devotion-list.dart';
 import 'package:cokg/src/areas/screens/event/event-list.dart';
 import 'package:cokg/src/areas/screens/group/groups-list.dart';
-import 'package:cokg/src/areas/screens/sermons/sermon-list.dart';
 import 'package:cokg/src/areas/services/providers/authentication.dart';
 import 'package:cokg/src/resources/utils/floatingActionButton.dart';
 import 'package:cokg/src/resources/widgets/button.dart';
@@ -28,7 +28,7 @@ class _HomeState extends State<Home> {
   final List<Widget> _children = [
     EventList(),
     GroupList(),
-    SermonList(),
+    DevotionList(),
     Center(child: Text('Live'))
   ];
 
@@ -137,7 +137,7 @@ class _HomeState extends State<Home> {
 
             BottomNavigationBarItem(
               icon: Icon(Icons.record_voice_over),
-              label: 'Sermons'
+              label: 'Devotion'
             ),
 
             BottomNavigationBarItem(

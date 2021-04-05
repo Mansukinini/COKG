@@ -12,10 +12,5 @@ class AppState {
 
   setUserAuthorization(Users userProfile) {
     _userProfile = userProfile;
-
-    print(_userProfile.firstName + ' from Authorization');
-    print(_userProfile.lastName + ' from Authorization');
   }
-
-
 }
