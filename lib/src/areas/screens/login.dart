@@ -72,6 +72,8 @@ class _LoginState extends State<Login> {
         ),
         
         // Todo: Add forgot password functionality
+        
+        // ignore: deprecated_member_use
         FlatButton(
           onPressed: (){},
           textColor: AppColors.black,
@@ -99,6 +101,7 @@ class _LoginState extends State<Login> {
             children: <Widget>[
               Text('Does not have account?', style: TextStyles.suggestion),
 
+              // ignore: deprecated_member_use
               FlatButton(
                 child: Text('Sign up', style: TextStyle(fontSize: 20.0)),
                 textColor: AppColors.brown,

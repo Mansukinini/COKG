@@ -49,7 +49,7 @@ class DevotionRepositry {
   Future<Devotion> getDevotionById(String id) => DatabaseService.getDevotionById(id);
 
   void uploadFile() async {
-    var path = await FilePicker.getFilePath(type: FileType.audio);
+    var path = await FilePicker.getFilePath(type: FileType.AUDIO);
     
     if (path != null) {
       setId(uuid.v4());

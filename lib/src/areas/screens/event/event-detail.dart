@@ -64,6 +64,7 @@ class _EventDetailState extends State<EventDetail> {
 
         title: Center(child: Text(action)),
         actions: <Widget>[
+          // ignore: deprecated_member_use
           RaisedButton(
             child: Text('Save', style: TextStyle(fontSize: 18.0, color: Colors.white, fontWeight: FontWeight.bold)),
             color: Theme.of(context).accentColor,
@@ -111,7 +112,7 @@ class _EventDetailState extends State<EventDetail> {
                 
               return AppTextField(
                 labelText: 'Title',
-                initialText: (event != null) ? event.name.toString() : null,
+                initialText: (event != null) ? event.name : null,
                 onChanged: eventProvider.setName,
               );
             }
@@ -124,7 +125,7 @@ class _EventDetailState extends State<EventDetail> {
               return AppTextField(
                 labelText: 'Enter Description',
                 maxLines: 3,
-                initialText: (event != null) ? event.description.toString() : null,
+                initialText: (event != null) ? event.description : null,
                 onChanged: eventProvider.setDescription,
               );
             }
@@ -132,20 +133,11 @@ class _EventDetailState extends State<EventDetail> {
             
           StreamBuilder<DateTime>(
             stream: eventProvider.getDateTime,
-            builder: (context, event) {
+            builder: (context, snapshot) {
               
-              if (!event.hasData)
-                return Center(child: CircularProgressIndicator());
-
               return AppDateTimePicker(
-                dateLabelText: 'Date', 
-                timeLabelText: "Hour", 
-                initialValue: (event.hasData) ? event.data.toString() : null,
-                onChanged: (val) {
-                  setState(() {
-                    eventProvider.setDateTime(DateTime.parse(val));
-                  });
-                }
+                dateLabelText: 'Date & Time', 
+                initialValue: (event != null) ? DateTime.parse(event.date) : null,
               );
             }
           ),
@@ -162,7 +154,6 @@ class _EventDetailState extends State<EventDetail> {
       eventProvider.setImageUrl(event.imageUrl ?? '');
       eventProvider.setName(event.name);
       eventProvider.setDescription(event.description);
-      print(event.date);
       eventProvider.setDateTime(DateTime.parse(event.date));
     } else {
       eventProvider.setImageUrl(null);

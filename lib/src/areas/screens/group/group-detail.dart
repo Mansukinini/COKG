@@ -18,6 +18,7 @@ class GroupDetail extends StatelessWidget {
 
           title: Center(child: Text("Add Groups")),
           actions: <Widget>[
+            // ignore: deprecated_member_use
             RaisedButton(
               child: Text('Cancel', style: TextStyle(fontSize: 18.0, color: Colors.white, fontWeight: FontWeight.bold)),
               color: Theme.of(context).accentColor,

@@ -115,6 +115,7 @@ class _SignupState extends State<Signup> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text('Already have an account?', style: TextStyles.suggestion),
+              // ignore: deprecated_member_use
               FlatButton(
                 child: Text('Log In', style: TextStyle(fontSize: 20.0)),
                 textColor: AppColors.brown,

@@ -1,44 +1,70 @@
-import 'package:date_time_picker/date_time_picker.dart';
+import 'package:cokg/src/styles/textfields.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-class AppDateTimePicker extends StatelessWidget {
+class AppDateTimePicker extends StatefulWidget {
   final void Function(String) onChanged;
-  final String initialValue;
-  final String dateFormat;
+  final DateTime initialValue;
   final String dateLabelText;
   final String timeLabelText;
 
   AppDateTimePicker({
     @required this.dateLabelText,
-    this.timeLabelText,
-    this.dateFormat = 'yyyy-MM-dd', 
+    this.timeLabelText, 
     this.onChanged,
     this.initialValue
   });
 
   @override
-  Widget build(BuildContext context) {
+  _AppDateTimePickerState createState() => _AppDateTimePickerState();
+}
 
-   
+class _AppDateTimePickerState extends State<AppDateTimePicker> {
+  TextEditingController _controller;
+
+  @override
+  void initState() {
+    // _node = FocusNode();
+    _controller = TextEditingController();
+    if (widget.initialValue != null) {
+      _controller.text = DateFormat("yyyy-MM-dd HH:mm").format(widget.initialValue);
+    }
+
+    // _node.addListener(_handleFocusChange);
+    super.initState();
+  }
+  @override
+  Widget build(BuildContext context) {
+    
     return Padding(
-      padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 12.0),
-      child: DateTimePicker(
-        type: DateTimePickerType.dateTimeSeparate,
-        dateMask: dateFormat,
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2100),
-        initialValue: initialValue,
-        // icon: Icon(Icons.event),
-        dateLabelText: dateLabelText,
-        timeLabelText: timeLabelText,
-        onChanged: onChanged,
-        
-        // validator: (val) {    
-        //   print(val);
-        //   return null;
-        // },
-          // onSaved: (val) => eventProvider.setDate(DateTime.parse(val)),
-       
+      padding: const EdgeInsets.only(top:12.0, left: 10.0, right: 10.0, bottom: 12.0),
+      child: DateTimeField(
+        style: TextFieldStyles.text,
+        controller: _controller,
+        decoration: TextFieldStyles.materialDecoration(widget.dateLabelText, null, null, null),
+        format: DateFormat("yyyy-MM-dd HH:mm"),
+        onShowPicker: (context, currentValue) async {
+
+          final date = await showDatePicker(
+            context: context,
+            firstDate: DateTime(1900),
+            initialDate: widget.initialValue ?? DateTime.now(),
+            lastDate: DateTime(2100)
+          );
+
+          if (date != null) {
+            
+            final time = await showTimePicker(
+              context: context,
+              initialTime: TimeOfDay.fromDateTime(widget.initialValue ?? DateTime.now()),
+            );
+            
+            return DateTimeField.combine(date, time);
+          } else {
+            return currentValue;
+          }
+        },
       ),
     );
   }
