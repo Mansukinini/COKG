@@ -1,8 +1,9 @@
 import 'package:cokg/src/areas/models/Event.dart';
 import 'package:cokg/src/areas/services/providers/event-provider.dart';
+import 'package:cokg/src/resources/widgets/button.dart';
 import 'package:cokg/src/resources/widgets/dateTimePicker.dart';
-import 'package:cokg/src/resources/widgets/file-upload.dart';
 import 'package:cokg/src/resources/widgets/textfield.dart';
+import 'package:cokg/src/styles/base.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,8 +17,6 @@ class EventDetail extends StatefulWidget {
 }
 
 class _EventDetailState extends State<EventDetail> {
-  // final nameController = TextEditingController();
-  // final descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context)  {
@@ -86,23 +85,25 @@ class _EventDetailState extends State<EventDetail> {
 
           StreamBuilder<String>(
             stream: eventProvider.getImageUrl,
-            builder: (context, event) {
+            builder: (context, snapshot) {
               
-              if (event.data != null){
-                if (!event.hasData)
-                  return Center(child: CircularProgressIndicator());
-                
-                return Container(
-                  height: MediaQuery.of(context).size.height * .25,
-                  child: CircleAvatar(
-                    radius: 150.0,
-                    backgroundImage: (event.data != null) ? NetworkImage(event.data) : AssetImage('assets/images/user.jpg'),
-                    child: FileUpload(icon: Icons.camera_alt, onPressed: eventProvider.pickImage),
-                  ),
+              if (!snapshot.hasData || snapshot.data == "") {
+                return AppButton(labelText: 'Add Image',
+                  onPressed: () => eventProvider.pickImage(),
                 );
-              } else {
-                return FileUpload(icon: Icons.camera_alt, onPressed: eventProvider.pickImage);
               }
+
+              return Column(
+                children: <Widget>[
+                  Padding(padding: BaseStyles.listPadding,
+                  child: Image.network(snapshot.data),
+                  ),
+
+                  AppButton(labelText: 'Change Image',
+                    onPressed: () => eventProvider.pickImage(),
+                  )
+                ],
+              );
             }
           ),
 
@@ -138,6 +139,7 @@ class _EventDetailState extends State<EventDetail> {
               return AppDateTimePicker(
                 dateLabelText: 'Date & Time', 
                 initialValue: (event != null) ? DateTime.parse(event.date) : null,
+                onChanged: eventProvider.setDateTime,
               );
             }
           ),
@@ -146,11 +148,11 @@ class _EventDetailState extends State<EventDetail> {
     );
   }
 
+  // Todo: Move to EventProvider file
   void _setEvent(EventProvider eventProvider, Event event, String eventId) {
     eventProvider.setId(widget.id);
     
     if (widget.id != null && event.toMap() != null) {
-      // eventProvider.setChanges(event);
       eventProvider.setImageUrl(event.imageUrl ?? '');
       eventProvider.setName(event.name);
       eventProvider.setDescription(event.description);
@@ -161,13 +163,5 @@ class _EventDetailState extends State<EventDetail> {
       eventProvider.setDescription(null);
       eventProvider.setDateTime(null);
     }
-  }
-  
-  @override 
-  void dispose() {
-    // eventProvider.dispose();
-    // nameController.dispose();
-    // descriptionController.dispose();
-    super.dispose();
   }
 }

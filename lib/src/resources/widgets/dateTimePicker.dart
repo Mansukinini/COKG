@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class AppDateTimePicker extends StatefulWidget {
-  final void Function(String) onChanged;
+  final void Function(DateTime) onChanged;
   final DateTime initialValue;
-  final String dateLabelText;
+  final String dateLabelText; 
   final String timeLabelText;
 
   AppDateTimePicker({
@@ -40,6 +40,7 @@ class _AppDateTimePickerState extends State<AppDateTimePicker> {
     return Padding(
       padding: const EdgeInsets.only(top:12.0, left: 10.0, right: 10.0, bottom: 12.0),
       child: DateTimeField(
+        onChanged: widget.onChanged,
         style: TextFieldStyles.text,
         controller: _controller,
         decoration: TextFieldStyles.materialDecoration(widget.dateLabelText, null, null, null),
@@ -54,12 +55,10 @@ class _AppDateTimePickerState extends State<AppDateTimePicker> {
           );
 
           if (date != null) {
-            
             final time = await showTimePicker(
               context: context,
               initialTime: TimeOfDay.fromDateTime(widget.initialValue ?? DateTime.now()),
             );
-            
             return DateTimeField.combine(date, time);
           } else {
             return currentValue;
@@ -68,4 +67,6 @@ class _AppDateTimePickerState extends State<AppDateTimePicker> {
       ),
     );
   }
+
+
 }

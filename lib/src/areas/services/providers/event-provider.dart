@@ -89,7 +89,6 @@ class EventProvider {
   }
 
   Future pickImage() async {
-
     //Get image from Device
     PickedFile image = await ImagePicker().getImage(source: ImageSource.gallery);
 
@@ -109,7 +108,6 @@ class EventProvider {
   // Todo: Add Validation
 
   Future<void> saveEvent() {
-
     if (_id.value != null) {
       // Edit new 
       var initialValues = Event(
@@ -122,9 +120,6 @@ class EventProvider {
         createdBy: _auth.currentUser.uid, 
         createdOn: DateTime.now().toIso8601String()
       );
-
-      print('Date Values');
-      print(initialValues.date);
 
       return DatabaseService.saveChanges(initialValues).then((value) => print('Save'))
         .catchError((error) => print(error));

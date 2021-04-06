@@ -35,7 +35,7 @@ class _LoginState extends State<Login> {
     
     return ListView(
       children: <Widget>[
-        SizedBox(height: MediaQuery.of(context).size.height * .1),
+        SizedBox(height: MediaQuery.of(context).size.height * .3),
           //Todo : Image container Don't delete
         // Container(
         //   decoration: BoxDecoration(
@@ -47,13 +47,6 @@ class _LoginState extends State<Login> {
         //   ),
         // ),
 
-        Container(
-          height: MediaQuery.of(context).size.height * .25,
-          child: CircleAvatar(
-            // radius: 20.0,
-            backgroundImage: AssetImage('assets/images/user.jpg',),
-          ),
-        ),
         
         StreamBuilder<String>(
           stream: authenticate.email,
