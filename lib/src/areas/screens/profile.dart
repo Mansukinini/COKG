@@ -79,6 +79,7 @@ class _ProfileState extends State<Profile> {
               labelText: 'Name',
               initialText: (users != null) ? users.firstName.toString() : null,
               onChanged: userProvider.setFirstName,
+              errorText: snapshot.error,
             );
           }
         ),
@@ -90,6 +91,7 @@ class _ProfileState extends State<Profile> {
             return AppTextField(labelText: 'Surname',
               initialText: (users != null) ? users.lastName.toString() : null,
               onChanged: userProvider.setLastName,
+              errorText: snapshot.error,
             );
           }
         ),

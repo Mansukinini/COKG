@@ -29,6 +29,7 @@ class EventList extends StatelessWidget {
             )
           ];
         },
+
         body: StreamBuilder<List<Event>>(
           stream: eventProvider.events,
           builder: (context, event) {
@@ -43,9 +44,9 @@ class EventList extends StatelessWidget {
                   title: event.data[index].name,
                   subtitle: event.data[index].description,
                   imageUrl: event.data[index].imageUrl,
-                  date: new DateFormat('MMM-dd').format(DateTime.parse(event.data[index].date)),
-                  time: new DateFormat('hh:mm').format(DateTime.parse(event.data[index].date)),
-                  onTap: () => Navigator.of(context).pushNamed("/eventDetail/${event.data[index].id}"),
+                  date: (event.data[index].date != null) ? new DateFormat('MMM-dd').format(DateTime.parse(event.data[index].date)) : null,
+                  time: (event.data[index].date != null) ? new DateFormat('hh:mm').format(DateTime.parse(event.data[index].date)) : null,
+                  onTap: () => Navigator.of(context).pushNamed("/eventDetail/${event.data[index].id}")
                 );
               }
             );

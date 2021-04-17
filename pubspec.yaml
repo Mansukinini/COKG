@@ -41,6 +41,7 @@ dependencies:
   provider: ^4.3.2+3
   intl: ^0.17.0
   permission_handler: ^6.1.1
+  fluttertoast: ^8.0.3
   # font_awesome: ^5.10.1
   audioplayers: ^0.18.3
   file_picker: ^1.2.0

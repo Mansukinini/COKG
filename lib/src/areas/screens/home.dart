@@ -121,6 +121,7 @@ class _HomeState extends State<Home> {
   }
     
   Widget bottomNavigationBar() {
+    
     return BottomNavigationBar(
       backgroundColor: AppColors.brown,
           type: BottomNavigationBarType.fixed,

@@ -12,6 +12,7 @@ class AppListTile extends StatelessWidget {
   final String time;
   final String id;
   final void Function() onTap;
+  final void Function() onLongPress;
   final Widget Function(BuildContext) builder;
 
   AppListTile({
@@ -22,6 +23,7 @@ class AppListTile extends StatelessWidget {
     this.time = '',
     this.id,
     this.onTap,
+    this.onLongPress,
     this.builder
   });
 
@@ -39,6 +41,7 @@ class AppListTile extends StatelessWidget {
             title: Text(title, style: TextStyles.subtitle),
             subtitle: Text(subtitle, style: TextStyle(fontSize: 12.0, color: Colors.black),),
             onTap: onTap,
+            onLongPress: onLongPress,
           ),
         ), 
          

@@ -10,9 +10,10 @@ import 'package:cokg/src/areas/screens/profile.dart';
 import 'package:flutter/material.dart';
 
 
-
 abstract class Routes {
+
   static MaterialPageRoute materialRoutes(RouteSettings route) {
+
     switch (route.name) {
       case "/home":
         return MaterialPageRoute(builder: (context) => Home());
@@ -30,25 +31,23 @@ abstract class Routes {
         return MaterialPageRoute(builder: (context) => DevotionDetail());
       // case "/devotionSubPage":
       //   return MaterialPageRoute(builder: (context) => DevotionSubPage());
-              default:
-                var routeArray = route.name.split("/");
-        
-                if (route.name.contains("/profile/")) {
-                  return MaterialPageRoute(
-                    builder: (context) => Profile(userId: routeArray[2]));
-                }
-        
-                if (route.name.contains("/eventDetail/")) {
-                  return MaterialPageRoute(builder: (context) => EventDetail(id: routeArray[2]));
-                }
+      default:
+        var routeArray = route.name.split("/");
 
-                if (route.name.contains("/devotionSubPage/")) {
-                  return MaterialPageRoute(builder: (context) =>  DevotionSubPage(id: routeArray[2]));
-                }
-            
-            
-            return MaterialPageRoute(builder: (context) => Login());
-          }
+        if (route.name.contains("/profile/")) {
+          return MaterialPageRoute(
+            builder: (context) => Profile(userId: routeArray[2]));
+        }
+
+        if (route.name.contains("/eventDetail/")) {
+          return MaterialPageRoute(builder: (context) => EventDetail(id: routeArray[2]));
+        }
+
+        if (route.name.contains("/devotionSubPage/")) {
+          return MaterialPageRoute(builder: (context) =>  DevotionSubPage(id: routeArray[2]));
         }
         
+      return MaterialPageRoute(builder: (context) => Login());
+    }
+  }
 }

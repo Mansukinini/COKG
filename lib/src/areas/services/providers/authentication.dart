@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:cokg/src/areas/models/user.dart';
 import 'package:cokg/src/areas/services/data/database.dart';
+import 'package:cokg/src/resources/utils/strings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -27,35 +30,26 @@ class Authentication {
 
 
   //getters
-  Stream<String> get firstName => _firstName.stream;
-  Stream<String> get lastName => _lastName.stream;
+  Stream<String> get firstName => _firstName.stream.transform(_validateName);
+  Stream<String> get lastName => _lastName.stream.transform(_validateName);
   Stream<String> get email => _email.stream;
-  Stream<String> get password => _password.stream;
+  Stream<String> get password => _password.stream.transform(_validatePassword);
   Stream<String> get confirmPassword => _confirmPassword.stream;
   Stream<Users> get user => _user.stream;
   Stream<bool> get isValid => CombineLatestStream.combine2(email, password, (email, password) => true);
 
-  dispose() {
-    _confirmPassword.close();
-    _password.close();
-    _email.close();
-    _lastName.close();
-    _firstName.close();
-    _user.close();
-  }
 
   Future<Users> signup() async {
+
     try {
-      // if (_password.value.trim() == _confirmPassword.value.trim()) {
-        UserCredential userAuth = await _auth.createUserWithEmailAndPassword(email: _email.value, password: _password.value);
-        if (_firstName.value != '' && _lastName.value != '') {
-          User user = userAuth.user;
-          user.updateProfile(displayName: _firstName.value + ' ' + _lastName.value);
-        }
-       
-        return await _databaseService.createUser(Users(id: userAuth.user.uid, firstName: _firstName.value, lastName: _lastName.value,
-        email: _email.value.trim(), createdOn: DateTime.now().toIso8601String()));
-      // } 
+      UserCredential userAuth = await _auth.createUserWithEmailAndPassword(email: _email.value, password: _password.value);
+      if (_firstName.value != '' && _lastName.value != '') {
+        User user = userAuth.user;
+        user.updateProfile(displayName: _firstName.value + ' ' + _lastName.value);
+      }
+      
+      return await _databaseService.createUser(Users(id: userAuth.user.uid, firstName: _firstName.value, lastName: _lastName.value,
+      email: _email.value.trim(), createdOn: DateTime.now().toIso8601String()));
     } on FirebaseAuthException catch (error) {
         print(error);
         return null;
@@ -99,5 +93,30 @@ class Authentication {
     }
 
     return true;
+  }
+
+  final _validateName = StreamTransformer<String, String>.fromHandlers(handleData: (name, sink) {
+    if (RegExp(r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]').hasMatch(name)) {
+      sink.addError(StringConstant.nameValidateMessage);
+    } else {
+      sink.add(name);
+    }
+  });
+
+  final _validatePassword = StreamTransformer<String, String>.fromHandlers(handleData: (password, sink) {
+    if (password.length >= 5) {
+      sink.add(password.trim());
+    } else {
+      sink.addError(StringConstant.passwordValidateMessage);
+    }
+  });
+
+  dispose() {
+    _confirmPassword.close();
+    _password.close();
+    _email.close();
+    _lastName.close();
+    _firstName.close();
+    _user.close();
   }
 }

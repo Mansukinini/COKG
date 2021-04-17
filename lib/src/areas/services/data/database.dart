@@ -9,6 +9,7 @@ class DatabaseService {
   FirebaseFirestore _db = FirebaseFirestore.instance;
   FirebaseAuth _auth = FirebaseAuth.instance;
    var uuid = Uuid();
+   
   //create user
   Future<Users> createUser(Users userApp) {
     return _db.collection('user').doc(userApp.id).set(userApp.toMap()).then((value) {
@@ -40,6 +41,7 @@ class DatabaseService {
   // Get Event
   static Stream<List<Event>> getEvents() {
     return FirebaseFirestore.instance.collection('event')
+    .orderBy('date', descending: true)
     .snapshots()
     .map((event) => event.docs
     .map((doc) => Event.fromFirestore(doc.data()))
@@ -71,7 +73,16 @@ class DatabaseService {
     }
 
     return FirebaseFirestore.instance.collection('event')
-    .doc(event.id)
-    .set(event.toMap(), option);
+      .doc(event.id)
+      .set(event.toMap(), option);
+  }
+
+  static Future<void> deleteEvent(String id) {
+
+    return FirebaseFirestore.instance.collection('event')
+      .doc(id)
+      .delete()
+      .then((value) => print("Event Deleted"))
+      .catchError((error) => print("Failed to delete user: $error"));
   }
 }

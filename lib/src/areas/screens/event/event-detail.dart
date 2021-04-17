@@ -1,5 +1,6 @@
 import 'package:cokg/src/areas/models/Event.dart';
 import 'package:cokg/src/areas/services/providers/event-provider.dart';
+import 'package:cokg/src/config.dart';
 import 'package:cokg/src/resources/widgets/button.dart';
 import 'package:cokg/src/resources/widgets/dateTimePicker.dart';
 import 'package:cokg/src/resources/widgets/textfield.dart';
@@ -18,6 +19,27 @@ class EventDetail extends StatefulWidget {
 
 class _EventDetailState extends State<EventDetail> {
 
+ /* @override
+  void initState() {
+    var eventProvider = Provider.of<EventProvider>(context, listen: false);
+    eventProvider.getIsEventSaved.listen((e) {
+      print('Saved');
+      if (context != null && e == true) {
+        Fluttertoast.showToast(
+          msg: "Event Saved",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 2,
+          backgroundColor: AppColors.brown,
+          textColor: Colors.white,
+          fontSize: 16.0);
+        
+        Navigator.of(context).pop();
+      }
+    });
+
+    super.initState();
+  }*/
   @override
   Widget build(BuildContext context)  {
     var eventProvider = Provider.of<EventProvider>(context);
@@ -63,15 +85,27 @@ class _EventDetailState extends State<EventDetail> {
 
         title: Center(child: Text(action)),
         actions: <Widget>[
-          // ignore: deprecated_member_use
-          RaisedButton(
-            child: Text('Save', style: TextStyle(fontSize: 18.0, color: Colors.white, fontWeight: FontWeight.bold)),
-            color: Theme.of(context).accentColor,
-            onPressed: () {eventProvider.saveEvent().then((value) => Navigator.of(context).pop());},
-          )
+          
+          // // ignore: deprecated_member_use
+          // RaisedButton(
+          //   child: Text('Save', style: TextStyle(fontSize: 18.0, color: Colors.white, fontWeight: FontWeight.bold)),
+          //   color: Theme.of(context).accentColor,
+          //   onPressed: () => eventProvider.saveEvent(),
+          // ),
+          
+          popupMenuButton(context),
         ]
       ),
       body: _pageBody(context, eventProvider, event.data),
+    );
+  }
+
+  PopupMenuButton popupMenuButton(BuildContext context) {
+    return PopupMenuButton<String>(
+      itemBuilder: (context) {
+        return Config.menuList.map((e) => PopupMenuItem<String>(value: e, child: Text(e),)).toList();
+      },
+      onSelected: _itemSelected,
     );
   }
 
@@ -115,6 +149,7 @@ class _EventDetailState extends State<EventDetail> {
                 labelText: 'Title',
                 initialText: (event != null) ? event.name : null,
                 onChanged: eventProvider.setName,
+                errorText: snapshot.error,
               );
             }
           ),
@@ -128,6 +163,7 @@ class _EventDetailState extends State<EventDetail> {
                 maxLines: 3,
                 initialText: (event != null) ? event.description : null,
                 onChanged: eventProvider.setDescription,
+                errorText: snapshot.error,
               );
             }
           ),
@@ -146,6 +182,16 @@ class _EventDetailState extends State<EventDetail> {
         ],
       ),
     );
+  }
+
+  void _itemSelected(String item) {
+    var eventProvider = Provider.of<EventProvider>(context, listen: false);
+    if (item == Config.edit) {
+      print('Edit');
+    } else
+    if(item == Config.delete) {
+      eventProvider.deleteEvent(widget.id).then((value) => Navigator.pop(context));
+    }
   }
 
   // Todo: Move to EventProvider file

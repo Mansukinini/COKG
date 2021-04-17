@@ -27,10 +27,11 @@ class EventProvider {
   final _lastUpdatedOn = BehaviorSubject<DateTime>();
 
   final _event = BehaviorSubject<Event>();
+  final _isEventSaved = BehaviorSubject<bool>();
 
   //Gettes
   Stream<String> get getId => _id.stream;
-  Stream<String> get getName => _name.stream;
+  Stream<String> get getName => _name.stream.transform(_validateTitle);
   Stream<String> get getDescription => _description.stream;
   Stream<DateTime> get getDateTime => _dateTime.stream;
   Stream<String> get getImageUrl => _imageUrl.stream;
@@ -40,6 +41,7 @@ class EventProvider {
   Stream<String> get getLastUpdatedBy => _lastUpdatedBy.stream;
   Stream<DateTime> get getLastUpdatedOn => _lastUpdatedOn.stream;
   Stream<Event> get getEvent => _event.stream;
+  Stream<bool> get getIsEventSaved => _isEventSaved.stream;
  
   //Settes
   Function(String) get setId => _id.sink.add;
@@ -54,6 +56,7 @@ class EventProvider {
   Function(DateTime) get setLastUpdatedOn =>_lastUpdatedOn.sink.add;
 
   Function(Event) get setEvent => _event.sink.add;
+  Function(bool) get setIsEventSaved => _isEventSaved.sink.add;
 
   Stream<List<Event>> get events => DatabaseService.getEvents();
 
@@ -108,39 +111,35 @@ class EventProvider {
   // Todo: Add Validation
 
   Future<void> saveEvent() {
-    if (_id.value != null) {
-      // Edit new 
-      var initialValues = Event(
-        id: _id.value, 
-        name: _name.value, 
-        description: _description.hasValue ? _description.value : null,
-        date: _dateTime.hasValue ? _dateTime.value.toIso8601String() : null,
-        imageUrl: _imageUrl.hasValue ? _imageUrl.value : null, 
-        isUploaded: _isUploaded.value, 
-        createdBy: _auth.currentUser.uid, 
-        createdOn: DateTime.now().toIso8601String()
-      );
+    var initialValues = Event(
+      id: _id.value ?? uuid.v4(), 
+      name: _name.value, 
+      description: _description.hasValue ? _description.value : null,
+      date: (_dateTime.hasValue && _dateTime.value != null) ? _dateTime.value.toIso8601String() : null,
+      imageUrl: _imageUrl.hasValue ? _imageUrl.value : null, 
+      isUploaded: _isUploaded.value, 
+      createdBy: _auth.currentUser.uid, 
+      createdOn: DateTime.now().toIso8601String()
+    );
 
-      return DatabaseService.saveChanges(initialValues).then((value) => print('Save'))
-        .catchError((error) => print(error));
-    } else {
-
-      var event = Event(id: _id.value, 
-        name: _name.value, 
-        description: _description.value, 
-        date: _dateTime.hasValue ? _dateTime.value.toString() : null,
-        imageUrl: _imageUrl.value, 
-        isUploaded: _isUploaded.value, 
-        createdBy: _createdBy.value, 
-        createdOn: _createdOn.value.toIso8601String(),
-        lastUploadBy: _lastUpdatedBy.value,
-        lastUploadOn: DateTime.now().toIso8601String());
-        print('Edit ' + event.toString());
-
-      return DatabaseService.saveChanges(event).then((value) => print(value))
-        .catchError((error) => print(error));
-    }
+    return DatabaseService.saveChanges(initialValues)
+      .then((value) => _isEventSaved.sink.add(true))
+      .catchError((error) => _isEventSaved.sink.add(false));
   }
+
+  Future<void> deleteEvent(String id) {
+    return DatabaseService.deleteEvent(id);
+  }
+
+  final _validateTitle = StreamTransformer<String, String>.fromHandlers(handleData: (data, sink) {
+    if (data != null) {
+      if (data.length >= 3 && data.length <= 30){
+        sink.add(data.trim());
+      } else {
+        sink.addError('Enter Title');
+      }
+    } 
+  });
 
   dispose() {
     _id.close();
@@ -155,5 +154,6 @@ class EventProvider {
     _lastUpdatedOn.close();
 
     _event.close();
+    _isEventSaved.close();
   }
 }
