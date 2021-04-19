@@ -18,7 +18,7 @@ class EventDetail extends StatefulWidget {
 }
 
 class _EventDetailState extends State<EventDetail> {
-
+  bool isEdit = false;
  /* @override
   void initState() {
     var eventProvider = Provider.of<EventProvider>(context, listen: false);
@@ -52,7 +52,7 @@ class _EventDetailState extends State<EventDetail> {
   }
 
   StreamBuilder _addEvent(BuildContext context, EventProvider eventProvider) {
-   
+     isEdit = true;
     return StreamBuilder<Event>(
       stream: eventProvider.getEvent,
       builder: (context, event) => _scafford(context, eventProvider, event),
@@ -73,27 +73,17 @@ class _EventDetailState extends State<EventDetail> {
   }
 
   Scaffold _scafford(BuildContext context, EventProvider eventProvider, AsyncSnapshot<Event> event) {
-    var action = event.data != null ? "Edit Event" : "Add Event";
+    var action = event.data != null ? (isEdit) ? "Edit Event" : "" : "Add Event";
 
     _setEvent(eventProvider, event.data, widget.id);
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(icon: Icon(Icons.arrow_back), iconSize: 30.0, color: Colors.white,
-          onPressed: () => Navigator.pop(context),
-        ),
-
+        leading: IconButton(icon: Icon(Icons.arrow_back), iconSize: 30.0, color: Colors.white, onPressed: () => Navigator.pop(context)),
         title: Center(child: Text(action)),
         actions: <Widget>[
-          
-          // // ignore: deprecated_member_use
-          // RaisedButton(
-          //   child: Text('Save', style: TextStyle(fontSize: 18.0, color: Colors.white, fontWeight: FontWeight.bold)),
-          //   color: Theme.of(context).accentColor,
-          //   onPressed: () => eventProvider.saveEvent(),
-          // ),
-          
-          popupMenuButton(context),
+          (isEdit) ? IconButton(icon: Icon(Icons.check), iconSize: 35.0, color: Colors.white, onPressed: () => eventProvider.saveEvent()) : Container(),
+          !(isEdit) ? popupMenuButton(context) : Container(),
         ]
       ),
       body: _pageBody(context, eventProvider, event.data),
@@ -113,9 +103,8 @@ class _EventDetailState extends State<EventDetail> {
       
     return Padding(
       padding: EdgeInsets.only(top: 10.0, bottom: 20.0),
-      child: ListView(
-          children: <Widget>[ 
-            SizedBox(height: 20.0,),
+      child: ListView(children: <Widget>[ 
+          SizedBox(height: 20.0,),
 
           StreamBuilder<String>(
             stream: eventProvider.getImageUrl,
@@ -133,9 +122,9 @@ class _EventDetailState extends State<EventDetail> {
                   child: Image.network(snapshot.data),
                   ),
 
-                  AppButton(labelText: 'Change Image',
+                  (isEdit) ? AppButton(labelText: 'Change Image',
                     onPressed: () => eventProvider.pickImage(),
-                  )
+                  ) : Container()
                 ],
               );
             }
@@ -150,6 +139,7 @@ class _EventDetailState extends State<EventDetail> {
                 initialText: (event != null) ? event.name : null,
                 onChanged: eventProvider.setName,
                 errorText: snapshot.error,
+                readOnly: !isEdit,
               );
             }
           ),
@@ -164,6 +154,7 @@ class _EventDetailState extends State<EventDetail> {
                 initialText: (event != null) ? event.description : null,
                 onChanged: eventProvider.setDescription,
                 errorText: snapshot.error,
+                readOnly: !isEdit,
               );
             }
           ),
@@ -176,6 +167,7 @@ class _EventDetailState extends State<EventDetail> {
                 dateLabelText: 'Date & Time', 
                 initialValue: (event != null) ? DateTime.parse(event.date) : null,
                 onChanged: eventProvider.setDateTime,
+                readyOnly: !isEdit,
               );
             }
           ),
@@ -187,7 +179,7 @@ class _EventDetailState extends State<EventDetail> {
   void _itemSelected(String item) {
     var eventProvider = Provider.of<EventProvider>(context, listen: false);
     if (item == Config.edit) {
-      print('Edit');
+      setState(() => isEdit = true);
     } else
     if(item == Config.delete) {
       eventProvider.deleteEvent(widget.id).then((value) => Navigator.pop(context));

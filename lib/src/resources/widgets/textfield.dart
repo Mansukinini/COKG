@@ -10,6 +10,7 @@ class AppTextField extends StatefulWidget {
   final String initialText;
   final bool obscureText;
   final int maxLines;
+  final bool readOnly;
   final void Function(String) onChanged;
 
   AppTextField({
@@ -21,7 +22,8 @@ class AppTextField extends StatefulWidget {
     this.obscureText = false,
     this.maxLines = 1,
     this.onChanged,
-    this.errorText
+    this.errorText,
+    this.readOnly = false
   });
 
   @override
@@ -63,6 +65,7 @@ class _AppTextFieldState extends State<AppTextField> {
         style: TextFieldStyles.text,
         obscureText: widget.obscureText,
         controller: _controller,
+        readOnly: widget.readOnly,
       ),
     );
   }

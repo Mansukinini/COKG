@@ -8,12 +8,14 @@ class AppDateTimePicker extends StatefulWidget {
   final DateTime initialValue;
   final String dateLabelText; 
   final String timeLabelText;
+  final bool readyOnly;
 
   AppDateTimePicker({
     @required this.dateLabelText,
     this.timeLabelText, 
     this.onChanged,
-    this.initialValue
+    this.initialValue,
+    this.readyOnly = false
   });
 
   @override
@@ -40,6 +42,7 @@ class _AppDateTimePickerState extends State<AppDateTimePicker> {
     return Padding(
       padding: const EdgeInsets.only(top:12.0, left: 10.0, right: 10.0, bottom: 12.0),
       child: DateTimeField(
+        readOnly: widget.readyOnly,
         onChanged: widget.onChanged,
         style: TextFieldStyles.text,
         controller: _controller,
@@ -51,7 +54,7 @@ class _AppDateTimePickerState extends State<AppDateTimePicker> {
             context: context,
             firstDate: DateTime(1900),
             initialDate: widget.initialValue ?? DateTime.now(),
-            lastDate: DateTime(2100)
+            lastDate: DateTime(2100),
           );
 
           if (date != null) {

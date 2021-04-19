@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cokg/src/areas/models/Event.dart';
 import 'package:cokg/src/areas/models/devotion.dart';
+import 'package:cokg/src/areas/models/group.dart';
 import 'package:cokg/src/areas/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uuid/uuid.dart';
@@ -63,6 +64,13 @@ class DatabaseService {
       .get().then((event) => Event.fromFirestore(event.data()));
   }
 
+  static Future<Group> getGroupById(String id) {
+   
+    return FirebaseFirestore.instance.collection('group')
+      .doc(id)
+      .get().then((group) => Group.fromFirestore(group.data()));
+  }
+
   // Create
   static Future saveChanges(Event event) {
     var option = SetOptions(merge: true);
@@ -83,6 +91,15 @@ class DatabaseService {
       .doc(id)
       .delete()
       .then((value) => print("Event Deleted"))
+      .catchError((error) => print("Failed to delete user: $error"));
+  }
+
+  static Future<void> deleteGroup(String id) {
+
+    return FirebaseFirestore.instance.collection('group')
+      .doc(id)
+      .delete()
+      .then((value) => print("group Deleted"))
       .catchError((error) => print("Failed to delete user: $error"));
   }
 }
