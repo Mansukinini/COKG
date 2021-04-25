@@ -9,7 +9,7 @@ import 'package:rxdart/subjects.dart';
 import 'package:uuid/uuid.dart';
 
 class GroupProvider {
-  final storageService = FirebaseStorageService();
+  // final storageService = FirebaseStorageService();
   var uuid = Uuid();
   
   final _id = BehaviorSubject<String>();
@@ -38,8 +38,29 @@ class GroupProvider {
   Function(DateTime) get setStartDateTime => _startDateTime.sink.add;
   Function(DateTime) get setEndDateTime => _endDateTime.sink.add;
 
+  Stream<List<Group>> groups() {
+    return DatabaseService.getGroups();
+  }
+
   Future<Group> getGroupById(String id) {
     return DatabaseService.getGroupById(id);
+  }
+
+  void setGroup(Group group, String id) {
+    setId(id);
+    
+    if (id != null && group.toMap() != null) {
+      setImageUrl(group.imageUrl ?? null);
+      setName(group.name);
+      setDescription(group.description);
+      if (group.startDateTime != null)
+        setStartDateTime(DateTime.parse(group.startDateTime));
+    } else {
+      setImageUrl(null);
+      setName(null);
+      setDescription(null);
+      setStartDateTime(null);
+    }
   }
 
   Future pickImage() async {
@@ -58,9 +79,17 @@ class GroupProvider {
     }
   }
 
-  Future saveGroup() async {
-    var group = Group(id: uuid.v4(), name: _name.value, description: _description.value);
-    print(group.toMap());
+  Future<void> saveGroup() {
+    var group = Group(
+      id: _id.hasValue ? _id.value : uuid.v4(), 
+      name: _name.hasValue ? _name.value : null, 
+      description: _description.hasValue ? _description.value : null,
+      imageUrl: _imageUrl.hasValue ? _imageUrl.value : null,
+      startDateTime: _startDateTime.hasValue ? _startDateTime.value.toIso8601String() : null,
+      endDateTime: _endDateTime.hasValue ? _endDateTime.value.toIso8601String() : null
+    );
+    
+    return DatabaseService.saveGroup(group).then((value) => print('Group Saved'));
   }
 
   Future<void> deleteGroup(String id) {

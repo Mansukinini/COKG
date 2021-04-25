@@ -8,11 +8,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:uuid/uuid.dart';
 
-var result;
+
 class UserProvider {
-  final DatabaseService dbService = DatabaseService();
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final storageService = FirebaseStorageService();
   var uuid = Uuid();
   
   //Declare variables
@@ -63,7 +61,7 @@ class UserProvider {
 
   Future<Users> getUserData(String id) async {
     var result;
-    await dbService.getUserById(id).then((value) {
+    await DatabaseService.getUserById(id).then((value) {
       result = value;
     });
     return result;
@@ -85,10 +83,10 @@ class UserProvider {
 
   Future<Users> save() async {
     try{
-    var user = Users(id: _auth.currentUser.uid, firstName: _firstName.value, lastName: _lastName.value, contactNo: _contactNo.value,
-      imageUrl: _imageUrl.value, isValid: true, email: _email.value);
+      var user = Users(id: _auth.currentUser.uid, firstName: _firstName.value, lastName: _lastName.value, contactNo: _contactNo.value,
+        imageUrl: _imageUrl.value, isValid: true, email: _email.value);
 
-    return await dbService.createUser(user);
+      return await DatabaseService.createUser(user);
     }on FirebaseException catch (e) {
       print(e);
       return null;

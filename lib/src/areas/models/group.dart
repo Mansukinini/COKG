@@ -19,11 +19,14 @@ class Group {
     };
   }
 
-  Group.fromFirestore(Map<String, dynamic> group)
-  : id = group['id'],
-  name = group['name'],
-  description = group['description'],
-  imageUrl = group['imageUrl'],
-  startDateTime = group['startDateTime'],
-  endDateTime = group['endDateTime'];
+  factory Group.fromFirestore(Map<String, dynamic> group) {
+    return Group(
+      id: group['id'],
+      name: group['name'],
+      description: group['description'],
+      imageUrl: group['imageUrl'],
+      startDateTime: group['startDateTime'],
+      endDateTime: group['endDateTime']
+    );
+  }
 }

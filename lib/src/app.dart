@@ -18,7 +18,7 @@ final eventProvider = EventProvider();
 final groupProvider = GroupProvider();
 final devotionProvider = DevotionRepositry();
 final _auth = FirebaseAuth.instance;
-final farebase = DatabaseService();
+// final farebase = DatabaseService();
 final authorizeStep = AuthorizeStep();
 
 class App extends StatefulWidget {
@@ -32,7 +32,7 @@ class _AppState extends State<App> {
     
     _auth.authStateChanges().listen((User user) { 
       if (user != null) {
-        farebase.getUserById(user.uid).then((userProfile) {
+        DatabaseService.getUserById(user.uid).then((userProfile) {
           authorizeStep.setUserProfileAuthorization(userProfile);
         });
       } 

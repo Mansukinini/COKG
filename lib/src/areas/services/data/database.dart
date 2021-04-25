@@ -7,40 +7,38 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uuid/uuid.dart';
 
 class DatabaseService {
-  FirebaseFirestore _db = FirebaseFirestore.instance;
-  FirebaseAuth _auth = FirebaseAuth.instance;
-   var uuid = Uuid();
+  var uuid = Uuid();
    
   //create user
-  Future<Users> createUser(Users userApp) {
-    return _db.collection('user').doc(userApp.id).set(userApp.toMap()).then((value) {
+  static Future<Users> createUser(Users userApp) {
+    
+    return FirebaseFirestore.instance.collection('user').doc(userApp.id).set(userApp.toMap()).then((value) {
       if (userApp.firstName != null) {
-        _auth.currentUser.updateProfile(displayName: userApp.firstName + ' '+ userApp.lastName, photoURL: userApp.imageUrl);
-        _auth.currentUser.reload();
+        FirebaseAuth.instance.currentUser.updateProfile(displayName: userApp.firstName + ' '+ userApp.lastName, photoURL: userApp.imageUrl);
+        FirebaseAuth.instance.currentUser.reload();
       }
       return null;
     });
   }
 
-  //create Devotion
-  static Future<void> createDevotion(Devotion devotion) {
-    return FirebaseFirestore.instance.collection('Devotion')
-      .doc(devotion.id)
-      .set(devotion.toMap()).then((value) => null);
-  }
+  static Future<Users> getUserById(String id) {
 
-  static Future<Devotion> getDevotionById(String id) {
-    return FirebaseFirestore.instance.collection('Devotion').doc(id).get()
-    .then((devotion) => Devotion.fromFirestore(devotion.data()));
-  }
-
-  Future<Users> getUserById(String id) {
-    return _db.collection('user').doc(id).get()
+    return FirebaseFirestore.instance.collection('user').doc(id).get()
     .then((user) => Users.fromFirestore(user.data()));
+  }
+
+  // Create
+  static Future saveEvent(Event event) {
+    var option = SetOptions(merge: true);
+    
+    return FirebaseFirestore.instance.collection('event')
+      .doc(event.id)
+      .set(event.toMap(), option);
   }
 
   // Get Event
   static Stream<List<Event>> getEvents() {
+
     return FirebaseFirestore.instance.collection('event')
     .orderBy('date', descending: true)
     .snapshots()
@@ -49,40 +47,11 @@ class DatabaseService {
     .toList());
   }
 
-  static Stream<List<Devotion>> getDevotions() {
-    return FirebaseFirestore.instance.collection('Devotion')
-    .snapshots()
-    .map((devotion) => devotion.docs
-    .map((doc) => Devotion.fromFirestore(doc.data()))
-    .toList());
-  }
-
   static Future<Event> getEventById(String id) {
    
     return FirebaseFirestore.instance.collection('event')
       .doc(id)
       .get().then((event) => Event.fromFirestore(event.data()));
-  }
-
-  static Future<Group> getGroupById(String id) {
-   
-    return FirebaseFirestore.instance.collection('group')
-      .doc(id)
-      .get().then((group) => Group.fromFirestore(group.data()));
-  }
-
-  // Create
-  static Future saveChanges(Event event) {
-    var option = SetOptions(merge: true);
-    
-    //Todo: Implemente the lastUpdateBy and LastUpdatedOn
-    if (event.id != null) {
-      // event. = uuid.v4();
-    }
-
-    return FirebaseFirestore.instance.collection('event')
-      .doc(event.id)
-      .set(event.toMap(), option);
   }
 
   static Future<void> deleteEvent(String id) {
@@ -94,6 +63,32 @@ class DatabaseService {
       .catchError((error) => print("Failed to delete user: $error"));
   }
 
+  // Get group
+  static Stream<List<Group>> getGroups() {
+
+    return FirebaseFirestore.instance.collection('group')
+    .orderBy('name', descending: true)
+    .snapshots()
+    .map((group) => group.docs
+    .map((doc) => Group.fromFirestore(doc.data()))
+    .toList());
+  }
+
+  static Future<Group> getGroupById(String id) {
+   
+    return FirebaseFirestore.instance.collection('group')
+      .doc(id)
+      .get().then((group) => Group.fromFirestore(group.data()));
+  }
+
+  static Future saveGroup(Group group) {
+    var option = SetOptions(merge: true);
+
+    return FirebaseFirestore.instance.collection('group')
+      .doc(group.id)
+      .set(group.toMap(), option);
+  }
+
   static Future<void> deleteGroup(String id) {
 
     return FirebaseFirestore.instance.collection('group')
@@ -101,5 +96,29 @@ class DatabaseService {
       .delete()
       .then((value) => print("group Deleted"))
       .catchError((error) => print("Failed to delete user: $error"));
+  }
+
+  //create Devotion
+  static Future<void> createDevotion(Devotion devotion) {
+
+    return FirebaseFirestore.instance.collection('Devotion')
+      .doc(devotion.id)
+      .set(devotion.toMap()).then((value) => null);
+  }
+
+  static Stream<List<Devotion>> getDevotions() {
+
+    return FirebaseFirestore.instance.collection('Devotion')
+    .snapshots()
+    .map((devotion) => devotion.docs
+    .map((doc) => Devotion.fromFirestore(doc.data()))
+    .toList());
+  }
+  
+  static Future<Devotion> getDevotionById(String id) {
+
+    return FirebaseFirestore.instance.collection('Devotion')
+      .doc(id).get()
+      .then((devotion) => Devotion.fromFirestore(devotion.data()));
   }
 }

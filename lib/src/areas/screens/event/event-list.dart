@@ -29,30 +29,33 @@ class EventList extends StatelessWidget {
             )
           ];
         },
-
-        body: StreamBuilder<List<Event>>(
-          stream: eventProvider.events,
-          builder: (context, event) {
-            if (!event.hasData) return Center(child: CircularProgressIndicator());
-            
-            return ListView.builder(
-              itemCount: event.data.length,
-              itemBuilder: (context, index) {
-
-                return AppListTile(
-                  id: event.data[index].id,
-                  title: event.data[index].name,
-                  subtitle: event.data[index].description,
-                  imageUrl: event.data[index].imageUrl,
-                  date: (event.data[index].date != null) ? new DateFormat('MMM-dd').format(DateTime.parse(event.data[index].date)) : null,
-                  time: (event.data[index].date != null) ? new DateFormat('hh:mm').format(DateTime.parse(event.data[index].date)) : null,
-                  onTap: () => Navigator.of(context).pushNamed("/eventDetail/${event.data[index].id}")
-                );
-              }
-            );
-          },
-        ),
+        body: _pageBody(context, eventProvider)
       ),
+    );
+  }
+
+  StreamBuilder<List<Event>> _pageBody(BuildContext context, EventProvider eventProvider) {
+    return StreamBuilder<List<Event>>(
+      stream: eventProvider.events,
+      builder: (context, event) {
+        if (!event.hasData) return Center(child: CircularProgressIndicator());
+        
+        return ListView.builder(
+          itemCount: event.data.length,
+          itemBuilder: (context, index) {
+
+            return AppListTile(
+              id: event.data[index].id,
+              title: event.data[index].name,
+              subtitle: event.data[index].description,
+              imageUrl: event.data[index].imageUrl,
+              date: (event.data[index].date != null) ? new DateFormat('MMM-dd').format(DateTime.parse(event.data[index].date)) : null,
+              time: (event.data[index].date != null) ? new DateFormat('hh:mm').format(DateTime.parse(event.data[index].date)) : null,
+              onTap: () => Navigator.of(context).pushNamed("/eventDetail/${event.data[index].id}")
+            );
+          }
+        );
+      },
     );
   }
 }

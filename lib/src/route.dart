@@ -46,6 +46,10 @@ abstract class Routes {
         if (route.name.contains("/devotionSubPage/")) {
           return MaterialPageRoute(builder: (context) =>  DevotionSubPage(id: routeArray[2]));
         }
+
+        if (route.name.contains("/groupDetail/")) {
+          return MaterialPageRoute(builder: (context) => GroupDetail(id: routeArray[2]));
+        }
         
       return MaterialPageRoute(builder: (context) => Login());
     }

@@ -11,7 +11,6 @@ final RegExp regExpEmail = RegExp(
     
 class Authentication {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final DatabaseService _databaseService = DatabaseService();
 
   // Declare variable
   final _firstName = BehaviorSubject<String>();
@@ -48,7 +47,7 @@ class Authentication {
         user.updateProfile(displayName: _firstName.value + ' ' + _lastName.value);
       }
       
-      return await _databaseService.createUser(Users(id: userAuth.user.uid, firstName: _firstName.value, lastName: _lastName.value,
+      return await DatabaseService.createUser(Users(id: userAuth.user.uid, firstName: _firstName.value, lastName: _lastName.value,
       email: _email.value.trim(), createdOn: DateTime.now().toIso8601String()));
     } on FirebaseAuthException catch (error) {
         print(error);
@@ -60,7 +59,7 @@ class Authentication {
     try{
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(email: _email.value, password: _password.value);
      
-      var user = await _databaseService.getUserById(userCredential.user.uid);
+      var user = await DatabaseService.getUserById(userCredential.user.uid);
       _user.sink.add(user);
       return user;
  
@@ -86,7 +85,7 @@ class Authentication {
     var currentUser = _auth.currentUser;
 
     if (currentUser != null) {
-      var userData = await _databaseService.getUserById(currentUser.uid);
+      var userData = await DatabaseService.getUserById(currentUser.uid);
       _user.add(userData);
     } else {
       return false;

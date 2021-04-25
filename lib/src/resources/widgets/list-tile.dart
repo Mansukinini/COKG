@@ -38,8 +38,8 @@ class AppListTile extends StatelessWidget {
               radius: 30.0,
               backgroundImage: (imageUrl != null) ? NetworkImage(imageUrl) : AssetImage('assets/images/user.jpg'),
             ),
-            title: Text(title, style: TextStyles.subtitle),
-            subtitle: Text(subtitle, style: TextStyle(fontSize: 12.0, color: Colors.black),),
+            title: Text(title ?? '', style: TextStyles.subtitle),
+            subtitle: Text(subtitle ?? '', style: TextStyle(fontSize: 12.0, color: Colors.black),),
             onTap: onTap,
             onLongPress: onLongPress,
           ),
@@ -48,8 +48,8 @@ class AppListTile extends StatelessWidget {
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(date, style: TextStyle(color: Colors.black, fontSize: 14.0),),
-            Text(time, style: TextStyle(color: Colors.black, fontSize: 14.0))
+            Text(date ?? '', style: TextStyle(color: Colors.black, fontSize: 14.0),),
+            Text(time ?? '', style: TextStyle(color: Colors.black, fontSize: 14.0))
           ],
         ),
         Padding(

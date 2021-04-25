@@ -58,6 +58,7 @@ class EventProvider {
   Function(Event) get setEvent => _event.sink.add;
   Function(bool) get setIsEventSaved => _isEventSaved.sink.add;
 
+  // Get all events
   Stream<List<Event>> get events => DatabaseService.getEvents();
 
   Future<Event> getEventById(String id) {
@@ -122,7 +123,7 @@ class EventProvider {
       createdOn: DateTime.now().toIso8601String()
     );
 
-    return DatabaseService.saveChanges(initialValues)
+    return DatabaseService.saveEvent(initialValues)
       .then((value) => _isEventSaved.sink.add(true))
       .catchError((error) => _isEventSaved.sink.add(false));
   }

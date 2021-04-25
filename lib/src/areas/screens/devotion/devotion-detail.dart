@@ -10,11 +10,6 @@ class DevotionDetail extends StatefulWidget {
 }
 
 class _DevotionDetailState extends State<DevotionDetail> {
-
-  @override
-  void initState() {
-    super.initState();
-  }
   
   @override
   Widget build(BuildContext context) {
@@ -74,81 +69,12 @@ class _DevotionDetailState extends State<DevotionDetail> {
               }
             ),
 
-            // Stack(
-            //   children: <Widget>[
-            //     ClipPath(
-            //       clipper: CustomShapeClipper(),
-            //       child: Container(
-            //         height: 150.0,
-            //         decoration: BoxDecoration(color: primaryColor),
-            //       ),
-            //     ),
-                
-            //     Padding(
-            //       padding: EdgeInsets.only(top: 20.0, right: 25.0, left: 25.0),
-            //       child: Container(
-            //         width: double.infinity,
-            //         height: 250.0,
-            //         decoration: BoxDecoration(
-            //             color: Colors.white,
-            //             borderRadius: BorderRadius.all(Radius.circular(20.0)),
-            //             boxShadow: [
-            //               BoxShadow(
-            //                   color: Colors.black.withOpacity(0.1),
-            //                   offset: Offset(0.0, 3.0),
-            //                   blurRadius: 15.0)
-            //             ]),
-            //         child: Column(
-            //           children: <Widget>[
-            //             // Padding(
-            //             //   padding: EdgeInsets.symmetric(
-            //             //       horizontal: 40.0, vertical: 40.0),
-            //             //   child: Row(
-            //             //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //             //     children: <Widget>[
-                              
-            //             //     ],
-            //             //   ),
-            //             // ),
-            //             // Padding(
-            //             //   padding: EdgeInsets.symmetric(horizontal: 40.0),
-            //             //   child: Row(
-            //             //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //             //     children: <Widget>[
-                              
-                             
-            //             //     ],
-            //             //   ),
-            //             // ),
-
-            //             SizedBox(height: 15.0),
-                        
-            //             Divider(),
-            //             SizedBox(height: 15.0),
-            //             // Padding(
-            //             //   padding: EdgeInsets.symmetric(horizontal: 25.0),
-            //             //   child: Row(
-            //             //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //             //     children: <Widget>[
-                             
-                             
-            //             //     ],
-            //             //   ),
-            //             // )
-            //           ],
-            //         ),
-            //       ),
-            //     ),
-
-                AppButton(
-                  labelText: "Upload Audio file", 
-                  onPressed: () {
-                    devotionRepositry.uploadFile();
-                  }
-                ),
-
-            //   ],
-            // ),
+            AppButton(
+              labelText: "Upload Audio file", 
+              onPressed: () {
+                devotionRepositry.uploadFile();
+              }
+            ),
           ],
         ),
       );

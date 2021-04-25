@@ -1,6 +1,6 @@
 import 'package:cokg/src/areas/models/devotion.dart';
 import 'package:cokg/src/areas/services/providers/devotionRepositry.dart';
-import 'package:cokg/src/resources/widgets/list-tile.dart';
+import 'package:cokg/src/styles/text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,15 +16,15 @@ class _DevotionListState extends State<DevotionList> {
 
     return Scaffold(
       body: NestedScrollView(
-         headerSliverBuilder: (context, _){
+         headerSliverBuilder: (context, _) {
           return [
             SliverAppBar(
-              expandedHeight: 100,
+              expandedHeight: 200,
               collapsedHeight: kToolbarHeight+1,
               flexibleSpace: Stack(
                 children: <Widget>[
                   Positioned.fill(
-                    child: Image.asset('assets/images/logo.jpeg', fit: BoxFit.cover)
+                      child: Image.asset('assets/images/logo0.jpg', fit: BoxFit.cover)
                   )
                 ]
               ),
@@ -40,13 +40,22 @@ class _DevotionListState extends State<DevotionList> {
             return ListView.builder(
               itemCount: devotion.data.length,
               itemBuilder: (context, index) {
-                
-                return AppListTile(
-                  title: devotion.data[index].title,
-                  subtitle: devotion.data[index].description,
-                  onTap: () {
-                    Navigator.of(context).pushNamed("/devotionSubPage/${devotion.data[index].id}");
-                  }
+
+                return Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          radius: 35.0,
+                          child: Image.asset('assets/images/audiologo.png', fit: BoxFit.fill),
+                          // backgroundImage: Image.asset('assets/images/audiologo.png', fit: BoxFit.cover),
+                        ),
+                        title: Text(devotion.data[index].title ?? '', style: TextStyles.subtitle),
+                        subtitle: Text(devotion.data[index].description ?? '', style: TextStyle(fontSize: 12.0, color: Colors.black),),
+                        onTap: () => Navigator.of(context).pushNamed("/devotionSubPage/${devotion.data[index].id}"),
+                      ),
+                    )
+                 ]
                 ); 
               }
             );

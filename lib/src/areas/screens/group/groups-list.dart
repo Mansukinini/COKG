@@ -1,11 +1,14 @@
+import 'package:cokg/src/areas/models/group.dart';
+import 'package:cokg/src/areas/services/providers/groupProvider.dart';
 import 'package:cokg/src/resources/widgets/list-tile.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class GroupList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
+    var groupProvider =  Provider.of<GroupProvider>(context);
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (context, _){
@@ -23,72 +26,50 @@ class GroupList extends StatelessWidget {
             )
           ];
         },
-        body: ListView(
-          children: <Widget>[
-            AppListTile(
-              title: 'Cell Group',
-              subtitle: 'Prayer and Bible study',
-              date: new DateFormat('MMM-dd').format(DateTime.parse('2021-02-20T19:56:07.064407')),
-              time: new DateFormat('hh:mm').format(DateTime.parse('2021-02-20T19:56:07.064407')),
-            ),
-            AppListTile(
-              title: 'Cell Group',
-              subtitle: 'Prayer and Bible study',
-              date: new DateFormat('MMM-dd').format(DateTime.parse('2021-02-20T19:56:07.064407')),
-              time: new DateFormat('hh:mm').format(DateTime.parse('2021-02-20T19:56:07.064407')),
-            ),
-            AppListTile(
-              title: 'Cell Group',
-              subtitle: 'Prayer and Bible study',
-              date: new DateFormat('MMM-dd').format(DateTime.parse('2021-02-20T19:56:07.064407')),
-              time: new DateFormat('hh:mm').format(DateTime.parse('2021-02-20T19:56:07.064407')),
-            ),
-            AppListTile(
-              title: 'Cell Group',
-              subtitle: 'Prayer and Bible study',
-              date: new DateFormat('MMM-dd').format(DateTime.parse('2021-02-20T19:56:07.064407')),
-              time: new DateFormat('hh:mm').format(DateTime.parse('2021-02-20T19:56:07.064407')),
-            ),
-            AppListTile(
-              title: 'Cell Group',
-              subtitle: 'Prayer and Bible study',
-              date: new DateFormat('MMM-dd').format(DateTime.parse('2021-02-20T19:56:07.064407')),
-              time: new DateFormat('hh:mm').format(DateTime.parse('2021-02-20T19:56:07.064407')),
-            ),
-            AppListTile(
-              title: 'Cell Group',
-              subtitle: 'Prayer and Bible study',
-              date: new DateFormat('MMM-dd').format(DateTime.parse('2021-02-20T19:56:07.064407')),
-              time: new DateFormat('hh:mm').format(DateTime.parse('2021-02-20T19:56:07.064407')),
-            ),
-            AppListTile(
-              title: 'Cell Group',
-              subtitle: 'Prayer and Bible study',
-              date: new DateFormat('MMM-dd').format(DateTime.parse('2021-02-20T19:56:07.064407')),
-              time: new DateFormat('hh:mm').format(DateTime.parse('2021-02-20T19:56:07.064407')),
-            ),
-            AppListTile(
-              title: 'Cell Group',
-              subtitle: 'Prayer and Bible study',
-              date: new DateFormat('MMM-dd').format(DateTime.parse('2021-02-20T19:56:07.064407')),
-              time: new DateFormat('hh:mm').format(DateTime.parse('2021-02-20T19:56:07.064407')),
-            ),
-            AppListTile(
-              title: 'Cell Group',
-              subtitle: 'Prayer and Bible study',
-              date: new DateFormat('MMM-dd').format(DateTime.parse('2021-02-20T19:56:07.064407')),
-              time: new DateFormat('hh:mm').format(DateTime.parse('2021-02-20T19:56:07.064407')),
-            ),
-            AppListTile(
-              title: 'Cell Group',
-              subtitle: 'Prayer and Bible study',
-              date: new DateFormat('MMM-dd').format(DateTime.parse('2021-02-20T19:56:07.064407')),
-              time: new DateFormat('hh:mm').format(DateTime.parse('2021-02-20T19:56:07.064407')),
-            ),
-          ],
-        ),
+        body: _pageBody(context, groupProvider),
       ),
     );
     
+  }
+
+  StreamBuilder<List<Group>> _pageBody(BuildContext context, GroupProvider groupProvider) {
+    return StreamBuilder<List<Group>>(
+      stream: groupProvider.groups(),
+      builder: (context, group) {
+        if (!group.hasData) return Center(child: CircularProgressIndicator());
+        
+        return ListView.builder(
+          itemCount: group.data.length,
+          itemBuilder: (context, index) {
+
+            return AppListTile(
+              id: group.data[index].id,
+              title: group.data[index].name,
+              subtitle: group.data[index].description,
+              imageUrl: group.data[index].imageUrl,
+              date: (group.data[index].startDateTime != null) ? new DateFormat('MMM-dd').format(DateTime.parse(group.data[index].startDateTime)) : null,
+              time: (group.data[index].endDateTime != null) ? new DateFormat('hh:mm').format(DateTime.parse(group.data[index].endDateTime)) : null,
+              onTap: () => Navigator.of(context).pushNamed("/groupDetail/${group.data[index].id}")
+            );
+          }
+        );
+      },
+    );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   }
 }
