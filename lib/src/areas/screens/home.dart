@@ -57,7 +57,6 @@ class _HomeState extends State<Home> {
 
   Widget drawer(BuildContext context) { 
     final authenticate = Provider.of<Authentication>(context);
-    // appState.userFullName();
 
     return Drawer(
       child: ListView(

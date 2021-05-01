@@ -75,8 +75,7 @@ class _ProfileState extends State<Profile> {
           stream: userProvider.getFirstName,
           builder: (context, snapshot) {
               
-            return AppTextField(
-              labelText: 'Name',
+            return AppTextField(labelText: 'Name',
               initialText: (users != null) ? users.firstName.toString() : null,
               onChanged: userProvider.setFirstName,
               errorText: snapshot.error,
@@ -117,6 +116,7 @@ class _ProfileState extends State<Profile> {
             );
           }
         ),
+
         AppButton(labelText: 'Save', onPressed: () {
           userProvider.save().then((value) {
             if (value == null) {
@@ -128,7 +128,7 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  loadData(UserProvider userProvider, Users user) {
+  void loadData(UserProvider userProvider, Users user) {
     if (user != null) {
       userProvider.setFirstName(user.firstName);
       userProvider.setLastName(user.lastName);

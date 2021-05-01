@@ -91,6 +91,7 @@ class _EventDetailState extends State<EventDetail> {
   }
 
   PopupMenuButton popupMenuButton(BuildContext context) {
+
     return PopupMenuButton<String>(
       itemBuilder: (context) {
         return Config.menuList.map((e) => PopupMenuItem<String>(value: e, child: Text(e),)).toList();
@@ -111,9 +112,7 @@ class _EventDetailState extends State<EventDetail> {
             builder: (context, snapshot) {
               
               if (!snapshot.hasData || snapshot.data == "") {
-                return AppButton(labelText: 'Add Image',
-                  onPressed: () => eventProvider.pickImage(),
-                );
+                return AppButton(labelText: 'Add Image', onPressed: () => eventProvider.pickImage());
               }
 
               return Column(

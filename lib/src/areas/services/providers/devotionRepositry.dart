@@ -3,11 +3,12 @@ import 'package:cokg/src/areas/models/devotion.dart';
 import 'package:cokg/src/areas/services/data/database.dart';
 import 'package:cokg/src/areas/services/data/firebase-storage.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:path/path.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:uuid/uuid.dart';
 
 class DevotionRepositry {
-   var uuid = Uuid();
+  var uuid = Uuid();
 
   // declaretion
   final _id = BehaviorSubject<String>();
@@ -16,8 +17,6 @@ class DevotionRepositry {
   final _isUploaded = BehaviorSubject<bool>();
   final _url = BehaviorSubject<String>();
   final _fileName = BehaviorSubject<String>();
-  final _displayName = BehaviorSubject<String>();
-  final _miniType = BehaviorSubject<String>();
   final _createdBy = BehaviorSubject<String>();
   final _createdOn = BehaviorSubject<DateTime>();
 
@@ -28,8 +27,6 @@ class DevotionRepositry {
   Stream<bool> get getIsUploaded => _isUploaded.stream;
   Stream<String> get getUrl => _url.stream;
   Stream<String> get getFileName => _fileName.stream;
-  Stream<String> get getDisplayName => _displayName.stream;
-  Stream<String> get getMiniType => _miniType.stream;
   Stream<String> get getCreatedBy => _createdBy.stream;
   Stream<DateTime> get getCreatedOn => _createdOn.stream;
 
@@ -40,8 +37,6 @@ class DevotionRepositry {
   Function(bool) get setIsUploaded => _isUploaded.sink.add;
   Function(String) get setUrl => _url.sink.add;
   Function(String) get setFileName => _fileName.sink.add;
-  Function(String) get setDisplayName => _displayName.sink.add;
-  Function(String) get setMiniType => _miniType.sink.add;
   Function(String) get setCreatedBy => _createdBy.sink.add;
   Function(DateTime) get setCreatedOn => _createdOn.sink.add;
 
@@ -56,17 +51,21 @@ class DevotionRepositry {
       _isUploaded.sink.add(true);
       setCreatedOn(DateTime.now());
 
-      var audioUrl = await FirebaseStorageService.uploadAudio(File(path), _fileName.value);
+      var audioUrl = await FirebaseStorageService.uploadAudio(File(path), uuid.v4());
       
-      if (audioUrl != null)
+      if (audioUrl != null) {
         setUrl(audioUrl);
+        setFileName(basename(audioUrl));
+      }
     }
   }
 
   Future<void> saveDevotion() async {
+
     Devotion devotion = Devotion(
       id: _id.hasValue ? _id.value : Uuid().v4(), 
       title: _title.value,
+      fileName: _fileName.hasValue ? _fileName.value : null,
       description: _description.hasValue ? _description.value : null,
       url: _url.value,
       createdOn: _createdOn.value.toIso8601String()
@@ -82,8 +81,6 @@ class DevotionRepositry {
     _isUploaded.close();
     _url.close();
     _fileName.close();
-    _displayName.close();
-    _miniType.close();
     _createdBy.close(); 
     _createdOn.close();
   }

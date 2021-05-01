@@ -29,8 +29,6 @@ abstract class Routes {
         return MaterialPageRoute(builder: (context) => GroupDetail());
       case "/devotionDetail":
         return MaterialPageRoute(builder: (context) => DevotionDetail());
-      // case "/devotionSubPage":
-      //   return MaterialPageRoute(builder: (context) => DevotionSubPage());
       default:
         var routeArray = route.name.split("/");
 

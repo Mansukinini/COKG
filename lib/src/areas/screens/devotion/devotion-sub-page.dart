@@ -13,31 +13,190 @@ class DevotionSubPage extends StatefulWidget {
 }
 
 class _DevotionSubPageState extends State<DevotionSubPage> {
- //we will need some variables
-  bool playing = false; // at the begining we are not playing any song
-  IconData playBtn = Icons.play_arrow; // the main state of the play button icon
-
-  //Now let's start by creating our music player
-  //first let's declare some object
+  bool isPlaying = false; 
+  IconData payButton =  Icons.play_arrow;
   AudioPlayer _player;
   AudioCache cache;
 
   Duration position = new Duration();
   Duration musicLength = new Duration();
 
-  //we will create a custom slider
+  @override
+  Widget build(BuildContext context) {
+    var devotionProvider = Provider.of<DevotionRepositry>(context);
 
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(icon: Icon(Icons.keyboard_arrow_down),
+          iconSize: 30.0, color: Colors.white,
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
+
+      body: _pageBody(context, devotionProvider),
+    );
+  }
+
+  Widget _pageBody(BuildContext context, DevotionRepositry devotionProvider) {
+
+    return Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.brown[800],
+              Colors.brown[200],
+            ]),
+        ),
+        child: Padding(
+          padding: EdgeInsets.only(top: 48.0),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+
+                SizedBox(height: 20.0),
+                
+                _imageCenter(),
+                
+                SizedBox(height: 18.0),
+               
+                _displayTitle("Christ Our King Global"),
+
+                SizedBox(height: 30.0),
+                
+                _mediaPlayer(devotionProvider),
+              ],
+            ),
+          ),
+    );
+  }
+
+  Center _imageCenter() {
+
+    return Center(
+      child: Container(
+        width: 280.0,
+        height: 280.0,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(30.0),
+            image: DecorationImage(
+              image: AssetImage("assets/images/audio.jpg"),
+            )),
+      ),
+    );
+  }
+
+  Center _displayTitle(String title) {
+    return Center(
+      child: Text(title ?? '', style: TextStyle(color: Colors.white, fontSize: 32.0,fontWeight: FontWeight.w600,)),
+    );
+  }
+
+  Widget _mediaPlayer(DevotionRepositry devotionProvider) {
+
+    return Expanded(
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30.0),
+            topRight: Radius.circular(30.0),
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            _sliderContainer(),
+            
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                IconButton(iconSize: 45.0, color: Colors.blue,
+                  onPressed: () {},
+                  icon: Icon(Icons.skip_previous),
+                ),
+
+                _payAndPauseButton(devotionProvider),
+
+                IconButton(iconSize: 45.0,color: Colors.blue, onPressed: () {}, icon: Icon(Icons.skip_next)),
+              ]
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  FutureBuilder _payAndPauseButton(DevotionRepositry devotionProvider) {
+    
+
+    return FutureBuilder<Devotion>(
+      future: devotionProvider.getDevotionById(widget.id),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
+        
+        return IconButton(iconSize: 62.0, color: Colors.blue[800],
+          onPressed: () {
+            if (!isPlaying) {
+              _player.play(snapshot.data.url);
+              setState(() {
+                payButton = Icons.pause;
+                isPlaying = true;
+              });
+            } else {
+              _player.pause();
+              setState(() {
+                payButton = Icons.play_arrow;
+                isPlaying = false;
+              });
+            }
+          },
+          icon: Icon(payButton),
+        );
+      }
+    );
+  }
+
+  Container _sliderContainer() {
+
+    return Container(
+      width: 500.0,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text("${position.inMinutes}:${position.inSeconds.remainder(60)}",
+            style: TextStyle(fontSize: 18.0),
+          ),
+
+          slider(),
+
+          Text("${musicLength.inMinutes}:${musicLength.inSeconds.remainder(60)}",
+            style: TextStyle(fontSize: 18.0),
+          ),
+
+        ],
+      ),
+    );
+  }
+
+  //we will create a custom slider
   Widget slider() {
+    
     return Container(
       width: 300.0,
       child: Slider.adaptive(
-          activeColor: Colors.blue[800],
-          inactiveColor: Colors.grey[350],
-          value: position.inSeconds.toDouble(),
-          max: musicLength.inSeconds.toDouble(),
-          onChanged: (value) {
-            seekToSec(value.toInt());
-          }),
+        activeColor: Colors.blue[800],
+        inactiveColor: Colors.grey[350],
+        value: position.inSeconds.toDouble(),
+        max: musicLength.inSeconds.toDouble(),
+        onChanged: (value) => seekToSec(value.toInt())
+      ),
     );
   }
 
@@ -66,153 +225,6 @@ class _DevotionSubPageState extends State<DevotionSubPage> {
         position = p;
       });
     });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    print(widget.id);
-    var devotionProvider = Provider.of<DevotionRepositry>(context);
-    return Scaffold(
-      appBar: AppBar(
-            leading: IconButton(icon: Icon(Icons.keyboard_arrow_down),
-              iconSize: 30.0,
-              color: Colors.white,
-              onPressed: () => Navigator.pop(context),
-            ),
-      ),
-
-      body: _pageBody(context, devotionProvider),
-    );
-  }
-
-  Widget _pageBody(BuildContext context, DevotionRepositry devotionProvider) {
-
-    return Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.brown[800],
-                Colors.brown[200],
-              ]),
-        ),
-        child: Padding(
-          padding: EdgeInsets.only(top: 48.0),
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-
-                SizedBox(height: 20.0),
-                
-                _imageCenter(),
-                
-                SizedBox(height: 18.0),
-               
-                _displayName(),
-
-                SizedBox(height: 30.0),
-                
-                _mediaPlayer(devotionProvider),
-              ],
-            ),
-          ),
-    );
-  }
-
-  Center _imageCenter() {
-    return Center(
-      child: Container(
-        width: 280.0,
-        height: 280.0,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30.0),
-            image: DecorationImage(
-              image: AssetImage("assets/images/audio.jpg"),
-            )),
-      ),
-    );
-  }
-
-  Center _displayName() {
-    return Center(
-      child: Text("Christ Our King Global",
-        style: TextStyle(color: Colors.white,fontSize: 32.0,fontWeight: FontWeight.w600,),
-      ),
-    );
-  }
-
-  Widget _mediaPlayer(DevotionRepositry devotionProvider) {
-    return Expanded(
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30.0),
-            topRight: Radius.circular(30.0),
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            _sliderContainer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                IconButton(iconSize: 45.0, color: Colors.blue,
-                  onPressed: () {},
-                  icon: Icon(Icons.skip_previous),
-                ),
-
-                FutureBuilder<Devotion>(
-                  future: devotionProvider.getDevotionById(widget.id),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
-                   
-
-                    return IconButton(iconSize: 62.0, color: Colors.blue[800],
-                      onPressed: () async {
-                        await  _player.play(snapshot.data.url);
-                      },
-                      icon: Icon(playBtn,),
-                    );
-                  }
-                ),
-
-                IconButton(iconSize: 45.0,color: Colors.blue, onPressed: () {}, icon: Icon(Icons.skip_next),
-                ),
-              ],
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  Container _sliderContainer() {
-    return Container(
-      width: 500.0,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Text("${position.inMinutes}:${position.inSeconds.remainder(60)}",
-            style: TextStyle(fontSize: 18.0),
-          ),
-
-          slider(),
-
-          Text("${musicLength.inMinutes}:${musicLength.inSeconds.remainder(60)}",
-            style: TextStyle(fontSize: 18.0),
-          ),
-
-        ],
-      ),
-    );
   }
 }
 

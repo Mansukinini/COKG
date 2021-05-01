@@ -10,7 +10,6 @@ import 'package:uuid/uuid.dart';
 
 
 class UserProvider {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   var uuid = Uuid();
   
   //Declare variables
@@ -28,7 +27,6 @@ class UserProvider {
 
   final _users = BehaviorSubject<Users>();
 
- 
   //Get Data
   Stream<String> get getId => _id.stream;
   Stream<String> get getFirstName => _firstName.stream;
@@ -83,8 +81,8 @@ class UserProvider {
 
   Future<Users> save() async {
     try{
-      var user = Users(id: _auth.currentUser.uid, firstName: _firstName.value, lastName: _lastName.value, contactNo: _contactNo.value,
-        imageUrl: _imageUrl.value, isValid: true, email: _email.value);
+      var user = Users(id: FirebaseAuth.instance.currentUser.uid, firstName: _firstName.value, lastName: _lastName.value, 
+        contactNo: _contactNo.value, imageUrl: _imageUrl.value, isValid: true, email: _email.value);
 
       return await DatabaseService.createUser(user);
     }on FirebaseException catch (e) {
