@@ -3,54 +3,82 @@ import 'package:cokg/src/areas/services/providers/userProvider.dart';
 import 'package:cokg/src/resources/widgets/button.dart';
 import 'package:cokg/src/resources/widgets/file-upload.dart';
 import 'package:cokg/src/resources/widgets/textfield.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+final _auth = FirebaseAuth.instance;
+
 class Profile extends StatefulWidget {
-  final String userId;
-  Profile({@required this.userId});
+  final String id;
+  Profile({this.id});
   @override
   _ProfileState createState() => _ProfileState();
 }
-
 class _ProfileState extends State<Profile> {
+  User user;
+
   @override
+  void initState() {
+    user = _auth.currentUser;
+    super.initState();
+  }
+
   Widget build(BuildContext context) {
     var userProvider = Provider.of<UserProvider>(context);
 
-    return FutureBuilder<Users>(
-      future: userProvider.getUserData(widget.userId),
+    if (widget.id != null) {
+      return displayProfileById(userProvider, widget.id);
+    } else {
+      return displayProfile(userProvider);
+    }
+  }
+
+  FutureBuilder displayProfileById(UserProvider userProvider, String id) {
+    
+    return FutureBuilder<UserAuth>(
+      future: userProvider.getUserData(id),
       builder: (context, userData) {
 
-        if (!userData.hasData) {
-          return Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
-        }
+        if (!userData.hasData && widget.id != null) 
+          return Center(child: CircularProgressIndicator());
 
-        if (widget.userId != null){
-          loadData(userProvider, userData.data);
-        }
-
-        return Scaffold(
-          appBar: AppBar(
-              leading: IconButton(
-                icon: Icon(Icons.arrow_back),
-                iconSize: 30.0,
-                color: Colors.white,
-                onPressed: () => Navigator.pop(context),
-              ),
-
-            title: Text("Profile")
-          ),
-
-          body: _pageBody(context, userProvider, userData.data),
-        );
+        return scaffold(context, userProvider, userData);
       },
     );
   }
 
-  Widget _pageBody(BuildContext context, UserProvider userProvider, Users users) {
+  StreamBuilder displayProfile(UserProvider userProvider) {
+    
+    return StreamBuilder<UserAuth>(
+      stream: userProvider.getUserAuth,
+      builder: (context, userData) {
+        
+        return scaffold(context, userProvider, userData);
+      },
+    );
+  }
+
+  Scaffold scaffold(BuildContext context, UserProvider userProvider, AsyncSnapshot<UserAuth> userData) {
+
+    userProvider.setUser(userData.data, widget.id);
+
+    return Scaffold(
+      // appBar: AppBar(
+      //     leading: IconButton(
+      //       icon: Icon(Icons.arrow_back),
+      //       iconSize: 30.0,
+      //       color: Colors.white,
+      //       onPressed: () => Navigator.pop(context),
+      //     ),
+      //   title: Text("Profile", style: TextStyles.navTitle)
+      // ),
+
+      body: _pageBody(context, userProvider, userData.data),
+    );
+  }
+
+  Widget _pageBody(BuildContext context, UserProvider userProvider, UserAuth userAuth) {
 
     return ListView(
       children: <Widget>[
@@ -76,7 +104,7 @@ class _ProfileState extends State<Profile> {
           builder: (context, snapshot) {
               
             return AppTextField(labelText: 'Name',
-              initialText: (users != null) ? users.firstName.toString() : null,
+              initialText: (userAuth != null) ? userAuth.firstName : null,
               onChanged: userProvider.setFirstName,
               errorText: snapshot.error,
             );
@@ -88,7 +116,7 @@ class _ProfileState extends State<Profile> {
           builder: (context, snapshot) {
             
             return AppTextField(labelText: 'Surname',
-              initialText: (users != null) ? users.lastName.toString() : null,
+              initialText: (userAuth != null) ? userAuth.lastName.toString() : null,
               onChanged: userProvider.setLastName,
               errorText: snapshot.error,
             );
@@ -100,7 +128,7 @@ class _ProfileState extends State<Profile> {
           builder: (context, snapshot) {
 
             return AppTextField(labelText: 'Mobile',
-              initialText: users != null ? users.contactNo : null,
+              initialText: userAuth != null ? userAuth.contactNo : null,
               onChanged: userProvider.setContactNo,
             );
           }
@@ -111,28 +139,20 @@ class _ProfileState extends State<Profile> {
           builder: (context, snapshot) {
 
             return AppTextField(labelText: 'Email',
-              initialText: (users != null) ? users.email.toString() : null,
+              initialText: (userAuth != null) ? userAuth.email.toString() : null,
               onChanged: userProvider.setEmail,
             );
           }
         ),
 
-        AppButton(labelText: 'Save', onPressed: () {
+        (user.email != null) ? AppButton(labelText: 'Save', onPressed: () {
           userProvider.save().then((value) {
             if (value == null) {
-              Navigator.pushReplacementNamed(context, '/home');
+              Navigator.pushNamed(context, '/home');
             }
           });
-        })
+        }) : Container()
       ],
     );
-  }
-
-  void loadData(UserProvider userProvider, Users user) {
-    if (user != null) {
-      userProvider.setFirstName(user.firstName);
-      userProvider.setLastName(user.lastName);
-      userProvider.setEmail(user.email);
-    }
   }
 }

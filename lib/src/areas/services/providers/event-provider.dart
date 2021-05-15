@@ -55,7 +55,7 @@ class EventProvider {
   Function(String) get setLastUpdatedBy => _lastUpdatedBy.sink.add;
   Function(DateTime) get setLastUpdatedOn =>_lastUpdatedOn.sink.add;
 
-  Function(Event) get setEvent => _event.sink.add;
+  // Function(Event) get setEvent => _event.sink.add;
   Function(bool) get setIsEventSaved => _isEventSaved.sink.add;
 
   // Get all events
@@ -65,30 +65,19 @@ class EventProvider {
     return DatabaseService.getEventById(id);
   }
 
-  setChanges(Event event) {
-   
-    if (event.id != null) {
-      setId(event.id);
+  void setEvent(Event event, String id) {
+    setId(id);
+    
+    if (id != null && event.toMap() != null) {
+      setImageUrl(event.imageUrl ?? '');
       setName(event.name);
       setDescription(event.description);
       setDateTime(DateTime.parse(event.date));
-      setImageUrl(event.imageUrl);
-      setIsUploaded(event.isUploaded);
-      setCreatedBy(event.createdBy);
-      setCreatedOn(DateTime.parse(event.createdOn));
-      setLastUpdatedBy(event.lastUploadBy);
-      setLastUpdatedOn(DateTime.now());
     } else {
-      setId(null);
+      setImageUrl(null);
       setName(null);
       setDescription(null);
-      setDateTime(DateTime.parse(event.date));
-      setImageUrl(null);
-      setIsUploaded(event.isUploaded);
-      setCreatedBy(_auth.currentUser.uid);
-      setCreatedOn(DateTime.now());
-      setLastUpdatedBy(null);
-      setLastUpdatedOn(null);
+      setDateTime(null);
     }
   }
 

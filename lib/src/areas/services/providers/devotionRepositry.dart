@@ -20,6 +20,8 @@ class DevotionRepositry {
   final _createdBy = BehaviorSubject<String>();
   final _createdOn = BehaviorSubject<DateTime>();
 
+  final _devotion = BehaviorSubject<Devotion>();
+
   //Gettes
   Stream<String> get getId => _id.stream;
   Stream<String> get getTitle => _title.stream;
@@ -29,6 +31,7 @@ class DevotionRepositry {
   Stream<String> get getFileName => _fileName.stream;
   Stream<String> get getCreatedBy => _createdBy.stream;
   Stream<DateTime> get getCreatedOn => _createdOn.stream;
+  Stream<Devotion> get getDevotion => _devotion.stream;
 
   //Settes
   Function(String) get setId => _id.sink.add;
@@ -39,6 +42,18 @@ class DevotionRepositry {
   Function(String) get setFileName => _fileName.sink.add;
   Function(String) get setCreatedBy => _createdBy.sink.add;
   Function(DateTime) get setCreatedOn => _createdOn.sink.add;
+
+  void setDevotion(Devotion devotion, String id) {
+    setId(id);
+    
+    if (id != null && devotion.toMap() != null) {
+      setTitle(devotion.title);
+      setDescription(devotion.description);
+    } else {
+      setTitle(null);
+      setDescription(null);
+    }
+  }
 
   Stream<List<Devotion>> get devotion => DatabaseService.getDevotions();
   Future<Devotion> getDevotionById(String id) => DatabaseService.getDevotionById(id);
@@ -74,6 +89,10 @@ class DevotionRepositry {
     return await DatabaseService.createDevotion(devotion);
   }
 
+  Future<void> deleteDevotion(String id) {
+    return DatabaseService.deleteDevotion(id);
+  }
+
   dispose() {
     _id.close();
     _title.close();
@@ -83,5 +102,7 @@ class DevotionRepositry {
     _fileName.close();
     _createdBy.close(); 
     _createdOn.close();
+
+    _devotion.close();
   }
 }

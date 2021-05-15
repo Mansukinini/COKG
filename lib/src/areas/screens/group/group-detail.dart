@@ -4,9 +4,13 @@ import 'package:cokg/src/resources/widgets/button.dart';
 import 'package:cokg/src/resources/widgets/dateTimePicker.dart';
 import 'package:cokg/src/resources/widgets/textfield.dart';
 import 'package:cokg/src/styles/base.dart';
+import 'package:cokg/src/styles/text.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../config.dart';
+
+final _auth = FirebaseAuth.instance;
 
 class GroupDetail extends StatefulWidget {
     final String id;
@@ -17,6 +21,13 @@ class GroupDetail extends StatefulWidget {
 
 class _GroupDetailState extends State<GroupDetail> {
   bool isEdit = false;
+  User user;
+
+  @override
+  void initState() {
+    user = _auth.currentUser;
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     var groupProvider = Provider.of<GroupProvider>(context);
@@ -42,7 +53,8 @@ class _GroupDetailState extends State<GroupDetail> {
   }
 
   StreamBuilder _addEvent(BuildContext context, GroupProvider groupProvider) {
-     isEdit = true;
+    isEdit = true;
+    
     return StreamBuilder<Group>(
       stream: groupProvider.getGroup,
       builder: (context, group) => _scafford(context, groupProvider, group),
@@ -57,10 +69,10 @@ class _GroupDetailState extends State<GroupDetail> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(icon: Icon(Icons.arrow_back), iconSize: 30.0, color: Colors.white, onPressed: () => Navigator.pop(context)),
-        title: Center(child: Text(action)),
+        title: Center(child: Text(action, style: TextStyles.navTitle,)),
         actions: <Widget>[
           (isEdit) ? IconButton(icon: Icon(Icons.check), iconSize: 35.0, color: Colors.white, onPressed: () => groupProvider.saveGroup().then((value) => Navigator.pop(context))) : Container(),
-          !(isEdit) ? popupMenuButton(context) : Container(),
+          (user.email == Config.admin) ? !(isEdit) ? popupMenuButton(context) : Container() : Container(),
         ]
       ),
       body: _pageBody(context, groupProvider, group.data),
@@ -78,6 +90,7 @@ class _GroupDetailState extends State<GroupDetail> {
 
   void _itemSelected(String item) {
     var groupProvider = Provider.of<GroupProvider>(context, listen: false);
+    
     if (item == Config.edit) {
       setState(() => isEdit = true);
     } else

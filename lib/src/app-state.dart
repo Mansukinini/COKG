@@ -1,7 +1,7 @@
 import 'package:cokg/src/areas/models/user.dart';
 
 class AppState {
-  Users _userProfile;
+  UserAuth _userProfile;
 
   String userFullName() {
     String result;
@@ -10,7 +10,7 @@ class AppState {
     return result;
   }
 
-  setUserAuthorization(Users userProfile) {
+  setUserAuthorization(UserAuth userProfile) {
     _userProfile = userProfile;
   }
 }

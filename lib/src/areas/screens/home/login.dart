@@ -35,7 +35,7 @@ class _LoginState extends State<Login> {
     
     return ListView(
       children: <Widget>[
-        SizedBox(height: MediaQuery.of(context).size.height * .3),
+        SizedBox(height: MediaQuery.of(context).size.height * .27),
 
         StreamBuilder<String>(
           stream: authenticate.email,

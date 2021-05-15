@@ -17,6 +17,11 @@ class FirebaseStorageService {
     }
   }
 
+  static Future<String> downloadAudio(String url) async{
+    String result = await FirebaseStorage.instance.ref(url).getDownloadURL();
+    return result;
+  }
+
   static Future<String> uploadEventImage(File file, String filename) async {
     var storegeRef = await FirebaseStorage.instance.ref()
         .child('eventImages/$filename' + '.mp3')
@@ -32,32 +37,4 @@ class FirebaseStorageService {
 
     return await storegeRef.ref.getDownloadURL();
   }
-
-  // static Future<void> downloadURLAudioFile() async {
-  //   String downloadURL = await FirebaseStorage.instance
-  //     .ref('audio/2.mp3')
-  //     .getDownloadURL();
-    
-  //   // print('Download ' + downloadURL);
-  // }
-
-  // static Future<File> loadFirebase(String url) async {
-  //   try {
-  //     final audioFile = FirebaseStorage.instance.ref().child(url);
-  //     final bytes = await audioFile.getData();
-
-  //     return _storeFile(url, bytes);
-  //   } catch (e) {
-  //     return null;
-  //   }
-  // }
-
-  // static Future<File> _storeFile(String url, List<int> bytes) async {
-  //   final filename = basename(url);
-  //   final dir = await getApplicationDocumentsDirectory();
-
-  //   final file = File('${dir.path}/$filename');
-  //   await file.writeAsBytes(bytes, flush: true);
-  //   return file;
-  // }
 }

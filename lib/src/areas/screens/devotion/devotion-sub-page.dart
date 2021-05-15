@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 class DevotionSubPage extends StatefulWidget {
   final String id;
-  DevotionSubPage({@required this.id});
+  DevotionSubPage({this.id});
   @override
   _DevotionSubPageState createState() => _DevotionSubPageState();
 }
@@ -133,12 +133,11 @@ class _DevotionSubPageState extends State<DevotionSubPage> {
   }
 
   FutureBuilder _payAndPauseButton(DevotionRepositry devotionProvider) {
-    
 
     return FutureBuilder<Devotion>(
       future: devotionProvider.getDevotionById(widget.id),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
+        // if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
         
         return IconButton(iconSize: 62.0, color: Colors.blue[800],
           onPressed: () {
