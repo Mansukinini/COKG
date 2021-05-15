@@ -19,7 +19,7 @@ class GroupList extends StatelessWidget {
               flexibleSpace: Stack(
                 children: <Widget>[
                   Positioned.fill(
-                      child: Image.asset('assets/images/logo0.jpg', fit: BoxFit.cover)
+                    child: Image.asset('assets/images/logo0.jpg', fit: BoxFit.cover)
                   )
                 ]
               ),
@@ -29,10 +29,10 @@ class GroupList extends StatelessWidget {
         body: _pageBody(context, groupProvider),
       ),
     );
-    
   }
 
   StreamBuilder<List<Group>> _pageBody(BuildContext context, GroupProvider groupProvider) {
+    
     return StreamBuilder<List<Group>>(
       stream: groupProvider.groups(),
       builder: (context, group) {
@@ -43,7 +43,6 @@ class GroupList extends StatelessWidget {
           itemBuilder: (context, index) {
 
             return AppListTile(
-              id: group.data[index].id,
               title: group.data[index].name,
               subtitle: group.data[index].description,
               imageUrl: group.data[index].imageUrl,
@@ -55,21 +54,5 @@ class GroupList extends StatelessWidget {
         );
       },
     );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   }
 }

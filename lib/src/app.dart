@@ -7,7 +7,7 @@ import 'package:cokg/src/resources/authorization/authorize-step.dart';
 import 'package:cokg/src/route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cokg/src/areas/screens/home.dart';
+import 'package:cokg/src/areas/screens/home/home.dart';
 import 'package:provider/provider.dart';
 import 'areas/services/providers/devotionRepositry.dart';
 

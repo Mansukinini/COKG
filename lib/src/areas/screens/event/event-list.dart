@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:cokg/src/areas/services/providers/event-provider.dart';
 import 'package:cokg/src/areas/models/Event.dart';
 
-
 class EventList extends StatelessWidget {
 
   @override
@@ -45,7 +44,6 @@ class EventList extends StatelessWidget {
           itemBuilder: (context, index) {
 
             return AppListTile(
-              id: event.data[index].id,
               title: event.data[index].name,
               subtitle: event.data[index].description,
               imageUrl: event.data[index].imageUrl,

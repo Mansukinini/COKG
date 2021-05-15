@@ -25,7 +25,7 @@ class UserProvider {
   final _lastUpdatedBy = BehaviorSubject<String>();
   final _lastUpdatedOn = BehaviorSubject<DateTime>();
 
-  final _users = BehaviorSubject<Users>();
+  final _userAuth = BehaviorSubject<UserAuth>();
 
   //Get Data
   Stream<String> get getId => _id.stream;
@@ -40,7 +40,7 @@ class UserProvider {
   Stream<String> get getLastUpdatedBy => _lastUpdatedBy.stream;
   Stream<DateTime> get getLastUpdatedOn => _lastUpdatedOn.stream;
 
-  Stream<Users> get getUsers => _users.stream;
+  Stream<UserAuth> get getUserAuth => _userAuth.stream;
 
   //Set Data
   Function(String) get setId => _id.sink.add;
@@ -55,13 +55,15 @@ class UserProvider {
   Function(String) get setLastUpdatedBy => _lastUpdatedBy.sink.add;
   Function(DateTime) get setLastUpdatedOn => _lastUpdatedOn.sink.add;
 
-  Function(Users) get setUsers => _users.sink.add;
+  Function(UserAuth) get setUsers => _userAuth.sink.add;
 
-  Future<Users> getUserData(String id) async {
+  Future<UserAuth> getUserData(String id) async {
     var result;
+
     await DatabaseService.getUserById(id).then((value) {
       result = value;
     });
+
     return result;
   }
 
@@ -71,17 +73,18 @@ class UserProvider {
     //Upload to Firebase
     if (pickedFile != null) {
       var imageUrlDb = await FirebaseStorageService.uploadProfileImage(File(pickedFile.path), uuid.v4());
+      
       if (imageUrlDb != null) {
         setImageUrl(imageUrlDb);
       } 
-    }else {
+    } else {
       print('fail');
     }
   }
 
-  Future<Users> save() async {
+  Future<UserAuth> save() async {
     try{
-      var user = Users(id: FirebaseAuth.instance.currentUser.uid, firstName: _firstName.value, lastName: _lastName.value, 
+      var user = UserAuth(id: FirebaseAuth.instance.currentUser.uid, firstName: _firstName.value, lastName: _lastName.value, 
         contactNo: _contactNo.value, imageUrl: _imageUrl.value, isValid: true, email: _email.value);
 
       return await DatabaseService.createUser(user);
@@ -103,6 +106,6 @@ class UserProvider {
     _createdOn.close();
     _lastUpdatedBy.close();
     _lastUpdatedOn.close();
-    _users.close();
+    _userAuth.close();
   }
 }

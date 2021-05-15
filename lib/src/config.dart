@@ -5,4 +5,11 @@ class Config {
   static const List<String> menuList = <String>[
     edit, delete
   ];
+
+  static const String signOut = 'Sign Out';
+
+  static const List<String> homeBarList = <String>[
+    signOut
+  ];
+
 }

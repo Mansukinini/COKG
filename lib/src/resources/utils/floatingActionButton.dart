@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 class AppFloatingActionButton extends StatelessWidget {
   final int tapNo;
   
-  AppFloatingActionButton({
-    this.tapNo 
-  });
-
+  AppFloatingActionButton({this.tapNo});
   @override
   Widget build(BuildContext context) {
     switch(tapNo) {

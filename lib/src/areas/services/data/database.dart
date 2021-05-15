@@ -10,7 +10,7 @@ class DatabaseService {
   var uuid = Uuid();
    
   //create user
-  static Future<Users> createUser(Users userApp) {
+  static Future<UserAuth> createUser(UserAuth userApp) {
     
     return FirebaseFirestore.instance.collection('user').doc(userApp.id).set(userApp.toMap()).then((value) {
       if (userApp.firstName != null) {
@@ -21,10 +21,10 @@ class DatabaseService {
     });
   }
 
-  static Future<Users> getUserById(String id) {
+  static Future<UserAuth> getUserById(String id) {
 
     return FirebaseFirestore.instance.collection('user').doc(id).get()
-    .then((user) => Users.fromFirestore(user.data()));
+    .then((user) => UserAuth.fromFirestore(user.data()));
   }
 
   // Create
@@ -120,5 +120,14 @@ class DatabaseService {
     return FirebaseFirestore.instance.collection('Devotion')
       .doc(id).get()
       .then((devotion) => Devotion.fromFirestore(devotion.data()));
+  }
+
+  static Future<void> deleteDevotion(String id) {
+
+    return FirebaseFirestore.instance.collection('Devotion')
+      .doc(id)
+      .delete()
+      .then((value) => print("devotion Deleted"))
+      .catchError((error) => print("Failed to delete user: $error"));
   }
 }

@@ -1,17 +1,17 @@
 import 'package:cokg/src/areas/screens/devotion/devotion-list.dart';
 import 'package:cokg/src/areas/screens/event/event-list.dart';
 import 'package:cokg/src/areas/screens/group/groups-list.dart';
+import 'package:cokg/src/areas/screens/home/profile.dart';
 import 'package:cokg/src/areas/services/providers/authentication.dart';
 import 'package:cokg/src/resources/utils/floatingActionButton.dart';
-import 'package:cokg/src/resources/widgets/button.dart';
 import 'package:cokg/src/resources/widgets/navigatorBar.dart';
 import 'package:cokg/src/styles/color.dart';
 import 'package:cokg/src/styles/text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../../app-state.dart';
+import '../../../app-state.dart';
+import '../../../config.dart';
 
 final _auth = FirebaseAuth.instance; 
 final appState = AppState();
@@ -29,7 +29,8 @@ class _HomeState extends State<Home> {
     EventList(),
     GroupList(),
     DevotionList(),
-    Center(child: Text('Live'))
+    Profile()
+    // Center(child: Text('Live'))
   ];
 
   @override
@@ -37,16 +38,15 @@ class _HomeState extends State<Home> {
     user = _auth.currentUser;
     super.initState();
   }
-
+  
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
       drawer: drawer(context),
-      
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[AppNavbar.materialNavBar(title: '', pinned: false)];
+          return <Widget>[AppNavbar.materialNavBar(title: '', pinned: false, menuButton: popupMenuButton(context))];
         },
         body: _children[_selectedIndex]
       ),
@@ -56,7 +56,6 @@ class _HomeState extends State<Home> {
   }
 
   Widget drawer(BuildContext context) { 
-    final authenticate = Provider.of<Authentication>(context);
 
     return Drawer(
       child: ListView(
@@ -72,7 +71,7 @@ class _HomeState extends State<Home> {
           accountName: (user != null) ? Text(user.displayName) : null,
           accountEmail: (user != null) 
           ? Text(user.email) 
-          : Text('Log In or Sign Up', style: TextStyles.buttonTextLight),
+          : Text('Log In or Sign Up', style: TextStyles.body),
           
           onDetailsPressed: (user != null) 
           ? () => Navigator.of(context).pushNamed("/profile/" + user.uid) 
@@ -80,42 +79,51 @@ class _HomeState extends State<Home> {
         ),
         
         ListTile(
-          title: Text('Search', textAlign: TextAlign.center, style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),),
-          trailing: Icon(Icons.search, size: 35.0, color: Colors.black),
-          onTap: () {},
+          title: Text('ChristOurKing', textAlign: TextAlign.left, style: TextStyles.buttonTextBlack),
+          onTap: () => Navigator.pushNamed(context, '/home'),
         ),
 
         ListTile(
-          title: Text('Download', textAlign: TextAlign.center, style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold)),
-          trailing: Icon(Icons.arrow_circle_down, size: 35.0, color: Colors.black),
+          leading: Icon(Icons.arrow_circle_down, size: 35.0, color: Colors.black),
+          title: Text('Download', textAlign: TextAlign.left, style: TextStyles.buttonTextBlack),
           onTap: () { },
         ),
 
         ListTile(
-          title: Text('Inbox', textAlign: TextAlign.center, style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold)),
-          trailing: Icon(Icons.inbox_rounded, size: 35.0, color: Colors.black),
+          title: Text('Inbox', textAlign: TextAlign.left, style: TextStyles.buttonTextBlack),
+          leading: Icon(Icons.inbox_rounded, size: 35.0, color: Colors.black),
           onTap: () {},
         ),
 
         ListTile(
-          title: Text('Giving', textAlign: TextAlign.center, style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold)),
-          trailing: Icon(Icons.favorite_rounded, size: 35.0, color: Colors.brown),
+          title: Text('Giving', textAlign: TextAlign.left, style: TextStyles.buttonTextBlack),
+          leading: Icon(Icons.favorite_border, size: 35.0, color: Colors.black),
           onTap: () { },
         ),
 
-        SizedBox(height: MediaQuery.of(context).size.height * .25),
-
-        AppButton(
-          labelText: "Sign out", 
-          onPressed: () => authenticate.signOut().then((value){
-            if (value != null) {
-              Navigator.pushReplacementNamed(context, '/home');
-            }
-          }),
+        ListTile(
+          title: Text('About', textAlign: TextAlign.left, style: TextStyles.buttonTextBlack),
+          leading: Icon(Icons.info_outline, size: 35.0, color: Colors.black),
+          onTap: () => Navigator.pushNamed(context, '/about'),
         ),
-        
-      ],
-      ),
+
+        (user != null) ? ListTile(
+          title: Text('Sign Out', textAlign: TextAlign.left, style: TextStyles.buttonTextBlack),
+          leading: Icon(Icons.exit_to_app, size: 35.0, color: Colors.black),
+          onTap: () => Navigator.pushNamed(context, '/home'),
+        ) : ListTile(
+          title: Text('Sign In', textAlign: TextAlign.left, style: TextStyles.buttonTextBlack),
+          leading: Icon(Icons.exit_to_app, size: 35.0, color: Colors.black),
+          onTap: () => Navigator.pushNamed(context, '/login'),
+        ),
+
+        SizedBox(height: MediaQuery.of(context).size.height * .18),
+
+        Padding(
+          padding: const EdgeInsets.only(top:12.0, left: 10.0, right: 25.0, bottom: 15.0),
+          child: Text('Version 0.0.1', textAlign: TextAlign.right, style: TextStyle(fontSize: 13.0)),
+        )
+      ]),
     );
   }
     
@@ -125,8 +133,9 @@ class _HomeState extends State<Home> {
       backgroundColor: AppColors.brown,
           type: BottomNavigationBarType.fixed,
           items: const <BottomNavigationBarItem>[
+
             BottomNavigationBarItem(
-              icon: Icon(Icons.event),
+              icon: Icon(Icons.event_note_rounded),
               label: 'Events'
             ),
 
@@ -141,8 +150,8 @@ class _HomeState extends State<Home> {
             ),
 
             BottomNavigationBarItem(
-              icon: Icon(Icons.tv),
-              label: 'Live'
+              icon: Icon(Icons.account_circle_outlined),
+              label: 'Profile'
             ),
           ],
 
@@ -156,5 +165,23 @@ class _HomeState extends State<Home> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  PopupMenuButton popupMenuButton(BuildContext context) {
+    return PopupMenuButton<String>(
+      itemBuilder: (context) {
+        return Config.homeBarList.map((e) => PopupMenuItem<String>(value: e, child: Text(e),)).toList();
+      },
+      onSelected: _itemSelected,
+    );
+  }
+
+  void _itemSelected(String item) {
+    var auth = Provider.of<Authentication>(context, listen: false);
+
+    if (item == Config.signOut) {
+      auth.signOut().then((value) =>
+        Navigator.pushReplacementNamed(context, '/home'));
+    } 
   }
 }

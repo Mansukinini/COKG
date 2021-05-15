@@ -45,21 +45,26 @@ class _DevotionListState extends State<DevotionList> {
           itemCount: devotion.data.length,
           itemBuilder: (context, index) {
 
-            return Row(
-              children: <Widget>[
-                Expanded(
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      radius: 35.0,
-                      child: Image.asset('assets/images/audiologo.png', fit: BoxFit.fill),
-                      // backgroundImage: Image.asset('assets/images/audiologo.png', fit: BoxFit.cover),
+            return Container(
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        radius: 35.0,
+                        child: Image.asset('assets/images/audiologo.png', fit: BoxFit.fill),
+                      ),
+                      title: Text(devotion.data[index].title ?? '', style: TextStyles.title),
+                      subtitle: Text(devotion.data[index].description ?? '', style: TextStyles.subtitle),
+                      onTap: () => Navigator.of(context).pushNamed("/devotionSubPage/${devotion.data[index].id}"),
+                      onLongPress: () => Navigator.of(context).pushNamed("/devotionDetail/${devotion.data[index].id}"),
                     ),
-                    title: Text(devotion.data[index].title ?? '', style: TextStyles.subtitle),
-                    subtitle: Text(devotion.data[index].description ?? '', style: TextStyle(fontSize: 12.0, color: Colors.black),),
-                    onTap: () => Navigator.of(context).pushNamed("/devotionSubPage/${devotion.data[index].id}"),
-                  ),
-                )
-              ]
+                  )
+                ]
+              ),
+              decoration: BoxDecoration(
+                border: Border(bottom: BorderSide(color: Colors.black26)),
+              )
             ); 
           }
         );

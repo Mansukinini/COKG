@@ -1,4 +1,4 @@
-class Users {
+class UserAuth {
   final String id;
   final String firstName;
   final String lastName;
@@ -11,7 +11,7 @@ class Users {
   final String lastUploadBy;
   final String lastUploadOn;
 
-  Users({this.id, this.firstName, this.lastName, this.contactNo, this.email, this.imageUrl, this.isValid, this.createdBy, this.createdOn,
+  UserAuth({this.id, this.firstName, this.lastName, this.contactNo, this.email, this.imageUrl, this.isValid, this.createdBy, this.createdOn,
     this.lastUploadBy, this.lastUploadOn});
 
 
@@ -31,7 +31,7 @@ class Users {
     };
   }
 
-  Users.fromFirestore(Map<String, dynamic> user)
+  UserAuth.fromFirestore(Map<String, dynamic> user)
     : id = user['id'],
     firstName = user['firstName'],
     lastName = user['lastName'],

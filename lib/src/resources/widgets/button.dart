@@ -33,7 +33,7 @@ class _AppButtonState extends State<AppButton> {
       break;
       case ButtonType.Disabled:
         fontStyle = TextStyles.buttonTextLight;
-        buttonColor = AppColors.brown;
+        buttonColor = AppColors.lightgray;
       break;
       default:
         fontStyle = TextStyles.buttonTextLight;

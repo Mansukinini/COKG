@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cokg/src/areas/models/user.dart';
 import 'package:cokg/src/areas/services/data/database.dart';
 import 'package:cokg/src/resources/utils/strings.dart';
@@ -18,7 +17,7 @@ class Authentication {
   final _email = BehaviorSubject<String>();
   final _password = BehaviorSubject<String>();
   final _confirmPassword = BehaviorSubject<String>();
-  final _user = BehaviorSubject<Users>();
+  final _user = BehaviorSubject<UserAuth>();
 
   //setters
   Function(String) get setFirstName => _firstName.sink.add;
@@ -34,11 +33,11 @@ class Authentication {
   Stream<String> get email => _email.stream;
   Stream<String> get password => _password.stream.transform(_validatePassword);
   Stream<String> get confirmPassword => _confirmPassword.stream;
-  Stream<Users> get user => _user.stream;
+  Stream<UserAuth> get user => _user.stream;
   Stream<bool> get isValid => CombineLatestStream.combine2(email, password, (email, password) => true);
 
 
-  Future<Users> signup() async {
+  Future<UserAuth> signup() async {
 
     try {
       UserCredential userAuth = await _auth.createUserWithEmailAndPassword(email: _email.value, password: _password.value);
@@ -47,7 +46,7 @@ class Authentication {
         user.updateProfile(displayName: _firstName.value + ' ' + _lastName.value);
       }
       
-      return await DatabaseService.createUser(Users(id: userAuth.user.uid, firstName: _firstName.value, lastName: _lastName.value,
+      return await DatabaseService.createUser(UserAuth(id: userAuth.user.uid, firstName: _firstName.value, lastName: _lastName.value,
       email: _email.value.trim(), createdOn: DateTime.now().toIso8601String()));
     } on FirebaseAuthException catch (error) {
         print(error);
@@ -55,7 +54,7 @@ class Authentication {
     }
   }
 
-  Future<Users> login() async {
+  Future<UserAuth> login() async {
     try{
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(email: _email.value, password: _password.value);
      
