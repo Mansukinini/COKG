@@ -1,5 +1,4 @@
 class Config {
-
   static const String admin = 'christourkingglobal@gmail.com';
   static const String edit = 'Edit';
   static const String delete = 'Delete';
@@ -13,6 +12,5 @@ class Config {
   static const List<String> homeBarList = <String>[
     signOut
   ];
-
 
 }

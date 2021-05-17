@@ -1,7 +1,7 @@
 import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:cokg/src/areas/models/devotion.dart';
 import 'package:cokg/src/areas/services/providers/devotionRepositry.dart';
+import 'package:cokg/src/resources/widgets/media-player.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -67,7 +67,8 @@ class _DevotionSubPageState extends State<DevotionSubPage> {
 
                 SizedBox(height: 30.0),
                 
-                _mediaPlayer(devotionProvider),
+                MediaPlayer(id: widget.id),
+                // _mediaPlayer(devotionProvider),
               ],
             ),
           ),
@@ -95,135 +96,135 @@ class _DevotionSubPageState extends State<DevotionSubPage> {
     );
   }
 
-  Widget _mediaPlayer(DevotionRepositry devotionProvider) {
+  // Widget _mediaPlayer(DevotionRepositry devotionProvider) {
 
-    return Expanded(
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30.0),
-            topRight: Radius.circular(30.0),
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            _sliderContainer(),
+  //   return Expanded(
+  //     child: Container(
+  //       decoration: BoxDecoration(
+  //         color: Colors.white,
+  //         borderRadius: BorderRadius.only(
+  //           topLeft: Radius.circular(30.0),
+  //           topRight: Radius.circular(30.0),
+  //         ),
+  //       ),
+  //       child: Column(
+  //         mainAxisAlignment: MainAxisAlignment.center,
+  //         crossAxisAlignment: CrossAxisAlignment.center,
+  //         children: <Widget>[
+  //           _sliderContainer(),
             
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                IconButton(iconSize: 45.0, color: Colors.blue,
-                  onPressed: () {},
-                  icon: Icon(Icons.skip_previous),
-                ),
+  //           Row(
+  //             mainAxisAlignment: MainAxisAlignment.center,
+  //             crossAxisAlignment: CrossAxisAlignment.center,
+  //             children: <Widget>[
+  //               IconButton(iconSize: 45.0, color: Colors.blue,
+  //                 onPressed: () {},
+  //                 icon: Icon(Icons.skip_previous),
+  //               ),
 
-                _payAndPauseButton(devotionProvider),
+  //               _payAndPauseButton(devotionProvider),
 
-                IconButton(iconSize: 45.0,color: Colors.blue, onPressed: () {}, icon: Icon(Icons.skip_next)),
-              ]
-            )
-          ],
-        ),
-      ),
-    );
-  }
+  //               IconButton(iconSize: 45.0,color: Colors.blue, onPressed: () {}, icon: Icon(Icons.skip_next)),
+  //             ]
+  //           )
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
-  FutureBuilder _payAndPauseButton(DevotionRepositry devotionProvider) {
+  // FutureBuilder _payAndPauseButton(DevotionRepositry devotionProvider) {
 
-    return FutureBuilder<Devotion>(
-      future: devotionProvider.getDevotionById(widget.id),
-      builder: (context, snapshot) {
-        // if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
+  //   return FutureBuilder<Devotion>(
+  //     future: devotionProvider.getDevotionById(widget.id),
+  //     builder: (context, snapshot) {
+  //       // if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
         
-        return IconButton(iconSize: 62.0, color: Colors.blue[800],
-          onPressed: () {
-            if (!isPlaying) {
-              _player.play(snapshot.data.url);
-              setState(() {
-                payButton = Icons.pause;
-                isPlaying = true;
-              });
-            } else {
-              _player.pause();
-              setState(() {
-                payButton = Icons.play_arrow;
-                isPlaying = false;
-              });
-            }
-          },
-          icon: Icon(payButton),
-        );
-      }
-    );
-  }
+  //       return IconButton(iconSize: 62.0, color: Colors.blue[800],
+  //         onPressed: () {
+  //           if (!isPlaying) {
+  //             _player.play(snapshot.data.url);
+  //             setState(() {
+  //               payButton = Icons.pause;
+  //               isPlaying = true;
+  //             });
+  //           } else {
+  //             _player.pause();
+  //             setState(() {
+  //               payButton = Icons.play_arrow;
+  //               isPlaying = false;
+  //             });
+  //           }
+  //         },
+  //         icon: Icon(payButton),
+  //       );
+  //     }
+  //   );
+  // }
 
-  Container _sliderContainer() {
+  // Container _sliderContainer() {
 
-    return Container(
-      width: 500.0,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Text("${position.inMinutes}:${position.inSeconds.remainder(60)}",
-            style: TextStyle(fontSize: 18.0),
-          ),
+  //   return Container(
+  //     width: 500.0,
+  //     child: Row(
+  //       mainAxisAlignment: MainAxisAlignment.center,
+  //       crossAxisAlignment: CrossAxisAlignment.center,
+  //       children: <Widget>[
+  //         Text("${position.inMinutes}:${position.inSeconds.remainder(60)}",
+  //           style: TextStyle(fontSize: 18.0),
+  //         ),
 
-          slider(),
+  //         slider(),
 
-          Text("${musicLength.inMinutes}:${musicLength.inSeconds.remainder(60)}",
-            style: TextStyle(fontSize: 18.0),
-          ),
+  //         Text("${musicLength.inMinutes}:${musicLength.inSeconds.remainder(60)}",
+  //           style: TextStyle(fontSize: 18.0),
+  //         ),
 
-        ],
-      ),
-    );
-  }
+  //       ],
+  //     ),
+  //   );
+  // }
 
-  //we will create a custom slider
-  Widget slider() {
+  // //we will create a custom slider
+  // Widget slider() {
     
-    return Container(
-      width: 300.0,
-      child: Slider.adaptive(
-        activeColor: Colors.blue[800],
-        inactiveColor: Colors.grey[350],
-        value: position.inSeconds.toDouble(),
-        max: musicLength.inSeconds.toDouble(),
-        onChanged: (value) => seekToSec(value.toInt())
-      ),
-    );
-  }
+  //   return Container(
+  //     width: 300.0,
+  //     child: Slider.adaptive(
+  //       activeColor: Colors.blue[800],
+  //       inactiveColor: Colors.grey[350],
+  //       value: position.inSeconds.toDouble(),
+  //       max: musicLength.inSeconds.toDouble(),
+  //       onChanged: (value) => seekToSec(value.toInt())
+  //     ),
+  //   );
+  // }
 
-  //let's create the seek function that will allow us to go to a certain position of the music
-  void seekToSec(int sec) {
-    Duration newPos = Duration(seconds: sec);
-    _player.seek(newPos);
-  }
+  // //let's create the seek function that will allow us to go to a certain position of the music
+  // void seekToSec(int sec) {
+  //   Duration newPos = Duration(seconds: sec);
+  //   _player.seek(newPos);
+  // }
 
-  //Now let's initialize our player
-  @override
-  void initState() {
-    super.initState();
-    _player = AudioPlayer();
-    cache = AudioCache(fixedPlayer: _player);
+  // //Now let's initialize our player
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _player = AudioPlayer();
+  //   cache = AudioCache(fixedPlayer: _player);
 
-    _player.onDurationChanged.listen((d) {
-      setState(() {
-        musicLength = d;
-      });
-    });
+  //   _player.onDurationChanged.listen((d) {
+  //     setState(() {
+  //       musicLength = d;
+  //     });
+  //   });
 
-    //this function will allow us to move the cursor of the slider while we are playing the song
-    _player.onAudioPositionChanged.listen((p) {
-      setState(() {
-        position = p;
-      });
-    });
-  }
+  //   //this function will allow us to move the cursor of the slider while we are playing the song
+  //   _player.onAudioPositionChanged.listen((p) {
+  //     setState(() {
+  //       position = p;
+  //     });
+  //   });
+  // }
 }
 

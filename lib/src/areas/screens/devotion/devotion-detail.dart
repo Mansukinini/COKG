@@ -10,6 +10,7 @@ import '../../../config.dart';
 
 final _auth = FirebaseAuth.instance;
 
+
 class DevotionDetail extends StatefulWidget {
   final String id;
   DevotionDetail({this.id});
