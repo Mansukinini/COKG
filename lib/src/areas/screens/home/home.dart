@@ -80,6 +80,7 @@ class _HomeState extends State<Home> {
         
         ListTile(
           title: Text('ChristOurKing', textAlign: TextAlign.left, style: TextStyles.buttonTextBlack),
+          leading: Icon(Icons.home_max_outlined, size: 35.0, color: Colors.black),,
           onTap: () => Navigator.pushNamed(context, '/home'),
         ),
 
@@ -113,7 +114,7 @@ class _HomeState extends State<Home> {
           onTap: () => Navigator.pushNamed(context, '/home'),
         ) : ListTile(
           title: Text('Sign In', textAlign: TextAlign.left, style: TextStyles.buttonTextBlack),
-          leading: Icon(Icons.exit_to_app, size: 35.0, color: Colors.black),
+          leading: Icon(Icons.reset_tv_outlined, size: 35.0, color: Colors.black),
           onTap: () => Navigator.pushNamed(context, '/login'),
         ),
 

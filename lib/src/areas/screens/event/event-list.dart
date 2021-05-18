@@ -21,7 +21,7 @@ class EventList extends StatelessWidget {
               flexibleSpace: Stack(
                 children: <Widget>[
                   Positioned.fill(
-                    child: Image.asset('assets/images/logo0.jpg', fit: BoxFit.cover)
+                    child: Image.asset('assets/images/main.jpg', fit: BoxFit.cover)
                   )
                 ]
               ),
