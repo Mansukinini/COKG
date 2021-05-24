@@ -37,20 +37,26 @@ class Authentication {
   Stream<bool> get isValid => CombineLatestStream.combine2(email, password, (email, password) => true);
 
 
-  Future<UserAuth> signup() async {
-
+  Future<User> signup() async {
+    UserCredential userCredential;
     try {
-      UserCredential userAuth = await _auth.createUserWithEmailAndPassword(email: _email.value, password: _password.value);
-      if (_firstName.value != '' && _lastName.value != '') {
-        User user = userAuth.user;
-        user.updateProfile(displayName: _firstName.value + ' ' + _lastName.value);
+      if (_email.hasValue && _password.hasValue) {
+        userCredential = await _auth.createUserWithEmailAndPassword(email: _email.value, password: _password.value);
+        
+        if(_firstName.hasValue && _lastName.hasValue) {
+          userCredential.user.updateProfile(displayName: _firstName.value + ' ' + _lastName.value);
+        }
+          
+        if (userCredential.user.uid.isNotEmpty) {
+          return await DatabaseService.createUser(UserAuth(id: userCredential.user.uid, firstName: _firstName.value.trim(), lastName: _lastName.value.trim(),
+            email: _email.value.trim(), createdOn: DateTime.now().toIso8601String()));
+        }
       }
-      
-      return await DatabaseService.createUser(UserAuth(id: userAuth.user.uid, firstName: _firstName.value, lastName: _lastName.value,
-      email: _email.value.trim(), createdOn: DateTime.now().toIso8601String()));
+        
+      return (userCredential != null && userCredential.user != null) ? userCredential.user: null;
     } on FirebaseAuthException catch (error) {
-        print(error);
-        return null;
+      print(error.stackTrace);
+      return null;
     }
   }
 
@@ -61,7 +67,6 @@ class Authentication {
       var user = await DatabaseService.getUserById(userCredential.user.uid);
       _user.sink.add(user);
       return user;
- 
     }on FirebaseException catch (e) {
       print(e);
       return null;
@@ -69,8 +74,7 @@ class Authentication {
   }
 
   Future<User> signOut() async {
-    try
-    {
+    try {
       await _auth.signOut().then((value) => _user.sink.add(null));
      
       return _auth.currentUser;

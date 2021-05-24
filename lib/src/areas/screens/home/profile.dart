@@ -145,7 +145,7 @@ class _ProfileState extends State<Profile> {
           }
         ),
 
-        (user.email != null) ? AppButton(labelText: 'Save', onPressed: () {
+        (user != null && user.email != null) ? AppButton(labelText: 'Save', onPressed: () {
           userProvider.save().then((value) {
             if (value == null) {
               Navigator.pushNamed(context, '/home');

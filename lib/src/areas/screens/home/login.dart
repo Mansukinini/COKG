@@ -56,11 +56,11 @@ class _LoginState extends State<Login> {
         // Todo: Add forgot password functionality
         
         // ignore: deprecated_member_use
-        FlatButton(
-          onPressed: (){},
-          textColor: AppColors.black,
-          child: Text('Forgot Password'),
-        ),
+        // FlatButton(
+        //   onPressed: (){},
+        //   textColor: AppColors.black,
+        //   child: Text('Forgot Password'),
+        // ),
 
         StreamBuilder<bool>(
           stream: authenticate.isValid,

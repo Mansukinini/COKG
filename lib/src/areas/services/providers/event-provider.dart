@@ -72,7 +72,8 @@ class EventProvider {
       setImageUrl(event.imageUrl ?? '');
       setName(event.name);
       setDescription(event.description);
-      setDateTime(DateTime.parse(event.date));
+      if (event.date != null)
+        setDateTime(DateTime.parse(event.date));
     } else {
       setImageUrl(null);
       setName(null);

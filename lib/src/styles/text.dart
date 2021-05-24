@@ -39,6 +39,11 @@ abstract class TextStyles {
         textStyle: TextStyle(color: AppColors.black, fontSize: 14.0));
   }
 
+  static TextStyle get placeholder {
+    return GoogleFonts.roboto(
+        textStyle: TextStyle(color: AppColors.black, fontSize: 16.0));
+  }
+
   static TextStyle get actionText {
     return GoogleFonts.roboto(
         textStyle: TextStyle(fontSize: 18.0, color: Colors.white, fontWeight: FontWeight.w400));

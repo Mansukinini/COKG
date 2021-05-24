@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 abstract class TextFieldStyles {
   static Color get cursorColor => AppColors.darkblue;
 
-  static TextStyle get placeholder => TextStyles.suggestion;
+  static TextStyle get placeholder => TextStyles.placeholder;
 
   static TextStyle get text => TextStyles.body;
 

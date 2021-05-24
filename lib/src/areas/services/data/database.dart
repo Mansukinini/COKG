@@ -6,25 +6,31 @@ import 'package:cokg/src/areas/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../config.dart';
+
 class DatabaseService {
   var uuid = Uuid();
    
   //create user
-  static Future<UserAuth> createUser(UserAuth userApp) {
+  static Future createUser(UserAuth userApp) {
     
-    return FirebaseFirestore.instance.collection('user').doc(userApp.id).set(userApp.toMap()).then((value) {
-      if (userApp.firstName != null) {
-        FirebaseAuth.instance.currentUser.updateProfile(displayName: userApp.firstName + ' '+ userApp.lastName, photoURL: userApp.imageUrl);
-        FirebaseAuth.instance.currentUser.reload();
-      }
-      return null;
+    return FirebaseFirestore.instance.collection('user')
+      .doc(userApp.id).set(userApp.toMap())
+      .then((value) {
+        FirebaseAuth.instance.currentUser.updateProfile(displayName: userApp.firstName + ' ' + userApp.lastName, photoURL: userApp.imageUrl);
+        return FirebaseAuth.instance.currentUser;
     });
+  }
+
+  static Future createAdmin() {
+    return FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: Config.admin, password: Config.password);
   }
 
   static Future<UserAuth> getUserById(String id) {
 
     return FirebaseFirestore.instance.collection('user').doc(id).get()
-    .then((user) => UserAuth.fromFirestore(user.data()));
+          .then((user) => UserAuth.fromFirestore(user.data()));
   }
 
   // Create
@@ -101,14 +107,14 @@ class DatabaseService {
   //create Devotion
   static Future<void> createDevotion(Devotion devotion) {
 
-    return FirebaseFirestore.instance.collection('Devotion')
+    return FirebaseFirestore.instance.collection('devotion')
       .doc(devotion.id)
       .set(devotion.toMap()).then((value) => null);
   }
 
   static Stream<List<Devotion>> getDevotions() {
 
-    return FirebaseFirestore.instance.collection('Devotion')
+    return FirebaseFirestore.instance.collection('devotion')
     .snapshots()
     .map((devotion) => devotion.docs
     .map((doc) => Devotion.fromFirestore(doc.data()))
@@ -117,14 +123,14 @@ class DatabaseService {
   
   static Future<Devotion> getDevotionById(String id) {
 
-    return FirebaseFirestore.instance.collection('Devotion')
+    return FirebaseFirestore.instance.collection('devotion')
       .doc(id).get()
       .then((devotion) => Devotion.fromFirestore(devotion.data()));
   }
 
   static Future<void> deleteDevotion(String id) {
 
-    return FirebaseFirestore.instance.collection('Devotion')
+    return FirebaseFirestore.instance.collection('devotion')
       .doc(id)
       .delete()
       .then((value) => print("devotion Deleted"))

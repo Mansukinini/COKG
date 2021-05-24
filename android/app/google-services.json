@@ -1,34 +1,33 @@
 {
   "project_info": {
-    "project_number": "1032264268604",
-    "firebase_url": "https://cokg-7c4d9.firebaseio.com",
-    "project_id": "cokg-7c4d9",
-    "storage_bucket": "cokg-7c4d9.appspot.com"
+    "project_number": "782742779590",
+    "project_id": "cokg-a8dba",
+    "storage_bucket": "cokg-a8dba.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1032264268604:android:50150774aace6f24f53c39",
+        "mobilesdk_app_id": "1:782742779590:android:a5622f1ed74a6fcc9e89c7",
         "android_client_info": {
           "package_name": "com.christourkingglobal.cokg"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1032264268604-qiingn279npf8b2ta02034soqd912q22.apps.googleusercontent.com",
+          "client_id": "782742779590-05oi949qd76ifekokg0a8764ndgtp36p.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCaymCUymej2bXN8Q8sp5axAcyuimBfi6U"
+          "current_key": "AIzaSyAvi8en3XJ2W9Gwyc-BjRRVb7kPlJAShZE"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1032264268604-qiingn279npf8b2ta02034soqd912q22.apps.googleusercontent.com",
+              "client_id": "782742779590-05oi949qd76ifekokg0a8764ndgtp36p.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

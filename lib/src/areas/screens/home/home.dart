@@ -10,11 +10,9 @@ import 'package:cokg/src/styles/text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../app-state.dart';
 import '../../../config.dart';
 
 final _auth = FirebaseAuth.instance; 
-final appState = AppState();
 
 class Home extends StatefulWidget {
   @override
@@ -50,13 +48,16 @@ class _HomeState extends State<Home> {
         },
         body: _children[_selectedIndex]
       ),
-      floatingActionButton: (user.email == Config.admin) ? AppFloatingActionButton(tapNo: _selectedIndex) : null,
+
+      floatingActionButton: (user != null && user.email == Config.admin) ? 
+        AppFloatingActionButton(tapNo: _selectedIndex) : null,
       bottomNavigationBar: bottomNavigationBar(),
     );
   }
 
   Widget drawer(BuildContext context) { 
-
+    var auth = Provider.of<Authentication>(context, listen: false);
+    
     return Drawer(
       child: ListView(
       padding: EdgeInsets.zero,
@@ -65,11 +66,12 @@ class _HomeState extends State<Home> {
         UserAccountsDrawerHeader(
           currentAccountPicture: CircleAvatar(
             backgroundColor: AppColors.lightgray,
-            backgroundImage: (user != null) ? NetworkImage(user.photoURL) : AssetImage('assets/images/user.jpg'),
+            backgroundImage: (user != null && user.photoURL != null) ? 
+            NetworkImage(user.photoURL) : AssetImage('assets/images/user.jpg'),
           ),
 
-          accountName: (user != null) ? Text(user.displayName) : null,
-          accountEmail: (user != null) 
+          accountName: (user != null && user.displayName != null) ? Text(user.displayName) : null,
+          accountEmail: (user != null && user.email != null) 
           ? Text(user.email) 
           : Text('Log In or Sign Up', style: TextStyles.body),
           
@@ -80,7 +82,7 @@ class _HomeState extends State<Home> {
         
         ListTile(
           title: Text('ChristOurKing', textAlign: TextAlign.left, style: TextStyles.buttonTextBlack),
-          leading: Icon(Icons.home_max_outlined, size: 35.0, color: Colors.black),,
+          leading: Icon(Icons.home_mini_outlined, size: 35.0, color: Colors.black),
           onTap: () => Navigator.pushNamed(context, '/home'),
         ),
 
@@ -111,8 +113,10 @@ class _HomeState extends State<Home> {
         (user != null) ? ListTile(
           title: Text('Sign Out', textAlign: TextAlign.left, style: TextStyles.buttonTextBlack),
           leading: Icon(Icons.exit_to_app, size: 35.0, color: Colors.black),
-          onTap: () => Navigator.pushNamed(context, '/home'),
-        ) : ListTile(
+          onTap: () => auth.signOut().then((value) => Navigator.pushReplacementNamed(context, '/home')),
+        ) 
+        
+        : ListTile(
           title: Text('Sign In', textAlign: TextAlign.left, style: TextStyles.buttonTextBlack),
           leading: Icon(Icons.reset_tv_outlined, size: 35.0, color: Colors.black),
           onTap: () => Navigator.pushNamed(context, '/login'),

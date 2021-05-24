@@ -103,8 +103,8 @@ class _SignupState extends State<Signup> {
           buttonType: ButtonType.LightBlue,
           onPressed: () { 
             authenticate.signup().then((value) {
-              if (value != null) {
-                Navigator.pushReplacementNamed(context, '/login');
+              if (value != null && value.email.isNotEmpty) {
+                Navigator.pushReplacementNamed(context, '/home');
               }
             });
           },

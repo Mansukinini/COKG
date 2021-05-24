@@ -73,7 +73,7 @@ class _EventDetailState extends State<EventDetail> {
         title: Center(child: Text(action, style: TextStyles.navTitle)),
         actions: <Widget>[
           (isEdit) ? IconButton(icon: Icon(Icons.check), iconSize: 35.0, color: Colors.white, onPressed: () => eventProvider.saveEvent()) : Container(),
-          (user.email == Config.admin) ? !(isEdit) ? popupMenuButton(context) : Container() : Container(),
+          (user != null && user.email == Config.admin) ? !(isEdit) ? popupMenuButton(context) : Container() : Container(),
         ]
       ),
       body: _pageBody(context, eventProvider, event.data),
@@ -124,7 +124,7 @@ class _EventDetailState extends State<EventDetail> {
                 
               return AppTextField(
                 labelText: 'Title',
-                initialText: (event != null) ? event.name : null,
+                initialText: (event != null && event.name != null) ? event.name : null,
                 onChanged: eventProvider.setName,
                 errorText: snapshot.error,
                 readOnly: !isEdit,
@@ -139,7 +139,7 @@ class _EventDetailState extends State<EventDetail> {
               return AppTextField(
                 labelText: 'Enter Description',
                 maxLines: 3,
-                initialText: (event != null) ? event.description : null,
+                initialText: (event != null && event.description != null) ? event.description : null,
                 onChanged: eventProvider.setDescription,
                 errorText: snapshot.error,
                 readOnly: !isEdit,
@@ -153,7 +153,7 @@ class _EventDetailState extends State<EventDetail> {
               
               return AppDateTimePicker(
                 dateLabelText: 'Date & Time', 
-                initialValue: (event != null) ? DateTime.parse(event.date) : null,
+                initialValue: (event != null && event.date != null) ? DateTime.parse(event.date) : null,
                 onChanged: eventProvider.setDateTime,
                 readyOnly: !isEdit,
               );

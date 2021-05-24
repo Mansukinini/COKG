@@ -69,17 +69,15 @@ class _DevotionDetailState extends State<DevotionDetail> {
       appBar: AppBar(leading: IconButton(icon: Icon(Icons.arrow_back), iconSize: 30.0, color: Colors.white, onPressed: () => Navigator.pop(context)),
         title: Center(child: Text(action, style: TextStyles.navTitle)),
           actions: <Widget>[
-            // ignore: deprecated_member_use
-            (isEdit) ? RaisedButton(
+            
+            (isEdit) ? ElevatedButton(
               child: Text('Cancel', style: TextStyles.actionText),
-              color: Theme.of(context).accentColor,
               onPressed: () => Navigator.of(context).pop()
             ) : Container(),
 
-            // ignore: deprecated_member_use
-            (isEdit) ? RaisedButton(
+            (isEdit) ? ElevatedButton(                                         
             child: Text('Save', style: TextStyles.actionText),
-            color: Theme.of(context).accentColor,
+            // color: Theme.of(context).backgroundColor,
             onPressed: () => devotionProvider.saveDevotion().then((value) => Navigator.of(context).pop())
             ) : Container(),
             (user.email == Config.admin) ? !(isEdit) ? popupMenuButton(context) : Container() : Container(),
@@ -119,7 +117,7 @@ class _DevotionDetailState extends State<DevotionDetail> {
 
                 return AppTextField(labelText: "Title",
                   readOnly: !isEdit,
-                  initialText: devotion != null ? devotion.title : null,
+                  initialText: (devotion != null && devotion.title != null) ? devotion.title : null,
                   onChanged: devotionRepositry.setTitle,
                 );
               }
@@ -133,7 +131,7 @@ class _DevotionDetailState extends State<DevotionDetail> {
                   maxLines: 2,
                   readOnly: !isEdit,
                   onChanged: devotionRepositry.setDescription,
-                  initialText: devotion != null ? devotion.description : null
+                  initialText: (devotion != null && devotion.description != null) ? devotion.description : null
                 );
               }
             ),

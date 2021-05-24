@@ -39,7 +39,7 @@ class _MediaPlayerState extends State<MediaPlayer> {
       });
     });
   }
-
+  
   @override
   Widget build(BuildContext context) {
     var devotionProvider = Provider.of<DevotionRepositry>(context);
@@ -156,4 +156,13 @@ class _MediaPlayerState extends State<MediaPlayer> {
     Duration newPos = Duration(seconds: sec);
     _player.seek(newPos);
   }
+ 
+  @override
+  void dispose() {
+   super.dispose();
+   _player.pause();
+
+    payButton = Icons.play_arrow;
+    isPlaying = false;
+ }
 }

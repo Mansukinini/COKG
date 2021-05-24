@@ -72,7 +72,7 @@ class _GroupDetailState extends State<GroupDetail> {
         title: Center(child: Text(action, style: TextStyles.navTitle,)),
         actions: <Widget>[
           (isEdit) ? IconButton(icon: Icon(Icons.check), iconSize: 35.0, color: Colors.white, onPressed: () => groupProvider.saveGroup().then((value) => Navigator.pop(context))) : Container(),
-          (user.email == Config.admin) ? !(isEdit) ? popupMenuButton(context) : Container() : Container(),
+          (user != null && user.email == Config.admin) ? !(isEdit) ? popupMenuButton(context) : Container() : Container(),
         ]
       ),
       body: _pageBody(context, groupProvider, group.data),
@@ -132,7 +132,7 @@ class _GroupDetailState extends State<GroupDetail> {
 
             return AppTextField(
               labelText: 'Name',
-              initialText: group != null ? group.name : null,
+              initialText: (group != null && group.name != null) ? group.name : null,
               onChanged: groupProvider.setName,
                readOnly: !isEdit
             );
@@ -145,7 +145,7 @@ class _GroupDetailState extends State<GroupDetail> {
 
             return AppTextField(
               labelText: 'Description',
-              initialText: group != null ? group.description : null,
+              initialText: (group != null && group.description != null) ? group.description : null,
               onChanged: groupProvider.setDescription,
               maxLines: 2,
               readOnly: !isEdit,
