@@ -50,10 +50,12 @@ class _DevotionListState extends State<DevotionList> {
                 children: <Widget>[
                   Expanded(
                     child: ListTile(
-                      leading: CircleAvatar(
-                        radius: 35.0,
-                        child: Image.asset('assets/images/audiologo.png', fit: BoxFit.fill),
-                      ),
+                      leading: Icon(Icons.headphones_rounded, size: 45.0, color: Colors.black)
+                      // CircleAvatar(
+                      //   radius: 35.0,
+                      //   child: Image.asset('assets/images/audiologo.png', fit: BoxFit.fill),
+                      // )
+                      ,
                       title: Text(devotion.data[index].title ?? '', style: TextStyles.title),
                       subtitle: Text(devotion.data[index].description ?? '', style: TextStyles.subtitle),
                       onTap: () => Navigator.of(context).pushNamed("/devotionSubPage/${devotion.data[index].id}"),
