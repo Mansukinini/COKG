@@ -1,5 +1,3 @@
-import 'package:audioplayers/audio_cache.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:cokg/src/areas/models/devotion.dart';
 import 'package:cokg/src/areas/services/providers/devotionRepositry.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +13,8 @@ class MediaPlayer extends StatefulWidget {
 class _MediaPlayerState extends State<MediaPlayer> {
   bool isPlaying = false; 
   IconData payButton =  Icons.play_arrow;
-  AudioPlayer _player;
-  AudioCache cache;
+  // AudioPlayer _player;
+  // AudioCache cache;
 
   Duration position = new Duration();
   Duration musicLength = new Duration();
@@ -24,20 +22,20 @@ class _MediaPlayerState extends State<MediaPlayer> {
   @override
   void initState() {
     super.initState();
-    _player = AudioPlayer();
-    cache = AudioCache(fixedPlayer: _player);
+    // _player = AudioPlayer();
+    // cache = AudioCache(fixedPlayer: _player);
 
-    _player.onDurationChanged.listen((d) {
-      setState(() {
-        musicLength = d;
-      });
-    });
+    // _player.onDurationChanged.listen((d) {
+    //   setState(() {
+    //     musicLength = d;
+    //   });
+    // });
 
-    _player.onAudioPositionChanged.listen((p) {
-      setState(() {
-        position = p;
-      });
-    });
+    // _player.onAudioPositionChanged.listen((p) {
+    //   setState(() {
+    //     position = p;
+    //   });
+    // });
   }
   
   @override
@@ -96,13 +94,13 @@ class _MediaPlayerState extends State<MediaPlayer> {
         return IconButton(iconSize: 62.0, color: Colors.blue[800],
           onPressed: () {
             if (!isPlaying) {
-              _player.play(snapshot.data.url);
+              // _player.play(snapshot.data.url);
               setState(() {
                 payButton = Icons.pause;
                 isPlaying = true;
               });
             } else {
-              _player.pause();
+              // _player.pause();
               setState(() {
                 payButton = Icons.play_arrow;
                 isPlaying = false;
@@ -154,13 +152,13 @@ class _MediaPlayerState extends State<MediaPlayer> {
 
   void seekToSec(int sec) {
     Duration newPos = Duration(seconds: sec);
-    _player.seek(newPos);
+    // _player.seek(newPos);
   }
  
   @override
   void dispose() {
    super.dispose();
-   _player.pause();
+  //  _player.pause();
 
     payButton = Icons.play_arrow;
     isPlaying = false;
