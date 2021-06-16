@@ -17,6 +17,7 @@ class DatabaseService {
     return FirebaseFirestore.instance.collection('user')
       .doc(userApp.id).set(userApp.toMap())
       .then((value) {
+        // ignore: deprecated_member_use
         FirebaseAuth.instance.currentUser.updateProfile(displayName: userApp.firstName + ' ' + userApp.lastName, photoURL: userApp.imageUrl);
         return FirebaseAuth.instance.currentUser;
     });

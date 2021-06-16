@@ -89,7 +89,7 @@ class _ProfileState extends State<Profile> {
           builder: (context, snapshot) {
             
             return Container(
-              height: MediaQuery.of(context).size.height * .25,
+              height: MediaQuery.of(context).size.height * .24,
               child: CircleAvatar(
                 radius: 50.0,
                 backgroundImage: (snapshot.data != null) ? NetworkImage(snapshot.data) : AssetImage('assets/images/user.jpg'),

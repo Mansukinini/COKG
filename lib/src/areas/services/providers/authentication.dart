@@ -44,6 +44,7 @@ class Authentication {
         userCredential = await _auth.createUserWithEmailAndPassword(email: _email.value, password: _password.value);
         
         if(_firstName.hasValue && _lastName.hasValue) {
+          // ignore: deprecated_member_use
           userCredential.user.updateProfile(displayName: _firstName.value + ' ' + _lastName.value);
         }
           
