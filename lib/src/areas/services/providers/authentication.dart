@@ -3,6 +3,7 @@ import 'package:cokg/src/areas/models/user.dart';
 import 'package:cokg/src/areas/services/data/database.dart';
 import 'package:cokg/src/resources/utils/strings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rxdart/rxdart.dart';
 
 final RegExp regExpEmail = RegExp(
@@ -30,36 +31,12 @@ class Authentication {
   //getters
   Stream<String> get firstName => _firstName.stream.transform(_validateName);
   Stream<String> get lastName => _lastName.stream.transform(_validateName);
-  Stream<String> get email => _email.stream;
+  Stream<String> get email => _email.stream.transform(_validateEmail);
   Stream<String> get password => _password.stream.transform(_validatePassword);
   Stream<String> get confirmPassword => _confirmPassword.stream;
   Stream<UserAuth> get user => _user.stream;
   Stream<bool> get isValid => CombineLatestStream.combine2(email, password, (email, password) => true);
 
-
-  Future<User> signup() async {
-    UserCredential userCredential;
-    try {
-      if (_email.hasValue && _password.hasValue) {
-        userCredential = await _auth.createUserWithEmailAndPassword(email: _email.value, password: _password.value);
-        
-        if(_firstName.hasValue && _lastName.hasValue) {
-          // ignore: deprecated_member_use
-          userCredential.user.updateProfile(displayName: _firstName.value + ' ' + _lastName.value);
-        }
-          
-        if (userCredential.user.uid.isNotEmpty) {
-          return await DatabaseService.createUser(UserAuth(id: userCredential.user.uid, firstName: _firstName.value.trim(), lastName: _lastName.value.trim(),
-            email: _email.value.trim(), createdOn: DateTime.now().toIso8601String()));
-        }
-      }
-        
-      return (userCredential != null && userCredential.user != null) ? userCredential.user: null;
-    } on FirebaseAuthException catch (error) {
-      print(error.stackTrace);
-      return null;
-    }
-  }
 
   Future<UserAuth> login() async {
     try{
@@ -98,6 +75,58 @@ class Authentication {
     return true;
   }
 
+  Future<User> signup() async {
+    UserCredential userCredential;
+    try {
+      if (_email.hasValue && _password.hasValue) {
+        userCredential = await _auth.createUserWithEmailAndPassword(email: _email.value, password: _password.value);
+        
+        if(_firstName.hasValue && _lastName.hasValue) {
+          userCredential.user.updateProfile(displayName: _firstName.value + ' ' + _lastName.value);
+        }
+          
+        if (userCredential.user.uid.isNotEmpty) {
+          return await DatabaseService.createUser(UserAuth(id: userCredential.user.uid, firstName: _firstName.value.trim(), lastName: _lastName.value.trim(),
+            email: _email.value.trim(), createdOn: DateTime.now().toIso8601String()));
+        }
+      }
+        
+      return (userCredential != null && userCredential.user != null) ? userCredential.user: null;
+    } on FirebaseAuthException catch (error) {
+      print(error.stackTrace);
+      return null;
+    }
+  }
+
+  Future<UserCredential> signInWithGoogle() async {
+    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken
+    );
+
+    return await _auth.signInWithCredential(credential);
+  }
+
+  void createUser(User userData) async {
+   
+    // final user = await DatabaseService.getUserById(userData.uid);
+
+    // if (user == null && user.id == null) {
+      DatabaseService.createUser(UserAuth(id: userData.uid, firstName: userData.displayName, 
+              email: userData.email, contactNo: userData.phoneNumber, imageUrl: userData.photoURL,
+              createdOn: DateTime.now().toIso8601String()));
+
+              _user.sink.add(UserAuth(id: userData.uid, firstName: userData.displayName, 
+              email: userData.email, contactNo: userData.phoneNumber, imageUrl: userData.photoURL,
+              createdOn: DateTime.now().toIso8601String()));
+     
+    // }
+  }
+
+
   final _validateName = StreamTransformer<String, String>.fromHandlers(handleData: (name, sink) {
     if (RegExp(r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]').hasMatch(name)) {
       sink.addError(StringConstant.nameValidateMessage);
@@ -111,6 +140,14 @@ class Authentication {
       sink.add(password.trim());
     } else {
       sink.addError(StringConstant.passwordValidateMessage);
+    }
+  });
+
+  final _validateEmail = StreamTransformer<String, String>.fromHandlers(handleData: (email, sink) {
+    if (email.contains('@')) {
+      sink.add(email);
+    } else {
+      sink.addError(StringConstant.emailValidateMessage);
     }
   });
 

@@ -1,7 +1,7 @@
 import 'package:cokg/src/areas/screens/devotion/devotion-list.dart';
 import 'package:cokg/src/areas/screens/event/event-list.dart';
 import 'package:cokg/src/areas/screens/group/groups-list.dart';
-import 'package:cokg/src/areas/screens/home/profile.dart';
+import 'package:cokg/src/areas/screens/home/drawer/profile.dart';
 import 'package:cokg/src/areas/services/providers/authentication.dart';
 import 'package:cokg/src/resources/utils/floatingActionButton.dart';
 import 'package:cokg/src/resources/widgets/navigatorBar.dart';
@@ -44,7 +44,7 @@ class _HomeState extends State<Home> {
       drawer: drawer(context),
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[AppNavbar.materialNavBar(title: '', pinned: false, menuButton: popupMenuButton(context))];
+          return <Widget>[AppNavbar.materialNavBar(title: '', pinned: false)];
         },
         body: _children[_selectedIndex]
       ),
@@ -75,14 +75,14 @@ class _HomeState extends State<Home> {
           ? Text(user.email) 
           : Text('Log In or Sign Up', style: TextStyles.body),
           
-          onDetailsPressed: (user != null) 
+          onDetailsPressed: (user != null && user.uid != null) 
           ? () => Navigator.of(context).pushNamed("/profile/" + user.uid) 
           : () => Navigator.of(context).pushNamed("/login"),
         ),
         
         ListTile(
           title: Text('ChristOurKing', textAlign: TextAlign.left, style: TextStyles.buttonTextBlack),
-          leading: Icon(Icons.home_mini_outlined, size: 35.0, color: Colors.black),
+          leading: Icon(Icons.public_rounded, size: 35.0, color: Colors.black),
           onTap: () => Navigator.pushNamed(context, '/home'),
         ),
 
@@ -112,13 +112,13 @@ class _HomeState extends State<Home> {
 
         (user != null) ? ListTile(
           title: Text('Sign Out', textAlign: TextAlign.left, style: TextStyles.buttonTextBlack),
-          leading: Icon(Icons.exit_to_app, size: 35.0, color: Colors.black),
+          leading: Icon(Icons.logout_rounded, size: 35.0, color: Colors.black),
           onTap: () => auth.signOut().then((value) => Navigator.pushReplacementNamed(context, '/home')),
         ) 
         
         : ListTile(
           title: Text('Sign In', textAlign: TextAlign.left, style: TextStyles.buttonTextBlack),
-          leading: Icon(Icons.reset_tv_outlined, size: 35.0, color: Colors.black),
+          leading: Icon(Icons.login_rounded, size: 35.0, color: Colors.black),
           onTap: () => Navigator.pushNamed(context, '/login'),
         ),
 

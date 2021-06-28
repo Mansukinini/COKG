@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 
 abstract class AppNavbar {
-  static SliverAppBar materialNavBar({@required String title, bool pinned, TabBar tabBar, PopupMenuButton menuButton}){
+  static SliverAppBar materialNavBar({@required String title, bool pinned, TabBar tabBar}){
     return SliverAppBar(
       title: Text(title, style: TextStyles.navTitleMaterial),
       backgroundColor: Colors.brown,
@@ -12,7 +12,7 @@ abstract class AppNavbar {
       floating: true,
       pinned: (pinned == null) ? true : pinned,
       snap: true,
-      actions: <Widget>[menuButton],
+      // actions: <Widget>[menuButton],
     );
   }
 }

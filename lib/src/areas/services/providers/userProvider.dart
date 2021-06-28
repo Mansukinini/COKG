@@ -20,7 +20,7 @@ class UserProvider {
   final _email = BehaviorSubject<String>();
   final _imageUrl = BehaviorSubject<String>();
   final _isValid = BehaviorSubject<bool>();
-  final  _createdBy = BehaviorSubject<String>();
+  final _createdBy = BehaviorSubject<String>();
   final _createdOn = BehaviorSubject<DateTime>();
   final _lastUpdatedBy = BehaviorSubject<String>();
   final _lastUpdatedOn = BehaviorSubject<DateTime>();

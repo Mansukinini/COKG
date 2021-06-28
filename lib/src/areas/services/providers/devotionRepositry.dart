@@ -49,16 +49,19 @@ class DevotionRepositry {
     if (id != null && devotion.toMap() != null) {
       setTitle(devotion.title);
       setDescription(devotion.description);
+      setUrl(devotion.url);
     } else {
       setTitle(null);
       setDescription(null);
+      setUrl(null);
     }
   }
 
-  Stream<List<Devotion>> get devotion => DatabaseService.getDevotions();
-  Future<Devotion> getDevotionById(String id) => DatabaseService.getDevotionById(id);
+ Stream<List<Devotion>> get devotion => DatabaseService.getDevotions();
 
-  void uploadFile() async {
+ Future<Devotion> getDevotionById(String id) => DatabaseService.getDevotionById(id);
+
+  Future uploadFile() async {
     var path = await FilePicker.getFilePath(type: FileType.AUDIO);
     
     if (path != null) {
@@ -72,7 +75,10 @@ class DevotionRepositry {
         setUrl(audioUrl);
         setFileName(basename(audioUrl));
       }
+      
+      return audioUrl;
     }
+    return null;
   }
 
   Future<void> saveDevotion() async {
@@ -83,7 +89,7 @@ class DevotionRepositry {
       fileName: _fileName.hasValue ? _fileName.value : null,
       description: _description.hasValue ? _description.value : null,
       url: _url.value,
-      createdOn: _createdOn.value.toIso8601String()
+      createdOn: _createdOn.hasValue ? _createdOn.value.toIso8601String() : null
     );
 
     return await DatabaseService.createDevotion(devotion);

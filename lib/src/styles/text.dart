@@ -21,6 +21,14 @@ abstract class TextStyles {
             fontSize: 18.0));
   }
 
+  static TextStyle get blackTitle {
+    return GoogleFonts.poppins(
+        textStyle: TextStyle(
+            color: AppColors.black,
+            fontWeight: FontWeight.w500,
+            fontSize: 24.0));
+  }
+
   static TextStyle get subtitle {
     return GoogleFonts.roboto(
         textStyle: TextStyle(

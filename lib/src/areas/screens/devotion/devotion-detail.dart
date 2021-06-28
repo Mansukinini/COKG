@@ -10,7 +10,6 @@ import '../../../config.dart';
 
 final _auth = FirebaseAuth.instance;
 
-
 class DevotionDetail extends StatefulWidget {
   final String id;
   DevotionDetail({this.id});
@@ -80,7 +79,7 @@ class _DevotionDetailState extends State<DevotionDetail> {
             // color: Theme.of(context).backgroundColor,
             onPressed: () => devotionProvider.saveDevotion().then((value) => Navigator.of(context).pop())
             ) : Container(),
-            (user.email == Config.admin) ? !(isEdit) ? popupMenuButton(context) : Container() : Container(),
+            (user != null && user.email == Config.admin) ? !(isEdit) ? popupMenuButton(context) : Container() : Container(),
           ]),
           body: _pageBody(context, devotionProvider, devotion.data),
     );
@@ -138,8 +137,14 @@ class _DevotionDetailState extends State<DevotionDetail> {
 
             (isEdit) ? AppButton(
               labelText: "Upload Audio file", 
-              onPressed: () => devotionRepositry.uploadFile()
+              onPressed: () {
+                devotionRepositry.uploadFile().then((value) {
+                  print(value.toString() + " From upload");
+                });
+              }
             ) : Container(),
+
+            // MediaPlayer(id: widget.id),
           ],
         ),
       );

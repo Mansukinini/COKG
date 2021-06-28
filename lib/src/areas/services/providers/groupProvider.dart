@@ -9,7 +9,6 @@ import 'package:rxdart/subjects.dart';
 import 'package:uuid/uuid.dart';
 
 class GroupProvider {
-  // final storageService = FirebaseStorageService();
   var uuid = Uuid();
   
   final _id = BehaviorSubject<String>();
@@ -81,7 +80,7 @@ class GroupProvider {
 
   Future<void> saveGroup() {
     var group = Group(
-      id: _id.hasValue ? _id.value : uuid.v4(), 
+      id: _id.value ?? uuid.v4(),
       name: _name.hasValue ? _name.value : null, 
       description: _description.hasValue ? _description.value : null,
       imageUrl: _imageUrl.hasValue ? _imageUrl.value : null,

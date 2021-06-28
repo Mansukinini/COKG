@@ -17,8 +17,8 @@ class DatabaseService {
     return FirebaseFirestore.instance.collection('user')
       .doc(userApp.id).set(userApp.toMap())
       .then((value) {
-        // ignore: deprecated_member_use
-        FirebaseAuth.instance.currentUser.updateProfile(displayName: userApp.firstName + ' ' + userApp.lastName, photoURL: userApp.imageUrl);
+
+        FirebaseAuth.instance.currentUser.updateProfile(displayName: userApp.firstName, photoURL: userApp.imageUrl);
         return FirebaseAuth.instance.currentUser;
     });
   }
@@ -115,7 +115,9 @@ class DatabaseService {
 
   static Stream<List<Devotion>> getDevotions() {
 
+
     return FirebaseFirestore.instance.collection('devotion')
+    .orderBy('createdOn', descending: true)
     .snapshots()
     .map((devotion) => devotion.docs
     .map((doc) => Devotion.fromFirestore(doc.data()))

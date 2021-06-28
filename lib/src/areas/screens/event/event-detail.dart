@@ -65,6 +65,7 @@ class _EventDetailState extends State<EventDetail> {
 
   Scaffold _scafford(BuildContext context, EventProvider eventProvider, AsyncSnapshot<Event> event) {
     var action = event.data != null ? (isEdit) ? "Edit Event" : "" : "Add Event";
+    
     eventProvider.setEvent(event.data, widget.id);
 
     return Scaffold(

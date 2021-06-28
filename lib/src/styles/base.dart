@@ -7,7 +7,7 @@ abstract class BaseStyles {
 
   static double get borderWith => 2.0;
 
-  static double get listFieldHorizontal => 15.0;
+  static double get listFieldHorizontal => 12.0;
 
   static double get listFieldVertical => 8.0;
 

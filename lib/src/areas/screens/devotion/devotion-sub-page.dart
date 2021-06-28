@@ -2,7 +2,6 @@ import 'package:cokg/src/areas/services/providers/devotionRepositry.dart';
 import 'package:cokg/src/resources/widgets/media-player.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:cokg/src/resources/widgets/media-player.dart';
 
 class DevotionSubPage extends StatefulWidget {
   final String id;
@@ -12,12 +11,6 @@ class DevotionSubPage extends StatefulWidget {
 }
 
 class _DevotionSubPageState extends State<DevotionSubPage> {
-  bool isPlaying = false; 
-  IconData payButton =  Icons.play_arrow;
-  // AudioCache cache;
-
-  Duration position = new Duration();
-  Duration musicLength = new Duration();
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +59,6 @@ class _DevotionSubPageState extends State<DevotionSubPage> {
                 SizedBox(height: 30.0),
                 
                 MediaPlayer(id: widget.id),
-                // _mediaPlayer(devotionProvider),
               ],
             ),
           ),

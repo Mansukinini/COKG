@@ -28,18 +28,19 @@ class _GroupDetailState extends State<GroupDetail> {
     user = _auth.currentUser;
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     var groupProvider = Provider.of<GroupProvider>(context);
-
+    
     if (widget.id != null) {
-     return _editEvent(context, groupProvider);
+     return _editGroup(context, groupProvider);
     } else {
-      return _addEvent(context, groupProvider);
+      return _addGroup(context, groupProvider);
     }
   }
 
-  FutureBuilder _editEvent(BuildContext context, GroupProvider groupProvider) {
+  FutureBuilder _editGroup(BuildContext context, GroupProvider groupProvider) {
     
     return FutureBuilder<Group>(
       future: groupProvider.getGroupById(widget.id),
@@ -52,7 +53,7 @@ class _GroupDetailState extends State<GroupDetail> {
     });
   }
 
-  StreamBuilder _addEvent(BuildContext context, GroupProvider groupProvider) {
+  StreamBuilder _addGroup(BuildContext context, GroupProvider groupProvider) {
     isEdit = true;
     
     return StreamBuilder<Group>(
@@ -63,7 +64,7 @@ class _GroupDetailState extends State<GroupDetail> {
 
   Scaffold _scafford(BuildContext context, GroupProvider groupProvider, AsyncSnapshot<Group> group) {
     var action = group.data != null ? (isEdit) ? "Edit Group" : "" : "Add Group";
-
+    
     groupProvider.setGroup(group.data, widget.id);
 
     return Scaffold(

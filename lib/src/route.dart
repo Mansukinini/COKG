@@ -4,12 +4,12 @@ import 'package:cokg/src/areas/screens/event/event-detail.dart';
 import 'package:cokg/src/areas/screens/event/event-list.dart';
 import 'package:cokg/src/areas/screens/group/group-detail.dart';
 import 'package:cokg/src/areas/screens/home/home.dart';
-import 'package:cokg/src/areas/screens/home/login.dart';
-import 'package:cokg/src/areas/screens/home/profile.dart';
-import 'package:cokg/src/areas/screens/home/about.dart';
+import 'package:cokg/src/areas/screens/home/drawer/login.dart';
+import 'package:cokg/src/areas/screens/home/drawer/profile.dart';
+import 'package:cokg/src/areas/screens/home/drawer/about.dart';
 import 'package:flutter/material.dart';
 
-import 'areas/screens/home/sign-up.dart';
+import 'areas/screens/home/drawer/sign-up.dart';
 
 
 abstract class Routes {
