@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../config.dart';
 
-final _auth = FirebaseAuth.instance; 
+final Authentication _auth = Authentication();
 
 class Home extends StatefulWidget {
   @override

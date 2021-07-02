@@ -7,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-final _auth = FirebaseAuth.instance;
+final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class Profile extends StatefulWidget {
   final String id;
@@ -82,7 +82,7 @@ class _ProfileState extends State<Profile> {
               height: MediaQuery.of(context).size.height * .24,
               child: CircleAvatar(
                 radius: 25.0,
-                backgroundImage: (snapshot.data != null) ? NetworkImage(snapshot.data) : AssetImage('assets/images/user.jpg'),
+                backgroundImage: (user != null && user.photoURL != null) ? NetworkImage(user.photoURL) : AssetImage('assets/images/user.jpg'),
                 child: FileUpload(icon: Icons.camera_alt, onPressed: userProvider.pickImage),
               ),
             );
@@ -94,7 +94,7 @@ class _ProfileState extends State<Profile> {
           builder: (context, snapshot) {
               
             return AppTextField(labelText: 'Name',
-              initialText: (userAuth != null) ? userAuth.firstName : null,
+              initialText: (userAuth != null) ? userAuth.firstName : (user != null) ? user.displayName : null,
               onChanged: userProvider.setFirstName,
               errorText: snapshot.error,
             );
@@ -106,7 +106,7 @@ class _ProfileState extends State<Profile> {
           builder: (context, snapshot) {
             
             return AppTextField(labelText: 'Surname',
-              initialText: (userAuth != null) ? userAuth.lastName.toString() : null,
+              initialText: (userAuth != null) ? userAuth.lastName :  null,
               onChanged: userProvider.setLastName,
               errorText: snapshot.error,
             );
@@ -118,7 +118,7 @@ class _ProfileState extends State<Profile> {
           builder: (context, snapshot) {
 
             return AppTextField(labelText: 'Mobile',
-              initialText: userAuth != null ? userAuth.contactNo : null,
+              initialText: (userAuth != null) ? userAuth.contactNo : (user != null && user.phoneNumber != null) ? user.phoneNumber : null,
               onChanged: userProvider.setContactNo,
             );
           }
@@ -129,15 +129,15 @@ class _ProfileState extends State<Profile> {
           builder: (context, snapshot) {
 
             return AppTextField(labelText: 'Email',
-              initialText: (userAuth != null) ? userAuth.email.toString() : null,
+              initialText: (userAuth != null) ? userAuth.email : (user != null && user.email != null) ? user.email : null,
               onChanged: userProvider.setEmail,
             );
           }
         ),
 
         (user != null && user.email != null) ? AppButton(labelText: 'Save', onPressed: () {
-          userProvider.save().then((value) {
-            if (value == null) {
+          userProvider.saveProfile().then((value) {
+            if (value != null) {
               Navigator.pushNamed(context, '/home');
             }
           });

@@ -68,17 +68,15 @@ class _DevotionDetailState extends State<DevotionDetail> {
       appBar: AppBar(leading: IconButton(icon: Icon(Icons.arrow_back), iconSize: 30.0, color: Colors.white, onPressed: () => Navigator.pop(context)),
         title: Center(child: Text(action, style: TextStyles.navTitle)),
           actions: <Widget>[
-            
-            (isEdit) ? ElevatedButton(
-              child: Text('Cancel', style: TextStyles.actionText),
-              onPressed: () => Navigator.of(context).pop()
-            ) : Container(),
 
-            (isEdit) ? ElevatedButton(                                         
-            child: Text('Save', style: TextStyles.actionText),
-            // color: Theme.of(context).backgroundColor,
-            onPressed: () => devotionProvider.saveDevotion().then((value) => Navigator.of(context).pop())
-            ) : Container(),
+            (isEdit) ? IconButton(icon: Icon(Icons.check), iconSize: 35.0, color: Colors.white, 
+          onPressed: () async {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Adding devotion ...')));
+
+            await devotionProvider.saveDevotion().then((value) => Navigator.pop(context));
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Devotion Added'), backgroundColor: Colors.green));
+          }) : Container(),
             (user != null && user.email == Config.admin) ? !(isEdit) ? popupMenuButton(context) : Container() : Container(),
           ]),
           body: _pageBody(context, devotionProvider, devotion.data),
@@ -139,7 +137,7 @@ class _DevotionDetailState extends State<DevotionDetail> {
               labelText: "Upload Audio file", 
               onPressed: () {
                 devotionRepositry.uploadFile().then((value) {
-                  print(value.toString() + " From upload");
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Upload Completed'), backgroundColor: Colors.green));
                 });
               }
             ) : Container(),

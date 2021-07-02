@@ -52,7 +52,7 @@ class _DevotionListState extends State<DevotionList> {
                     child: ListTile(
                       leading: Icon(Icons.headphones_rounded, size: 45.0, color: Colors.black),
                       title: Text(devotion.data[index].title.length > 25 ? '${devotion.data[index].title.substring(0, 25)}...' : devotion.data[index].title ?? '', style: TextStyles.title),
-                      subtitle: Text((devotion.data[index].description != null && devotion.data[index].description.length > 40) ? '${devotion.data[index].description.substring(0, 45)}...' : devotion.data[index].description ?? '', style: TextStyles.subtitle),
+                      subtitle: Text((devotion.data[index].description != null && devotion.data[index].description.length > 40) ? '${devotion.data[index].description.substring(0, 45)}...' : devotion.data[index].description ?? devotion.data[index].title, style: TextStyles.subtitle),
                       onTap: () => Navigator.of(context).pushNamed("/devotionSubPage/${devotion.data[index].id}"),
                       onLongPress: () => Navigator.of(context).pushNamed("/devotionDetail/${devotion.data[index].id}"),
                     ),

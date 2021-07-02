@@ -44,7 +44,7 @@ class GroupList extends StatelessWidget {
 
             return AppListTile(
               title: group.data[index].name,
-              subtitle: group.data[index].description,
+              subtitle: group.data[index].description ?? group.data[index].name,
               imageUrl: group.data[index].imageUrl,
               date: (group.data[index].startDateTime != null) ? new DateFormat('MMM-dd').format(DateTime.parse(group.data[index].startDateTime)) : null,
               time: (group.data[index].endDateTime != null) ? new DateFormat('hh:mm').format(DateTime.parse(group.data[index].endDateTime)) : null,

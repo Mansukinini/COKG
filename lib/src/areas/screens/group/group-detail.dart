@@ -72,7 +72,14 @@ class _GroupDetailState extends State<GroupDetail> {
         leading: IconButton(icon: Icon(Icons.arrow_back), iconSize: 30.0, color: Colors.white, onPressed: () => Navigator.pop(context)),
         title: Center(child: Text(action, style: TextStyles.navTitle,)),
         actions: <Widget>[
-          (isEdit) ? IconButton(icon: Icon(Icons.check), iconSize: 35.0, color: Colors.white, onPressed: () => groupProvider.saveGroup().then((value) => Navigator.pop(context))) : Container(),
+          (isEdit) ? IconButton(icon: Icon(Icons.check), iconSize: 35.0, color: Colors.white, 
+          onPressed: () async {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Adding Group ...')));
+
+            await groupProvider.saveGroup().then((value) => Navigator.pop(context));
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Group Added'), backgroundColor: Colors.green));
+          }) : Container(),
           (user != null && user.email == Config.admin) ? !(isEdit) ? popupMenuButton(context) : Container() : Container(),
         ]
       ),

@@ -45,7 +45,7 @@ class EventList extends StatelessWidget {
 
             return AppListTile(
               title: event.data[index].name,
-              subtitle: event.data[index].description,
+              subtitle: event.data[index].description ?? event.data[index].name,
               imageUrl: event.data[index].imageUrl,
               date: (event.data[index].date != null) ? new DateFormat('MMM-dd').format(DateTime.parse(event.data[index].date)) : null,
               time: (event.data[index].date != null) ? new DateFormat('hh:mm').format(DateTime.parse(event.data[index].date)) : null,

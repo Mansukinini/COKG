@@ -73,7 +73,17 @@ class _EventDetailState extends State<EventDetail> {
         leading: IconButton(icon: Icon(Icons.arrow_back), iconSize: 30.0, color: Colors.white, onPressed: () => Navigator.pop(context)),
         title: Center(child: Text(action, style: TextStyles.navTitle)),
         actions: <Widget>[
-          (isEdit) ? IconButton(icon: Icon(Icons.check), iconSize: 35.0, color: Colors.white, onPressed: () => eventProvider.saveEvent()) : Container(),
+          (isEdit) ? IconButton(icon: Icon(Icons.check), iconSize: 35.0, color: Colors.white, 
+          onPressed: () async {
+
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Adding event ...')));
+
+            await eventProvider.saveEvent().whenComplete(() {
+              Navigator.pushNamed(context, '/home');
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Added an Event'), backgroundColor: Colors.green));
+            });
+          }) : Container(),
           (user != null && user.email == Config.admin) ? !(isEdit) ? popupMenuButton(context) : Container() : Container(),
         ]
       ),
@@ -139,7 +149,7 @@ class _EventDetailState extends State<EventDetail> {
                 
               return AppTextField(
                 labelText: 'Enter Description',
-                maxLines: 3,
+                maxLines: 2,
                 initialText: (event != null && event.description != null) ? event.description : null,
                 onChanged: eventProvider.setDescription,
                 errorText: snapshot.error,
