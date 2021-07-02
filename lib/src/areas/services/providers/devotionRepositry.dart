@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:cokg/src/areas/models/devotion.dart';
-import 'package:cokg/src/areas/services/data/database.dart';
+import 'package:cokg/src/areas/services/data/firestore.dart';
 import 'package:cokg/src/areas/services/data/firebase-storage.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart';
@@ -8,6 +8,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:uuid/uuid.dart';
 
 class DevotionRepositry {
+  final FirestoreService _firestoreService = FirestoreService.instance;
   var uuid = Uuid();
 
   // declaretion
@@ -57,9 +58,9 @@ class DevotionRepositry {
     }
   }
 
- Stream<List<Devotion>> get devotion => DatabaseService.getDevotions();
+ Stream<List<Devotion>> get devotion => _firestoreService.getDevotions();
 
- Future<Devotion> getDevotionById(String id) => DatabaseService.getDevotionById(id);
+ Future<Devotion> getDevotionById(String id) => _firestoreService.getDevotionById(id);
 
   Future uploadFile() async {
     var path = await FilePicker.getFilePath(type: FileType.AUDIO);
@@ -92,11 +93,11 @@ class DevotionRepositry {
       createdOn: _createdOn.hasValue ? _createdOn.value.toIso8601String() : null
     );
 
-    return await DatabaseService.createDevotion(devotion);
+    return await _firestoreService.createDevotion(devotion);
   }
 
   Future<void> deleteDevotion(String id) {
-    return DatabaseService.deleteDevotion(id);
+    return _firestoreService.deleteDevotion(id);
   }
 
   dispose() {

@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'package:cokg/src/areas/models/user.dart';
-import 'package:cokg/src/areas/services/data/database.dart';
+import 'package:cokg/src/areas/services/data/firestore.dart';
 import 'package:cokg/src/resources/utils/strings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -10,7 +11,17 @@ final RegExp regExpEmail = RegExp(
     r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
     
 class Authentication {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirestoreService _firestoreService = FirestoreService.instance;
+  final formKey = GlobalKey<FormState>();
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
+
+  // Singleton setup: prevents multiple instances of this class
+  Authentication._();
+  static final Authentication _authService = Authentication._();
+  factory Authentication() => _authService;
+
+  static Authentication get instance => _authService;
 
   // Declare variable
   final _firstName = BehaviorSubject<String>();
@@ -27,7 +38,6 @@ class Authentication {
   Function(String) get setPassword => _password.sink.add;
   Function(String) get setConfirmPassword => _confirmPassword.sink.add;
 
-
   //getters
   Stream<String> get firstName => _firstName.stream.transform(_validateName);
   Stream<String> get lastName => _lastName.stream.transform(_validateName);
@@ -37,12 +47,15 @@ class Authentication {
   Stream<UserAuth> get user => _user.stream;
   Stream<bool> get isValid => CombineLatestStream.combine2(email, password, (email, password) => true);
 
+  Stream<User> authStateChanges() => _firebaseAuth.authStateChanges();
+
+  User get currentUser => _firebaseAuth.currentUser;
 
   Future<UserAuth> login() async {
     try{
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(email: _email.value, password: _password.value);
+      UserCredential userCredential = await _firebaseAuth.signInWithEmailAndPassword(email: _email.value, password: _password.value);
      
-      var user = await DatabaseService.getUserById(userCredential.user.uid);
+      var user = await _firestoreService.getUserById(userCredential.user.uid);
       _user.sink.add(user);
       return user;
     }on FirebaseException catch (e) {
@@ -53,9 +66,9 @@ class Authentication {
 
   Future<User> signOut() async {
     try {
-      await _auth.signOut().then((value) => _user.sink.add(null));
+      await _firebaseAuth.signOut().then((value) => _user.sink.add(null));
      
-      return _auth.currentUser;
+      return _firebaseAuth.currentUser;
     }on FirebaseException catch (e) {
       print(e.message);
       return null;
@@ -63,10 +76,10 @@ class Authentication {
   }
 
   Future<bool> isLoggedIn() async {
-    var currentUser = _auth.currentUser;
+    var currentUser = _firebaseAuth.currentUser;
 
     if (currentUser != null) {
-      var userData = await DatabaseService.getUserById(currentUser.uid);
+      var userData = await _firestoreService.getUserById(currentUser.uid);
       _user.add(userData);
     } else {
       return false;
@@ -77,16 +90,13 @@ class Authentication {
 
   Future<User> signup() async {
     UserCredential userCredential;
+
     try {
       if (_email.hasValue && _password.hasValue) {
-        userCredential = await _auth.createUserWithEmailAndPassword(email: _email.value, password: _password.value);
-        
-        if(_firstName.hasValue && _lastName.hasValue) {
-          userCredential.user.updateProfile(displayName: _firstName.value + ' ' + _lastName.value);
-        }
+        userCredential = await _firebaseAuth.createUserWithEmailAndPassword(email: _email.value, password: _password.value);
           
-        if (userCredential.user.uid.isNotEmpty) {
-          return await DatabaseService.createUser(UserAuth(id: userCredential.user.uid, firstName: _firstName.value.trim(), lastName: _lastName.value.trim(),
+        if (userCredential != null && userCredential.user.uid.isNotEmpty) {
+          return await _firestoreService.createUser(UserAuth(id: userCredential.user.uid, firstName: _firstName.value.trim(), lastName: _lastName.value.trim(),
             email: _email.value.trim(), createdOn: DateTime.now().toIso8601String()));
         }
       }
@@ -99,31 +109,41 @@ class Authentication {
   }
 
   Future<UserCredential> signInWithGoogle() async {
-    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
-    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+    try {
+      final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+    
+      if (googleUser != null) {
+        final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken
-    );
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken
+        );
 
-    return await _auth.signInWithCredential(credential);
+        return _firebaseAuth.signInWithCredential(credential);
+      }
+    } on FirebaseAuthException catch (e) {
+      // showAlertDialog(context, e.message ?? 'Sign In with Google failed');
+      print(e.message ?? 'Sign In with Google failed');
+    }
+      return null;
+    
   }
 
-  void createUser(User userData) async {
+  Future<User> createUser(User userData) async {
    
-    // final user = await DatabaseService.getUserById(userData.uid);
+    final userAuth = await _firestoreService.getUserById(userData.uid);
 
-    // if (user == null && user.id == null) {
-      DatabaseService.createUser(UserAuth(id: userData.uid, firstName: userData.displayName, 
+    if (userAuth != null && userAuth.firstName == userData.displayName) {
+      return _firestoreService.createUser(UserAuth(id: userData.uid, firstName: userData.displayName, 
               email: userData.email, contactNo: userData.phoneNumber, imageUrl: userData.photoURL,
-              createdOn: DateTime.now().toIso8601String()));
+              createdOn: DateTime.now().toIso8601String())).then((value) => null);
 
-              _user.sink.add(UserAuth(id: userData.uid, firstName: userData.displayName, 
-              email: userData.email, contactNo: userData.phoneNumber, imageUrl: userData.photoURL,
-              createdOn: DateTime.now().toIso8601String()));
-     
-    // }
+              // _user.sink.add(UserAuth(id: userData.uid, firstName: userData.displayName, 
+              // email: userData.email, contactNo: userData.phoneNumber, imageUrl: userData.photoURL,
+              // createdOn: DateTime.now().toIso8601String()));
+    }
+    return null;
   }
 
 

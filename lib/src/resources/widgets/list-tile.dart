@@ -63,10 +63,5 @@ class AppListTile extends StatelessWidget {
         border: Border(bottom: BorderSide(color: Colors.black26)),
       )
     );
-
-    // ignore: dead_code
-    String hideLongText(String text) {
-      return text.length > 10 ? "${text.substring(0, 10)}..." : text;
-    }
   }
 }

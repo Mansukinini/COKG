@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:cokg/src/areas/models/group.dart';
-import 'package:cokg/src/areas/services/data/database.dart';
+import 'package:cokg/src/areas/services/data/firestore.dart';
 import 'package:cokg/src/areas/services/data/firebase-storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
@@ -9,6 +9,7 @@ import 'package:rxdart/subjects.dart';
 import 'package:uuid/uuid.dart';
 
 class GroupProvider {
+  final FirestoreService _firestoreService = FirestoreService.instance;
   var uuid = Uuid();
   
   final _id = BehaviorSubject<String>();
@@ -38,11 +39,11 @@ class GroupProvider {
   Function(DateTime) get setEndDateTime => _endDateTime.sink.add;
 
   Stream<List<Group>> groups() {
-    return DatabaseService.getGroups();
+    return _firestoreService.getGroups();
   }
 
   Future<Group> getGroupById(String id) {
-    return DatabaseService.getGroupById(id);
+    return _firestoreService.getGroupById(id);
   }
 
   void setGroup(Group group, String id) {
@@ -84,15 +85,15 @@ class GroupProvider {
       name: _name.hasValue ? _name.value : null, 
       description: _description.hasValue ? _description.value : null,
       imageUrl: _imageUrl.hasValue ? _imageUrl.value : null,
-      startDateTime: _startDateTime.hasValue ? _startDateTime.value.toIso8601String() : null,
-      endDateTime: _endDateTime.hasValue ? _endDateTime.value.toIso8601String() : null
+      startDateTime: _startDateTime.hasValue ? _startDateTime.value.toIso8601String()??_startDateTime.value.toString() : null,
+      endDateTime: _endDateTime.hasValue ? _endDateTime.value.toIso8601String() ?? _endDateTime.value : null
     );
     
-    return DatabaseService.saveGroup(group).then((value) => print('Group Saved'));
+    return _firestoreService.saveGroup(group).then((value) => print('Group Saved'));
   }
 
   Future<void> deleteGroup(String id) {
-    return DatabaseService.deleteGroup(id);
+    return _firestoreService.deleteGroup(id);
   }
 
   dispose() {

@@ -107,7 +107,6 @@ class _LoginState extends State<Login> {
             icon: FaIcon(FontAwesomeIcons.google, color: Colors.red),
             onPressed: (){
               authenticate.signInWithGoogle().then((userData) {
-                print(userData.user);
                 authenticate.createUser(userData.user);
               });
             }, 
@@ -116,5 +115,11 @@ class _LoginState extends State<Login> {
         ),
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    _userSubscription.cancel();
+    super.dispose();
   }
 }

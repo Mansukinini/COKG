@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cokg/src/areas/models/user.dart';
-import 'package:cokg/src/areas/services/data/database.dart';
+import 'package:cokg/src/areas/services/data/firestore.dart';
 import 'package:cokg/src/areas/services/data/firebase-storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
@@ -10,6 +10,7 @@ import 'package:uuid/uuid.dart';
 
 
 class UserProvider {
+  final FirestoreService _firestoreService = FirestoreService.instance;
   var uuid = Uuid();
   
   //Declare variables
@@ -61,12 +62,15 @@ class UserProvider {
     setId(id);
 
     if (id != null) {
-      print(userAuth.toMap());
       setFirstName(userAuth.firstName);
       setLastName(userAuth.lastName);
       setContactNo(userAuth.contactNo);
       setEmail(userAuth.email);
-      // setImageUrl(userAuth.imageUrl ?? '');
+
+      if (userAuth != null && userAuth.imageUrl != null) {
+        setImageUrl(userAuth.imageUrl);
+      }
+
     } else {
       setImageUrl(null);
       setFirstName(null);
@@ -79,7 +83,7 @@ class UserProvider {
   Future<UserAuth> getUserData(String id) async {
     var result;
 
-    await DatabaseService.getUserById(id).then((value) {
+    await _firestoreService.getUserById(id).then((value) {
       result = value;
     });
 
@@ -101,12 +105,18 @@ class UserProvider {
     }
   }
 
-  Future<UserAuth> save() async {
-    try{
-      var user = UserAuth(id: FirebaseAuth.instance.currentUser.uid, firstName: _firstName.value, lastName: _lastName.value, 
-        contactNo: _contactNo.value, imageUrl: _imageUrl.value, isValid: true, email: _email.value);
+  Future saveProfile() async {
+    try {
+        UserAuth user = UserAuth(
+        id: FirebaseAuth.instance.currentUser.uid ?? uuid.v4(), 
+        firstName: _firstName.value ?? null, 
+        lastName: _lastName.value ?? null, 
+        contactNo: _contactNo.value ?? null, 
+        imageUrl: _imageUrl.value ?? null, 
+        isValid: true, 
+        email: _email.value ?? null);
 
-      return await DatabaseService.createUser(user);
+      return await _firestoreService.createUser(user);
     }on FirebaseException catch (e) {
       print(e);
       return null;

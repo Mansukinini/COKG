@@ -4,13 +4,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:cokg/src/areas/models/Event.dart';
-import 'package:cokg/src/areas/services/data/database.dart';
+import 'package:cokg/src/areas/services/data/firestore.dart';
 import 'package:cokg/src/areas/services/data/firebase-storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
 
 class EventProvider {
+  final FirestoreService _firestoreService = FirestoreService.instance;
   final _auth = FirebaseAuth.instance;
   var uuid = Uuid();
  
@@ -59,21 +60,23 @@ class EventProvider {
   Function(bool) get setIsEventSaved => _isEventSaved.sink.add;
 
   // Get all events
-  Stream<List<Event>> get events => DatabaseService.getEvents();
+  Stream<List<Event>> get events => _firestoreService.getEvents();
 
   Future<Event> getEventById(String id) {
-    return DatabaseService.getEventById(id);
+    return _firestoreService.getEventById(id);
   }
 
   void setEvent(Event event, String id) {
     setId(id);
     
     if (id != null && event.toMap() != null) {
-      setImageUrl(event.imageUrl ?? '');
       setName(event.name);
       setDescription(event.description);
       if (event.date != null)
         setDateTime(DateTime.parse(event.date));
+
+        if (event != null && event.imageUrl != null)
+          setImageUrl(event.imageUrl);
     } else {
       setImageUrl(null);
       setName(null);
@@ -102,24 +105,25 @@ class EventProvider {
   // Todo: Add Validation
 
   Future<void> saveEvent() {
+
     var initialValues = Event(
       id: _id.value ?? uuid.v4(), 
       name: _name.value, 
       description: _description.hasValue ? _description.value : null,
       date: (_dateTime.hasValue && _dateTime.value != null) ? _dateTime.value.toIso8601String() : null,
       imageUrl: _imageUrl.hasValue ? _imageUrl.value : null, 
-      isUploaded: _isUploaded.value, 
+      isUploaded: _isUploaded.hasValue ? _isUploaded.value : false, 
       createdBy: _auth.currentUser.uid, 
       createdOn: DateTime.now().toIso8601String()
     );
 
-    return DatabaseService.saveEvent(initialValues)
+    return _firestoreService.saveEvent(initialValues)
       .then((value) => _isEventSaved.sink.add(true))
       .catchError((error) => _isEventSaved.sink.add(false));
   }
 
   Future<void> deleteEvent(String id) {
-    return DatabaseService.deleteEvent(id);
+    return _firestoreService.deleteEvent(id);
   }
 
   final _validateTitle = StreamTransformer<String, String>.fromHandlers(handleData: (data, sink) {
