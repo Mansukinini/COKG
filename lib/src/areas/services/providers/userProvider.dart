@@ -119,7 +119,6 @@ class UserProvider {
       return await _firestoreService.createUser(user);
     }on FirebaseException catch (e) {
       print(e);
-      return null;
     }
   }
 

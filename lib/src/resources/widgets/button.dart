@@ -41,40 +41,43 @@ class _AppButtonState extends State<AppButton> {
       break;
     }
 
-    return AnimatedContainer(
-      padding: EdgeInsets.only(
-        top: (pressed) ? BaseStyles.listFieldVertical + BaseStyles.animationOffset : BaseStyles.listFieldVertical,
-        left: BaseStyles.listFieldHorizontal,
-        right: BaseStyles.listFieldHorizontal,
-        bottom: (pressed) ? BaseStyles.listFieldVertical - BaseStyles.animationOffset : BaseStyles.listFieldVertical
-      ),
-      child: GestureDetector(
-        child: Container(
-          child: Center(child: Text(widget.labelText, style: fontStyle)),
-          height: ButtonStyles.buttonHeight,
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-            color: buttonColor,
-            borderRadius: BorderRadius.circular(BaseStyles.borderRadius),
-            boxShadow: pressed ? BaseStyles.boxShadowPressed : BaseStyles.boxShadow
-          ),
+    return Padding(
+      padding: const EdgeInsets.only(top: 16.0),
+      child: AnimatedContainer(
+        padding: EdgeInsets.only(
+          top: (pressed) ? BaseStyles.listFieldVertical + BaseStyles.animationOffset : BaseStyles.listFieldVertical,
+          left: BaseStyles.listFieldHorizontal,
+          right: BaseStyles.listFieldHorizontal,
+          bottom: (pressed) ? BaseStyles.listFieldVertical - BaseStyles.animationOffset : BaseStyles.listFieldVertical
         ),
-        onTapDown: (details){
-          setState(() {
+        child: GestureDetector(
+          child: Container(
+            child: Center(child: Text(widget.labelText, style: fontStyle)),
+            height: ButtonStyles.buttonHeight,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              color: buttonColor,
+              borderRadius: BorderRadius.circular(BaseStyles.borderRadius),
+              boxShadow: pressed ? BaseStyles.boxShadowPressed : BaseStyles.boxShadow
+            ),
+          ),
+          onTapDown: (details){
+            setState(() {
+              if (widget.buttonType != ButtonType.Disabled)
+                pressed = !pressed;
+            });
+          },
+          onTapUp: (details){
             if (widget.buttonType != ButtonType.Disabled)
               pressed = !pressed;
-          });
-        },
-        onTapUp: (details){
-          if (widget.buttonType != ButtonType.Disabled)
-            pressed = !pressed;
-        },
-        onTap: (){
-          if (widget.buttonType != ButtonType.Disabled)
-              widget.onPressed();
-        },
+          },
+          onTap: (){
+            if (widget.buttonType != ButtonType.Disabled)
+                widget.onPressed();
+          },
+        ),
+        duration: Duration(milliseconds:20),
       ),
-      duration: Duration(milliseconds:20),
     );
   }
 }

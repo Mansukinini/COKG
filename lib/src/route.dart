@@ -3,6 +3,9 @@ import 'package:cokg/src/areas/screens/devotion/devotion-sub-page.dart';
 import 'package:cokg/src/areas/screens/event/event-detail.dart';
 import 'package:cokg/src/areas/screens/event/event-list.dart';
 import 'package:cokg/src/areas/screens/group/group-detail.dart';
+import 'package:cokg/src/areas/screens/home/drawer/download.dart';
+import 'package:cokg/src/areas/screens/home/drawer/giving.dart';
+import 'package:cokg/src/areas/screens/home/drawer/inbox.dart';
 import 'package:cokg/src/areas/screens/home/home.dart';
 import 'package:cokg/src/areas/screens/home/drawer/login.dart';
 import 'package:cokg/src/areas/screens/home/drawer/profile.dart';
@@ -31,6 +34,12 @@ abstract class Routes {
         return MaterialPageRoute(builder: (context) => GroupDetail());
       case "/devotionDetail":
         return MaterialPageRoute(builder: (context) => DevotionDetail());
+      case "/download":
+        return MaterialPageRoute(builder: (context) => Download());
+      case "/inbox":
+        return MaterialPageRoute(builder: (context) => Inbox());
+      case "/giving":
+        return MaterialPageRoute(builder: (context) => Giving());
       case "/about":
         return MaterialPageRoute(builder: (context) => About());
       

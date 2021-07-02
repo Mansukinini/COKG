@@ -89,19 +89,19 @@ class _HomeState extends State<Home> {
         ListTile(
           leading: Icon(Icons.arrow_circle_down, size: 35.0, color: Colors.black),
           title: Text('Download', textAlign: TextAlign.left, style: TextStyles.buttonTextBlack),
-          onTap: () { },
+          onTap: () => Navigator.pushNamed(context, '/download'),
         ),
 
         ListTile(
           title: Text('Inbox', textAlign: TextAlign.left, style: TextStyles.buttonTextBlack),
           leading: Icon(Icons.inbox_rounded, size: 35.0, color: Colors.black),
-          onTap: () {},
+          onTap: () => Navigator.pushNamed(context, '/inbox'),
         ),
 
         ListTile(
           title: Text('Giving', textAlign: TextAlign.left, style: TextStyles.buttonTextBlack),
           leading: Icon(Icons.favorite_border, size: 35.0, color: Colors.black),
-          onTap: () { },
+          onTap: () => Navigator.pushNamed(context, '/giving'),
         ),
 
         ListTile(

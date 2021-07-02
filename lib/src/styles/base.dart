@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 abstract class BaseStyles {
 
-  static double get borderRadius => 5.0;
+  static double get borderRadius => 30.0;
 
   static double get borderWith => 2.0;
 

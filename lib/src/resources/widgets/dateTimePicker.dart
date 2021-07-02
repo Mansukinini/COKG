@@ -40,7 +40,7 @@ class _AppDateTimePickerState extends State<AppDateTimePicker> {
   Widget build(BuildContext context) {
     
     return Padding(
-      padding: const EdgeInsets.only(top:2.0, left: 16.0, right: 16.0, bottom: 12.0),
+      padding: const EdgeInsets.only(top:20.0, left: 16.0, right: 16.0, bottom: 12.0),
       child: DateTimeField(
         readOnly: widget.readyOnly,
         onChanged: widget.onChanged,

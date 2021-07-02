@@ -83,6 +83,7 @@ class _ProfileState extends State<Profile> {
               child: CircleAvatar(
                 radius: 25.0,
                 backgroundImage: (user != null && user.photoURL != null) ? NetworkImage(user.photoURL) : AssetImage('assets/images/user.jpg'),
+                backgroundColor: Colors.transparent,
                 child: FileUpload(icon: Icons.camera_alt, onPressed: userProvider.pickImage),
               ),
             );
@@ -136,10 +137,8 @@ class _ProfileState extends State<Profile> {
         ),
 
         (user != null && user.email != null) ? AppButton(labelText: 'Save', onPressed: () {
-          userProvider.saveProfile().then((value) {
-            if (value != null) {
-              Navigator.pushNamed(context, '/home');
-            }
+          userProvider.saveProfile().whenComplete(() {
+            Navigator.pushNamed(context, '/home');
           });
         }) : Container()
       ],

@@ -68,7 +68,11 @@ class _LoginState extends State<Login> {
           stream: authenticate.email,
           builder: (context, user) {
 
-            return AppTextField(hintText: 'Email', textInputType: TextInputType.emailAddress, onChanged: authenticate.setEmail);
+            return AppTextField(
+              labelText: 'Email', 
+              textInputType: TextInputType.emailAddress, 
+              onChanged: authenticate.setEmail
+            );
           }
         ),
 
@@ -76,7 +80,7 @@ class _LoginState extends State<Login> {
           stream: authenticate.password,
           builder: (context, user){
 
-            return AppTextField(hintText: 'Password', onChanged: authenticate.setPassword, obscureText: true);
+            return AppTextField(labelText: 'Password', onChanged: authenticate.setPassword, obscureText: true);
           },
         ),
 
@@ -102,12 +106,13 @@ class _LoginState extends State<Login> {
             style: ElevatedButton.styleFrom(
               primary: Colors.brown,
               onPrimary: Colors.white,
-              minimumSize: Size(double.infinity, 45)
+              minimumSize: Size(double.infinity, 45),
+              shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
             ),
             icon: FaIcon(FontAwesomeIcons.google, color: Colors.red),
             onPressed: (){
               authenticate.signInWithGoogle().then((userData) {
-                authenticate.createUser(userData.user);
+                authenticate.createUser(userData.user).whenComplete(() => Navigator.pushReplacementNamed(context, "/home"));
               });
             }, 
             label: Text('Sign Up with Google')
