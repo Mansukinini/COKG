@@ -3,6 +3,7 @@ import 'package:cokg/src/areas/screens/event/event-list.dart';
 import 'package:cokg/src/areas/screens/group/groups-list.dart';
 import 'package:cokg/src/areas/screens/home/drawer/profile.dart';
 import 'package:cokg/src/areas/services/providers/authentication.dart';
+import 'package:cokg/src/resources/utils/circularProgressIndicator.dart';
 import 'package:cokg/src/resources/utils/floatingActionButton.dart';
 import 'package:cokg/src/resources/widgets/navigatorBar.dart';
 import 'package:cokg/src/styles/color.dart';
@@ -113,7 +114,16 @@ class _HomeState extends State<Home> {
         (user != null) ? ListTile(
           title: Text('Sign Out', textAlign: TextAlign.left, style: TextStyles.buttonTextBlack),
           leading: Icon(Icons.logout_rounded, size: 35.0, color: Colors.black),
-          onTap: () => auth.signOut().then((value) => Navigator.pushReplacementNamed(context, '/home')),
+          onTap: () async {
+            ScaffoldMessenger.of(context).showSnackBar(ShowSnabar.loadingSnackBar('Loggin off...'));
+            await auth.signOut().then((user) {
+              if (user == null) {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(ShowSnabar.snackBar('User Logged off')); 
+                Navigator.pushReplacementNamed(context, '/home');
+              }
+            });
+          },
         ) 
         
         : ListTile(

@@ -1,10 +1,11 @@
 
+import 'dart:async';
 import 'package:cokg/src/areas/services/providers/authentication.dart';
+import 'package:cokg/src/resources/utils/circularProgressIndicator.dart';
 import 'package:cokg/src/resources/widgets/button.dart';
 import 'package:cokg/src/resources/widgets/textfield.dart';
-import 'package:cokg/src/styles/color.dart';
-import 'package:cokg/src/styles/text.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 
@@ -14,10 +15,15 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
+  StreamSubscription userSubscription;
 
  @override
  void initState() {
-  //  final authenticate = Provider.of<AuthenticationBloc>(context, listen: false);
+  final authenticate = Provider.of<Authentication>(context, listen: false);
+    userSubscription = authenticate.user.listen((user) {
+      if (user != null)
+        Navigator.pushReplacementNamed(context, "/home");
+    });
    super.initState();
  }
 
@@ -25,7 +31,12 @@ class _SignupState extends State<Signup> {
   Widget build(BuildContext context) {
     final authenticate = Provider.of<Authentication>(context);
 
-    return Scaffold(body: _pageBody(context, authenticate));
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(icon: Icon(Icons.arrow_back), iconSize: 30.0, color: Colors.white, onPressed: () => Navigator.pop(context)),
+      ),
+      body: _pageBody(context, authenticate)
+    );
   }
 
   Widget _pageBody(BuildContext context, Authentication authenticate) {
@@ -33,17 +44,12 @@ class _SignupState extends State<Signup> {
       children: <Widget>[
         SizedBox(height: 30.0,),
 
-        Padding(
-          padding: const EdgeInsets.all(9.0),
-          child: Text("Create your Christ Our King Account", style: TextStyles.title),
-        ),
-
         StreamBuilder<String>(
           stream: authenticate.firstName,
           builder: (context, snapshot) {
 
             return AppTextField(
-              hintText: 'Name',
+              labelText: 'Name',
               textInputType: TextInputType.emailAddress,
               onChanged: authenticate.setFirstName,
             );
@@ -55,7 +61,7 @@ class _SignupState extends State<Signup> {
           builder: (context, snapshot) {
 
             return AppTextField(
-              hintText: 'Surname',
+              labelText: 'Surname',
               textInputType: TextInputType.emailAddress,
               onChanged: authenticate.setLastName,
             );
@@ -67,7 +73,7 @@ class _SignupState extends State<Signup> {
           builder: (context, snapshot) {
 
             return AppTextField(
-              hintText: 'Email',
+             labelText: 'Email',
               textInputType: TextInputType.emailAddress,
               onChanged: authenticate.setEmail,
             );
@@ -79,7 +85,7 @@ class _SignupState extends State<Signup> {
           builder: (context, snapshot) {
 
             return AppTextField(
-              hintText: 'Password',
+              labelText: 'Password',
               obscureText: true,
               onChanged: authenticate.setPassword,
             );
@@ -91,7 +97,7 @@ class _SignupState extends State<Signup> {
           builder: (context, snapshot) {
 
             return AppTextField(
-              hintText: 'Confirm - Password',
+              labelText: 'Confirm - Password',
               obscureText: true,
               onChanged: authenticate.setConfirmPassword,
             );
@@ -101,31 +107,44 @@ class _SignupState extends State<Signup> {
         AppButton(
           labelText: 'Sign Up', 
           buttonType: ButtonType.LightBlue,
-          onPressed: () { 
-            authenticate.signup().then((value) {
-              if (value != null && value.email.isNotEmpty) {
-                Navigator.pushReplacementNamed(context, '/home');
+          onPressed: () async{ 
+            ScaffoldMessenger.of(context).showSnackBar(ShowSnabar.loadingSnackBar('Loggin up...'));
+            
+            await authenticate.signup().then((user) {
+              if (user != null && user.email.isNotEmpty) {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(ShowSnabar.snackBar(user.displayName + ' Successfully Logged'));
+                Navigator.pushReplacementNamed(context, "/home");
               }
             });
           },
         ),
 
-        Container(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text('Already have an account?', style: TextStyles.suggestion),
-              // ignore: deprecated_member_use
-              FlatButton(
-                child: Text('Log In', style: TextStyle(fontSize: 20.0)),
-                textColor: AppColors.brown,
-                onPressed: () => Navigator.pushNamed(context, '/login'),
-              )
-            ]
-          ),
-        )
-        
+        AppButton(
+          labelText: 'Sign Up with Google',
+          icon: FaIcon(FontAwesomeIcons.google, color: Colors.red),
+          isAnimatedButton: false, 
+          onPressed: () async {
+            ScaffoldMessenger.of(context).showSnackBar(ShowSnabar.loadingSnackBar('Loggin Up...'));
+
+            await authenticate.signInWithGoogle().then((userData) {
+              authenticate.createUser(userData.user).whenComplete(() {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(ShowSnabar.snackBar(userData.user.displayName + ' Successfully Logged'));
+                Navigator.pushReplacementNamed(context, "/home");
+              });
+            });
+          }
+        ),
+
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    if (userSubscription != null)
+      userSubscription.cancel();
+    super.dispose();
   }
 }

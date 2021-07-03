@@ -46,7 +46,7 @@ class _MediaPlayerState extends State<MediaPlayer> {
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Colors.brown[200],
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(30.0),
             topRight: Radius.circular(30.0),

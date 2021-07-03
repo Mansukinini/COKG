@@ -49,7 +49,7 @@ abstract class TextStyles {
 
   static TextStyle get placeholder {
     return GoogleFonts.roboto(
-        textStyle: TextStyle(color: AppColors.black, fontSize: 16.0));
+        textStyle: TextStyle(color: AppColors.brown, fontSize: 16.0));
   }
 
   static TextStyle get actionText {

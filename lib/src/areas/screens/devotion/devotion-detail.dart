@@ -1,5 +1,6 @@
 import 'package:cokg/src/areas/models/devotion.dart';
 import 'package:cokg/src/areas/services/providers/devotionRepositry.dart';
+import 'package:cokg/src/resources/utils/circularProgressIndicator.dart';
 import 'package:cokg/src/resources/widgets/button.dart';
 import 'package:cokg/src/resources/widgets/textfield.dart';
 import 'package:cokg/src/styles/text.dart';
@@ -68,18 +69,22 @@ class _DevotionDetailState extends State<DevotionDetail> {
       appBar: AppBar(leading: IconButton(icon: Icon(Icons.arrow_back), iconSize: 30.0, color: Colors.white, onPressed: () => Navigator.pop(context)),
         title: Center(child: Text(action, style: TextStyles.navTitle)),
           actions: <Widget>[
+            (isEdit) ? 
+              IconButton(icon: Icon(Icons.check), iconSize: 35.0, color: Colors.white, 
+              onPressed: () async {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Adding devotion ...')));
 
-            (isEdit) ? IconButton(icon: Icon(Icons.check), iconSize: 35.0, color: Colors.white, 
-          onPressed: () async {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Adding devotion ...')));
-
-            await devotionProvider.saveDevotion().then((value) => Navigator.pop(context));
+              await devotionProvider.saveDevotion().then((value) => Navigator.pop(context));
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Devotion Added'), backgroundColor: Colors.green));
-          }) : Container(),
-            (user != null && user.email == Config.admin) ? !(isEdit) ? popupMenuButton(context) : Container() : Container(),
-          ]),
-          body: _pageBody(context, devotionProvider, devotion.data),
+            }) : Container(),
+
+            (user != null && user.email == Config.admin) ? 
+              !(isEdit) ? popupMenuButton(context) : Container() : Container(),
+          ]
+        ),
+
+      body: _pageBody(context, devotionProvider, devotion.data),
     );
   }
 
@@ -105,47 +110,47 @@ class _DevotionDetailState extends State<DevotionDetail> {
     
   Widget _pageBody(BuildContext context, DevotionRepositry devotionRepositry, Devotion devotion) {
     return SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            StreamBuilder<String>(
-              stream: devotionRepositry.getTitle,
-              builder: (context, snapshots) {
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          StreamBuilder<String>(
+            stream: devotionRepositry.getTitle,
+            builder: (context, snapshots) {
 
-                return AppTextField(labelText: "Title",
-                  readOnly: !isEdit,
-                  initialText: (devotion != null && devotion.title != null) ? devotion.title : null,
-                  onChanged: devotionRepositry.setTitle,
-                );
-              }
-            ),
+              return AppTextField(labelText: "Title",
+                readOnly: !isEdit,
+                initialText: (devotion != null && devotion.title != null) ? devotion.title : null,
+                onChanged: devotionRepositry.setTitle,
+              );
+            }
+          ),
 
-            StreamBuilder<String>(
-              stream: devotionRepositry.getDescription,
-              builder: (context, snapshot) {
+          StreamBuilder<String>(
+            stream: devotionRepositry.getDescription,
+            builder: (context, snapshot) {
 
-                return AppTextField(labelText: "Description",
-                  maxLines: 2,
-                  readOnly: !isEdit,
-                  onChanged: devotionRepositry.setDescription,
-                  initialText: (devotion != null && devotion.description != null) ? devotion.description : null
-                );
-              }
-            ),
+              return AppTextField(labelText: "Description",
+                maxLines: 2,
+                readOnly: !isEdit,
+                onChanged: devotionRepositry.setDescription,
+                initialText: (devotion != null && devotion.description != null) ? devotion.description : null
+              );
+            }
+          ),
 
-            (isEdit) ? AppButton(
-              labelText: "Upload Audio file", 
-              onPressed: () {
-                devotionRepositry.uploadFile().then((value) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Upload Completed'), backgroundColor: Colors.green));
-                });
-              }
-            ) : Container(),
+          (isEdit) ? AppButton(
+            labelText: "Upload Audio", 
+            onPressed: () {
+              devotionRepositry.uploadFile().then((value) {
+                ScaffoldMessenger.of(context).showSnackBar(ShowSnabar.loadingSnackBar('Uploading...'));
+              });
+            }
+          ) : Container(),
 
-            // MediaPlayer(id: widget.id),
-          ],
-        ),
-      );
+          // MediaPlayer(id: widget.id),
+        ],
+      ),
+    );
   }
 }
 

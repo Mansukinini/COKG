@@ -1,6 +1,7 @@
 import 'package:cokg/src/areas/models/Event.dart';
 import 'package:cokg/src/areas/services/providers/event-provider.dart';
 import 'package:cokg/src/config.dart';
+import 'package:cokg/src/resources/utils/circularProgressIndicator.dart';
 import 'package:cokg/src/resources/widgets/button.dart';
 import 'package:cokg/src/resources/widgets/dateTimePicker.dart';
 import 'package:cokg/src/resources/widgets/textfield.dart';
@@ -75,13 +76,12 @@ class _EventDetailState extends State<EventDetail> {
         actions: <Widget>[
           (isEdit) ? IconButton(icon: Icon(Icons.check), iconSize: 35.0, color: Colors.white, 
           onPressed: () async {
-
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Adding event ...')));
 
             await eventProvider.saveEvent().whenComplete(() {
-              Navigator.pushNamed(context, '/home');
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Added an Event'), backgroundColor: Colors.green));
+              Navigator.pushNamed(context, '/home');
             });
           }) : Container(),
           (user != null && user.email == Config.admin) ? !(isEdit) ? popupMenuButton(context) : Container() : Container(),
@@ -106,28 +106,6 @@ class _EventDetailState extends State<EventDetail> {
       padding: EdgeInsets.only(top: 10.0, bottom: 20.0),
       child: ListView(children: <Widget>[ 
           SizedBox(height: 20.0,),
-
-          StreamBuilder<String>(
-            stream: eventProvider.getImageUrl,
-            builder: (context, snapshot) {
-              
-              if (!snapshot.hasData || snapshot.data == "") {
-                return AppButton(labelText: 'Add Image', onPressed: () => eventProvider.pickImage());
-              }
-
-              return Column(
-                children: <Widget>[
-                  Padding(padding: BaseStyles.listPadding,
-                  child: Image.network(snapshot.data),
-                  ),
-
-                  (isEdit) ? AppButton(labelText: 'Change Image',
-                    onPressed: () => eventProvider.pickImage(),
-                  ) : Container()
-                ],
-              );
-            }
-          ),
 
           StreamBuilder<String>(
             stream: eventProvider.getName,
@@ -170,6 +148,29 @@ class _EventDetailState extends State<EventDetail> {
               );
             }
           ),
+
+          StreamBuilder<String>(
+            stream: eventProvider.getImageUrl,
+            builder: (context, snapshot) {
+              
+              if (!snapshot.hasData || snapshot.data == "") {
+                return AppButton(
+                  labelText: 'Add Image', 
+                  onPressed: () => uploadImage(eventProvider)
+                );
+              }
+              
+              return Column(
+                children: <Widget>[
+                  Padding(padding: BaseStyles.listPadding, child: Image.network(snapshot.data)),
+
+                  (isEdit) ? AppButton(labelText: 'Change Image',
+                    onPressed: () => uploadImage(eventProvider),
+                  ) : Container()
+                ],
+              );
+            }
+          ),
         ],
       ),
     );
@@ -183,5 +184,11 @@ class _EventDetailState extends State<EventDetail> {
     if(item == Config.delete) {
       eventProvider.deleteEvent(widget.id).then((value) => Navigator.pop(context));
     }
+  }
+
+  void uploadImage(EventProvider eventProvider) {
+    eventProvider.pickImage().whenComplete(() {
+      ScaffoldMessenger.of(context).showSnackBar(ShowSnabar.loadingSnackBar('Uploading...'));
+    });
   }
 }

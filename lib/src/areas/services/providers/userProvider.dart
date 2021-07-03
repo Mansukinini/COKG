@@ -116,7 +116,8 @@ class UserProvider {
         isValid: true, 
         email: _email.value ?? null);
 
-      return await _firestoreService.createUser(user);
+      return await _firestoreService.createUser(user).whenComplete(() => 
+      _firestoreService.updateUser(user));
     }on FirebaseException catch (e) {
       print(e);
     }

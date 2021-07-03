@@ -15,7 +15,7 @@ abstract class TextFieldStyles {
   static InputDecoration materialDecoration(String labelText, String hintText, IconData icon, String errorText) 
   {
     return InputDecoration(
-      contentPadding: EdgeInsets.only(top: 2.0, left: 1.0, right: 1.0),
+      contentPadding: EdgeInsets.only(top: 2.0, left: 1.0, right: 1.0, bottom: 1.0),
       labelText: labelText != null ? labelText : null,
       hintText: hintText != null ? hintText : null,
       hintStyle: TextFieldStyles.placeholder,

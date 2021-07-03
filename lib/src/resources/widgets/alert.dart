@@ -29,5 +29,11 @@ abstract class AppAlerts {
       }
     );
   }
-
 }
+
+// Future<void> showAlertDialog(String title, String message) {
+//   return showDialog(context: context, 
+//     builder: (BuildContext context) {
+//       return AlertDialog(title: Text(title), content: Text(message));
+//   });
+// }

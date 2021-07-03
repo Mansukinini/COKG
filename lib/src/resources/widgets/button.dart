@@ -5,13 +5,18 @@ import 'package:cokg/src/styles/text.dart';
 import 'package:flutter/material.dart';
 
 class AppButton extends StatefulWidget {
+
   final String labelText;
   final ButtonType buttonType;
+  final Widget icon;
+  final bool isAnimatedButton;
   final void Function() onPressed;
 
   AppButton({
     @required this.labelText,
+    this.isAnimatedButton = true,
     this.buttonType,
+    this.icon,
     this.onPressed
   });
 
@@ -23,6 +28,15 @@ class _AppButtonState extends State<AppButton> {
   bool pressed = false;
   @override
   Widget build(BuildContext context) {
+
+    if (widget.isAnimatedButton){
+      return animatedContainer();
+    } else {
+      return elevatedButton();
+    }
+  }
+
+  Widget animatedContainer() {
     TextStyle fontStyle;
     Color buttonColor;
 
@@ -77,6 +91,25 @@ class _AppButtonState extends State<AppButton> {
           },
         ),
         duration: Duration(milliseconds:20),
+      ),
+    );
+  }
+
+  Widget elevatedButton() {
+    TextStyle fontStyle;
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 10.0, right: 12.0, left: 12.0),
+      child: ElevatedButton.icon(
+        style: ElevatedButton.styleFrom(
+          primary: Colors.brown,
+          onPrimary: Colors.white,
+          minimumSize: Size(double.infinity, 45),
+          shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+        ),
+        icon: widget.icon,
+        onPressed: widget.onPressed,
+        label: Text(widget.labelText, style: fontStyle)
       ),
     );
   }

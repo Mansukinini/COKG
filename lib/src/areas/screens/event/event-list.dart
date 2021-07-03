@@ -13,27 +13,28 @@ class EventList extends StatelessWidget {
     
     return Scaffold(
       body: NestedScrollView(
-        headerSliverBuilder: (context, _) {
-          return [
-            SliverAppBar(
-              expandedHeight: 200,
-              collapsedHeight: kToolbarHeight+1,
-              flexibleSpace: Stack(
-                children: <Widget>[
-                  Positioned.fill(
-                    child: Image.asset('assets/images/main.jpg', fit: BoxFit.cover)
-                  )
-                ]
-              ),
-            )
-          ];
-        },
+        headerSliverBuilder: (context, _) => [headerSilverAppBar()],
         body: _pageBody(context, eventProvider)
       ),
     );
   }
 
+  SliverAppBar headerSilverAppBar() {
+    return SliverAppBar(
+      expandedHeight: 200,
+      collapsedHeight: kToolbarHeight+1,
+      flexibleSpace: Stack(
+        children: <Widget>[
+          Positioned.fill(
+            child: Image.asset('assets/images/main.jpg', fit: BoxFit.cover)
+          )
+        ]
+      ),
+    );
+  }
+
   StreamBuilder<List<Event>> _pageBody(BuildContext context, EventProvider eventProvider) {
+
     return StreamBuilder<List<Event>>(
       stream: eventProvider.events,
       builder: (context, event) {

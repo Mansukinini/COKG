@@ -1,5 +1,6 @@
 import 'package:cokg/src/areas/models/group.dart';
 import 'package:cokg/src/areas/services/providers/groupProvider.dart';
+import 'package:cokg/src/resources/utils/circularProgressIndicator.dart';
 import 'package:cokg/src/resources/widgets/button.dart';
 import 'package:cokg/src/resources/widgets/dateTimePicker.dart';
 import 'package:cokg/src/resources/widgets/textfield.dart';
@@ -111,30 +112,6 @@ class _GroupDetailState extends State<GroupDetail> {
 
     return ListView(children: <Widget>[
         StreamBuilder<String>(
-          stream: groupProvider.getImageUrl,
-          builder: (context, snapshot) {
-            
-            if ((!snapshot.hasData || snapshot.data == "") && isEdit) {
-              return AppButton(labelText: 'Add Image',
-                onPressed: () => groupProvider.pickImage(),
-              );
-            }
-
-            return Column(
-              children: <Widget>[
-                Padding(padding: BaseStyles.listPadding,
-                child: snapshot.data != null ? Image.network(snapshot.data) : Container(),
-                ),
-
-                (isEdit) ? AppButton(labelText: 'Change Image',
-                  onPressed: () => groupProvider.pickImage(),
-                ) : Container()
-              ],
-            );
-          }
-        ),   
-        
-        StreamBuilder<String>(
           stream: null,
           builder: (context, snapshot) {
 
@@ -172,8 +149,38 @@ class _GroupDetailState extends State<GroupDetail> {
               readyOnly: !isEdit,
             );
           }
-       )
+        ),
+
+        StreamBuilder<String>(
+          stream: groupProvider.getImageUrl,
+          builder: (context, snapshot) {
+            
+            if ((!snapshot.hasData || snapshot.data == "") && isEdit) {
+              return AppButton(labelText: 'Add Image',
+                onPressed: () => uploadImage(groupProvider),
+              );
+            }
+
+            return Column(
+              children: <Widget>[
+                Padding(padding: BaseStyles.listPadding,
+                child: snapshot.data != null ? Image.network(snapshot.data) : Container(),
+                ),
+
+                (isEdit) ? AppButton(labelText: 'Change Image',
+                  onPressed: () => uploadImage(groupProvider),
+                ) : Container()
+              ],
+            );
+          }
+        ), 
      ]
     );
+  }
+
+  void uploadImage(GroupProvider groupProvider) {
+    groupProvider.pickImage().whenComplete(() {
+      ScaffoldMessenger.of(context).showSnackBar(ShowSnabar.loadingSnackBar('Uploading...'));
+    });
   }
 }

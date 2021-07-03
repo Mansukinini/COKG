@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:cokg/src/areas/models/Event.dart';
@@ -89,6 +90,13 @@ class EventProvider {
     //Get image from Device
     PickedFile image = await ImagePicker().getImage(source: ImageSource.gallery);
 
+    await Permission.photos.request();
+
+    var permissionStatus = await Permission.photos.status;
+    if (permissionStatus.isGranted) {
+
+    }
+
     //Upload to Firebase
     if (image != null) {
       var imageUrlDb = await FirebaseStorageService.uploadEventImage(File(image.path), uuid.v4());
@@ -101,8 +109,6 @@ class EventProvider {
       print('No path Received');
     }
   }
-
-  // Todo: Add Validation
 
   Future<void> saveEvent() {
 

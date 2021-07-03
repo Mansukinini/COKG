@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cokg/src/areas/services/providers/authentication.dart';
+import 'package:cokg/src/resources/utils/circularProgressIndicator.dart';
 import 'package:cokg/src/resources/widgets/button.dart';
 import 'package:cokg/src/resources/widgets/textfield.dart';
 import 'package:cokg/src/styles/text.dart';
@@ -13,12 +14,12 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  StreamSubscription _userSubscription;
+  StreamSubscription userSubscription;
 
   @override
   void initState() {
     final authenticate = Provider.of<Authentication>(context, listen: false);
-    _userSubscription = authenticate.user.listen((user) {
+    userSubscription = authenticate.user.listen((user) {
       if (user != null)
         Navigator.pushReplacementNamed(context, "/home");
     });
@@ -27,7 +28,12 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold( body: _pageBody(context));
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(icon: Icon(Icons.arrow_back), iconSize: 30.0, color: Colors.white, onPressed: () => Navigator.pop(context)),
+      ),
+       body: _pageBody(context)
+    );
   }
 
   Widget _pageBody(BuildContext context) {
@@ -35,7 +41,7 @@ class _LoginState extends State<Login> {
     
     return ListView(
       children: <Widget>[
-        SizedBox(height: MediaQuery.of(context).size.height * .15),
+        SizedBox(height: MediaQuery.of(context).size.height * .10),
 
         Container(
           child: Column(
@@ -69,7 +75,8 @@ class _LoginState extends State<Login> {
           builder: (context, user) {
 
             return AppTextField(
-              labelText: 'Email', 
+              labelText: 'Username',
+              hintText: 'exemple@gmail.com', 
               textInputType: TextInputType.emailAddress, 
               onChanged: authenticate.setEmail
             );
@@ -89,10 +96,14 @@ class _LoginState extends State<Login> {
           builder: (context, user) {
 
             return AppButton(labelText: 'Log In', buttonType: ButtonType.LightBlue, 
-              onPressed: () {
-                authenticate.login().then((response) {
-                  if (response != null) {
-                    Navigator.pop(context);
+              onPressed: () async {
+                ScaffoldMessenger.of(context).showSnackBar(ShowSnabar.loadingSnackBar('Loggin In...'));
+                
+                await authenticate.login().then((user) {
+                  if (user != null) {
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                    ScaffoldMessenger.of(context).showSnackBar(ShowSnabar.snackBar(user.firstName + ' Logged'));
+                    Navigator.pushReplacementNamed(context, "/home");
                   }
                 });
               },
@@ -100,31 +111,30 @@ class _LoginState extends State<Login> {
           },
         ),
 
-        Padding(
-          padding: const EdgeInsets.only(top: 10.0, right: 12.0, left: 12.0),
-          child: ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(
-              primary: Colors.brown,
-              onPrimary: Colors.white,
-              minimumSize: Size(double.infinity, 45),
-              shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-            ),
-            icon: FaIcon(FontAwesomeIcons.google, color: Colors.red),
-            onPressed: (){
-              authenticate.signInWithGoogle().then((userData) {
-                authenticate.createUser(userData.user).whenComplete(() => Navigator.pushReplacementNamed(context, "/home"));
+        AppButton(
+          labelText: 'Sign In with Google',
+          icon: FaIcon(FontAwesomeIcons.google, color: Colors.red),
+          isAnimatedButton: false, 
+          onPressed: () async {
+            ScaffoldMessenger.of(context).showSnackBar(ShowSnabar.loadingSnackBar('Loggin In...'));
+            
+            await authenticate.signInWithGoogle().then((userData) {
+              authenticate.createUser(userData.user).whenComplete(() {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(ShowSnabar.snackBar(userData.user.displayName + ' Logged'));
+                Navigator.pushReplacementNamed(context, "/home");
               });
-            }, 
-            label: Text('Sign Up with Google')
-          ),
-        ),
+            });
+          }
+        )
       ],
     );
   }
 
   @override
   void dispose() {
-    _userSubscription.cancel();
+    if (userSubscription != null)
+      userSubscription.cancel();
     super.dispose();
   }
 }

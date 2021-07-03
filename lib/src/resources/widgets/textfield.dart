@@ -2,6 +2,7 @@ import 'package:cokg/src/styles/textfields.dart';
 import 'package:flutter/material.dart';
 
 class AppTextField extends StatefulWidget {
+  
   final String hintText;
   final String labelText;
   final IconData materialIcon;

@@ -24,10 +24,14 @@ class FirestoreService {
     
     return collection
       .doc(userApp.id).set(userApp.toMap())
-      .then((value) {
-        FirebaseAuth.instance.currentUser.updateProfile(displayName: userApp.firstName, photoURL: userApp.imageUrl);
-        return FirebaseAuth.instance.currentUser;
-    });
+      .then((value) => FirebaseAuth.instance.currentUser);
+  }
+
+  Future updateUser(UserAuth userApp) {
+    final CollectionReference collection = _firebaseFirestore.collection('user');
+    
+    return FirebaseAuth.instance.currentUser.updateProfile(displayName: userApp.firstName, photoURL: userApp.imageUrl)
+      .whenComplete(() => collection.doc(userApp.id).set(userApp.toMap(), SetOptions(merge: true)));
   }
 
   Future<UserAuth> getUserById(String id) {
