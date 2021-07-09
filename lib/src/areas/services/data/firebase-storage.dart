@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:cokg/src/areas/models/firebase-file.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path_provider/path_provider.dart';
 
 class FirebaseStorageService {
 
@@ -17,9 +19,39 @@ class FirebaseStorageService {
     }
   }
 
-  static Future<String> downloadAudio(String url) async{
-    String result = await FirebaseStorage.instance.ref(url).getDownloadURL();
-    return result;
+  static Future<void> downloadAudioFromUrl(String url) async {
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    File downloadToFile = File('${appDocDir.path}');
+
+    try {
+     await FirebaseStorage.instance
+          .ref(url)
+          .writeToFile(downloadToFile);
+      print('completed');
+    } catch (e) { }
+  }
+
+  static Future<List<FirebaseFile>> downloadAudio(String url) async{
+    final ref = FirebaseStorage.instance.ref(url);
+    final result = await ref.listAll();
+
+    final urls = await _getDownloadLinks(result.items);
+    
+    return urls.asMap().map((index, url) {
+      final file = FirebaseFile(ref: result.items[index], name: ref.name, url: url);
+      return MapEntry(index, file);
+    }).values.toList();
+  }
+
+  static Future<List<String>> _getDownloadLinks(List<Reference> refs) {
+    return Future.wait(refs.map((e) => e.getDownloadURL()).toList());
+  }
+
+  static Future downloadFile(Reference reference) async {
+    final dir = await getApplicationDocumentsDirectory();
+    final file = File('${dir.path}/${reference.name}');
+
+    await reference.writeToFile(file);
   }
 
   static Future<String> uploadEventImage(File file, String filename) async {

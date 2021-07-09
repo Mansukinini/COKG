@@ -1,7 +1,10 @@
 import 'package:cokg/src/areas/models/devotion.dart';
+import 'package:cokg/src/areas/models/firebase-file.dart';
+import 'package:cokg/src/areas/services/data/firebase-storage.dart';
 import 'package:cokg/src/areas/services/providers/devotionRepositry.dart';
 import 'package:cokg/src/resources/utils/circularProgressIndicator.dart';
 import 'package:cokg/src/resources/widgets/button.dart';
+import 'package:cokg/src/resources/widgets/media-player.dart';
 import 'package:cokg/src/resources/widgets/textfield.dart';
 import 'package:cokg/src/styles/text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,12 +22,16 @@ class DevotionDetail extends StatefulWidget {
 }
 
 class _DevotionDetailState extends State<DevotionDetail> {
+  Future<List<FirebaseFile>> fileList;
   bool isEdit = false;
   User user;
 
   @override
   void initState() {
     user = _auth.currentUser;
+    if (widget.id != null) {
+      fileList = FirebaseStorageService.downloadAudio('audio/');
+    }
     super.initState();
   }
   @override
@@ -138,14 +145,66 @@ class _DevotionDetailState extends State<DevotionDetail> {
             }
           ),
 
-          (isEdit) ? AppButton(
-            labelText: "Upload Audio", 
-            onPressed: () {
-              devotionRepositry.uploadFile().then((value) {
-                ScaffoldMessenger.of(context).showSnackBar(ShowSnabar.loadingSnackBar('Uploading...'));
-              });
+          // (isEdit) ? AppButton(
+          //   labelText: "Upload Audio", 
+          //   onPressed: () {
+          //     devotionRepositry.uploadFile().then((value) {
+          //       ScaffoldMessenger.of(context).showSnackBar(ShowSnabar.loadingSnackBar('Uploading...'));
+          //     });
+          //   }
+          // ) : Container(),
+
+          StreamBuilder<String>(
+            stream: devotionRepositry.getUrl,
+            builder: (context, snapshot) {
+              print(fileList.asStream());
+              if (!snapshot.hasData || snapshot.data == "") {
+                return AppButton(
+                  labelText: "Upload Audio", 
+                  onPressed: () {
+                    devotionRepositry.uploadFile().then((value) {
+                      ScaffoldMessenger.of(context).showSnackBar(ShowSnabar.loadingSnackBar('Uploading...'));
+                    });
+                  }
+                );
+              }
+              
+              return Column(
+                children: <Widget>[
+                  SizedBox(height: 30.0),
+
+                  (snapshot.hasData) ? FutureBuilder(
+                    future: fileList,
+                    builder: (context, snapshot) {
+
+                      print(snapshot.data);
+
+                      return AppButton(labelText: 'Download',
+                        onPressed: () async {
+                          await FirebaseStorageService.downloadAudioFromUrl(snapshot.data);
+                          // Todo: pass the file reference
+                        // await FirebaseStorageService.downloadFile(reference);
+                        },
+                      );
+                    }
+                  ) : Container(),
+
+                  // StreamBuilder<String>(
+                  //   stream: devotionRepositry.getUrl,
+                  //   builder: (context, snapshot) {
+
+                  //     return AppButton(labelText: 'Download',
+                  //       onPressed: () async {
+                  //         // Todo: pass the file reference
+                  //       await FirebaseStorageService.downloadAudioFromUrl(snapshot.data);
+                  //       },
+                  //     );
+                  //   }
+                  // ),
+                ],
+              );
             }
-          ) : Container(),
+          ),
 
           // MediaPlayer(id: widget.id),
         ],

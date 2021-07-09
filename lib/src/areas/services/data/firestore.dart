@@ -3,7 +3,6 @@ import 'package:cokg/src/areas/models/Event.dart';
 import 'package:cokg/src/areas/models/devotion.dart';
 import 'package:cokg/src/areas/models/group.dart';
 import 'package:cokg/src/areas/models/user.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uuid/uuid.dart';
 
 class FirestoreService {
@@ -16,7 +15,6 @@ class FirestoreService {
   factory FirestoreService() => _service;
 
   static FirestoreService get instance => _service;
-
    
   //create user
   Future createUser(UserAuth userApp) {
@@ -24,15 +22,15 @@ class FirestoreService {
     
     return collection
       .doc(userApp.id).set(userApp.toMap())
-      .then((value) => FirebaseAuth.instance.currentUser);
+      .then((user) => user);
   }
 
-  Future updateUser(UserAuth userApp) {
-    final CollectionReference collection = _firebaseFirestore.collection('user');
+  // Future updateUser(UserAuth userApp) {
+  //   final CollectionReference collection = _firebaseFirestore.collection('user');
     
-    return FirebaseAuth.instance.currentUser.updateProfile(displayName: userApp.firstName, photoURL: userApp.imageUrl)
-      .whenComplete(() => collection.doc(userApp.id).set(userApp.toMap(), SetOptions(merge: true)));
-  }
+  //   return FirebaseAuth.instance.currentUser.updateProfile(displayName: userApp.firstName, photoURL: userApp.imageUrl)
+  //     .whenComplete(() => collection.doc(userApp.id).set(userApp.toMap(), SetOptions(merge: true)));
+  // }
 
   Future<UserAuth> getUserById(String id) {
     final CollectionReference collection = _firebaseFirestore.collection('user');

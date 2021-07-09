@@ -74,6 +74,7 @@ class _EventDetailState extends State<EventDetail> {
         leading: IconButton(icon: Icon(Icons.arrow_back), iconSize: 30.0, color: Colors.white, onPressed: () => Navigator.pop(context)),
         title: Center(child: Text(action, style: TextStyles.navTitle)),
         actions: <Widget>[
+          // Save button
           (isEdit) ? IconButton(icon: Icon(Icons.check), iconSize: 35.0, color: Colors.white, 
           onPressed: () async {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Adding event ...')));

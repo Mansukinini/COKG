@@ -13,11 +13,11 @@ class AppFloatingActionButton extends StatelessWidget {
         return FloatingActionButton(child: Icon(Icons.add), onPressed:() => Navigator.of(context).pushNamed("/groupDetail"));
       case 2:
         return FloatingActionButton(child: Icon(Icons.add), onPressed:() => Navigator.of(context).pushNamed("/devotionDetail"));
-      case 3:
-        return FloatingActionButton(child: Icon(Icons.add), onPressed:() => Navigator.of(context).pushNamed("/groupDetail"));
+      // case 3:
+      //   return FloatingActionButton(child: Icon(Icons.add), onPressed:() => Navigator.of(context).pushNamed("/groupDetail"));
 
       default:
-        return FloatingActionButton(child: Icon(Icons.add), onPressed:() => Navigator.of(context).pushNamed("/login"));
+        return Container();
     }
   }
 }

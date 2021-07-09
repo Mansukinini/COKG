@@ -86,7 +86,7 @@ class UserProvider {
     await _firestoreService.getUserById(id).then((value) {
       result = value;
     });
-
+    print(result);
     return result;
   }
 
@@ -114,10 +114,10 @@ class UserProvider {
         contactNo: _contactNo.value ?? null, 
         imageUrl: _imageUrl.value ?? null, 
         isValid: true, 
-        email: _email.value ?? null);
+        email: _email.value ?? null
+      );
 
-      return await _firestoreService.createUser(user).whenComplete(() => 
-      _firestoreService.updateUser(user));
+      return await _firestoreService.createUser(user);
     }on FirebaseException catch (e) {
       print(e);
     }

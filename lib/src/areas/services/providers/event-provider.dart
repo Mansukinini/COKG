@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
@@ -88,14 +89,7 @@ class EventProvider {
 
   Future pickImage() async {
     //Get image from Device
-    PickedFile image = await ImagePicker().getImage(source: ImageSource.gallery);
-
-    await Permission.photos.request();
-
-    var permissionStatus = await Permission.photos.status;
-    if (permissionStatus.isGranted) {
-
-    }
+    PickedFile  image = await ImagePicker().getImage(source: ImageSource.gallery);
 
     //Upload to Firebase
     if (image != null) {
@@ -104,7 +98,6 @@ class EventProvider {
         setImageUrl(imageUrlDb);
         _isUploaded.sink.add(true);
       }
-
     } else {
       print('No path Received');
     }
