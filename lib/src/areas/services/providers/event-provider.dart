@@ -1,8 +1,6 @@
 import 'dart:io';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_native_image/flutter_native_image.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:cokg/src/areas/models/Event.dart';

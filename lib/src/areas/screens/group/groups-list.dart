@@ -14,15 +14,9 @@ class GroupList extends StatelessWidget {
         headerSliverBuilder: (context, _){
           return [
             SliverAppBar(
-              expandedHeight: 200,
+              expandedHeight: 150.0,
               collapsedHeight: kToolbarHeight+1,
-              flexibleSpace: Stack(
-                children: <Widget>[
-                  Positioned.fill(
-                    child: Image.asset('assets/images/logo0.jpg', fit: BoxFit.cover)
-                  )
-                ]
-              ),
+              flexibleSpace: FlexibleSpaceBar(background: Image.asset('assets/images/logo0.jpg', fit: BoxFit.fill)),
             )
           ];
         },

@@ -19,13 +19,9 @@ class _DevotionListState extends State<DevotionList> {
          headerSliverBuilder: (context, _) {
           return [
             SliverAppBar(
-              expandedHeight: 200,
+              expandedHeight: 150.0,
               collapsedHeight: kToolbarHeight+1,
-              flexibleSpace: Stack(
-                children: <Widget>[
-                  Positioned.fill(child: Image.asset('assets/images/logo0.jpg', fit: BoxFit.cover))
-                ]
-              ),
+              flexibleSpace: FlexibleSpaceBar(background: Image.asset('assets/images/logo0.jpg', fit: BoxFit.fill)),
             )
           ];
         },
@@ -50,7 +46,7 @@ class _DevotionListState extends State<DevotionList> {
                 children: <Widget>[
                   Expanded(
                     child: ListTile(
-                      leading: Icon(Icons.headphones_rounded, size: 45.0, color: Colors.black),
+                      leading: Icon(Icons.headphones_rounded, size: 35.0, color: Colors.black),
                       title: Text(devotion.data[index].title.length > 25 ? '${devotion.data[index].title.substring(0, 25)}...' : devotion.data[index].title ?? '', style: TextStyles.title),
                       subtitle: Text((devotion.data[index].description != null && devotion.data[index].description.length > 40) ? '${devotion.data[index].description.substring(0, 45)}...' : devotion.data[index].description ?? devotion.data[index].title, style: TextStyles.subtitle),
                       onTap: () => Navigator.of(context).pushNamed("/devotionSubPage/${devotion.data[index].id}"),
@@ -59,9 +55,8 @@ class _DevotionListState extends State<DevotionList> {
                   )
                 ]
               ),
-              decoration: BoxDecoration(
-                border: Border(bottom: BorderSide(color: Colors.black26)),
-              )
+
+              decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black26)))
             ); 
           }
         );

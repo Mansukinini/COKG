@@ -103,7 +103,7 @@ class _LoginState extends State<Login> {
                   if (user != null) {
                     ScaffoldMessenger.of(context).hideCurrentSnackBar();
                     ScaffoldMessenger.of(context).showSnackBar(ShowSnabar.snackBar(user.firstName + ' Logged'));
-                    Navigator.pushReplacementNamed(context, "/home");
+                    Navigator.pushNamed(context, '/home');
                   }
                 });
               },
@@ -122,7 +122,7 @@ class _LoginState extends State<Login> {
               authenticate.createUser(userData.user).whenComplete(() {
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 ScaffoldMessenger.of(context).showSnackBar(ShowSnabar.snackBar(userData.user.displayName + ' Logged'));
-                Navigator.pushReplacementNamed(context, "/home");
+                Navigator.pushNamed(context, '/home');
               });
             });
           }

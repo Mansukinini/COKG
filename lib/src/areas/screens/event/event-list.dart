@@ -21,18 +21,12 @@ class EventList extends StatelessWidget {
 
   SliverAppBar headerSilverAppBar() {
     return SliverAppBar(
-      expandedHeight: 200,
+      expandedHeight: 150.0,
       collapsedHeight: kToolbarHeight+1,
-      flexibleSpace: Stack(
-        children: <Widget>[
-          Positioned.fill(
-            child: Image.asset('assets/images/main.jpg', fit: BoxFit.cover)
-          )
-        ]
-      ),
+      flexibleSpace: FlexibleSpaceBar(background: Image.asset('assets/images/main.jpg', fit: BoxFit.fill)),
     );
   }
-
+  
   StreamBuilder<List<Event>> _pageBody(BuildContext context, EventProvider eventProvider) {
 
     return StreamBuilder<List<Event>>(

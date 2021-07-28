@@ -59,9 +59,8 @@ class AppListTile extends StatelessWidget {
           Divider(height: 1, thickness: 1, color: Colors.blueGrey[900])
         ],
       ),
-      decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: Colors.black26)),
-      )
+      
+      decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black26)))
     );
   }
 }

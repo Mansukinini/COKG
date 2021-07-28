@@ -58,7 +58,7 @@ class _DevotionSubPageState extends State<DevotionSubPage> {
 
                 SizedBox(height: 30.0),
                 
-                MediaPlayer(id: widget.id),
+                Expanded(child:MediaPlayer(id: widget.id)),
               ],
             ),
           ),

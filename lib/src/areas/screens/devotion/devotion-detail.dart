@@ -4,7 +4,6 @@ import 'package:cokg/src/areas/services/data/firebase-storage.dart';
 import 'package:cokg/src/areas/services/providers/devotionRepositry.dart';
 import 'package:cokg/src/resources/utils/circularProgressIndicator.dart';
 import 'package:cokg/src/resources/widgets/button.dart';
-import 'package:cokg/src/resources/widgets/media-player.dart';
 import 'package:cokg/src/resources/widgets/textfield.dart';
 import 'package:cokg/src/styles/text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -73,11 +72,11 @@ class _DevotionDetailState extends State<DevotionDetail> {
     devotionProvider.setDevotion(devotion.data, widget.id);
 
     return Scaffold(
-      appBar: AppBar(leading: IconButton(icon: Icon(Icons.arrow_back), iconSize: 30.0, color: Colors.white, onPressed: () => Navigator.pop(context)),
+      appBar: AppBar(leading: IconButton(icon: Icon(Icons.arrow_back), iconSize: 25.0, color: Colors.white, onPressed: () => Navigator.pop(context)),
         title: Center(child: Text(action, style: TextStyles.navTitle)),
           actions: <Widget>[
             (isEdit) ? 
-              IconButton(icon: Icon(Icons.check), iconSize: 35.0, color: Colors.white, 
+              IconButton(icon: Icon(Icons.check), iconSize: 25.0, color: Colors.white, 
               onPressed: () async {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Adding devotion ...')));
 
@@ -157,7 +156,7 @@ class _DevotionDetailState extends State<DevotionDetail> {
           StreamBuilder<String>(
             stream: devotionRepositry.getUrl,
             builder: (context, snapshot) {
-              print(fileList.asStream());
+              
               if (!snapshot.hasData || snapshot.data == "") {
                 return AppButton(
                   labelText: "Upload Audio", 

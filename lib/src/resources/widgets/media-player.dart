@@ -48,8 +48,8 @@ class _MediaPlayerState extends State<MediaPlayer> {
         decoration: BoxDecoration(
           color: Colors.brown[200],
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30.0),
-            topRight: Radius.circular(30.0),
+            topLeft: Radius.circular(25.0),
+            topRight: Radius.circular(25.0),
           ),
         ),
         child: Column(
@@ -62,14 +62,14 @@ class _MediaPlayerState extends State<MediaPlayer> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                IconButton(iconSize: 45.0, color: Colors.blue,
+                IconButton(iconSize: 25.0, color: Colors.blue,
                   onPressed: () {},
                   icon: Icon(Icons.skip_previous),
                 ),
 
                 _payAndPauseButton(devotionProvider),
 
-                IconButton(iconSize: 45.0,color: Colors.blue, onPressed: () {}, icon: Icon(Icons.skip_next)),
+                IconButton(iconSize: 25.0,color: Colors.blue, onPressed: () {}, icon: Icon(Icons.skip_next)),
               ]
             )
           ],
@@ -118,13 +118,13 @@ class _MediaPlayerState extends State<MediaPlayer> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Text("${position.inMinutes}:${position.inSeconds.remainder(60)}",
-            style: TextStyle(fontSize: 18.0),
+            style: TextStyle(fontSize: 14.0),
           ),
 
           slider(),
 
           Text("${musicLength.inMinutes}:${musicLength.inSeconds.remainder(60)}",
-            style: TextStyle(fontSize: 18.0),
+            style: TextStyle(fontSize: 14.0),
           ),
 
         ],
@@ -156,7 +156,7 @@ class _MediaPlayerState extends State<MediaPlayer> {
    super.dispose();
    audioPlayer.dispose();
 
-    payButton = Icons.play_arrow;
-    isPlaying = false;
+   payButton = Icons.play_arrow;
+   isPlaying = false;
  }
 }

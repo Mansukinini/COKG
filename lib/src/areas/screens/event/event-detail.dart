@@ -71,11 +71,11 @@ class _EventDetailState extends State<EventDetail> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(icon: Icon(Icons.arrow_back), iconSize: 30.0, color: Colors.white, onPressed: () => Navigator.pop(context)),
+        leading: IconButton(icon: Icon(Icons.arrow_back), iconSize: 25.0, color: Colors.white, onPressed: () => Navigator.pop(context)),
         title: Center(child: Text(action, style: TextStyles.navTitle)),
         actions: <Widget>[
           // Save button
-          (isEdit) ? IconButton(icon: Icon(Icons.check), iconSize: 35.0, color: Colors.white, 
+          (isEdit) ? IconButton(icon: Icon(Icons.check), iconSize: 25.0, color: Colors.white, 
           onPressed: () async {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Adding event ...')));
 
@@ -105,8 +105,7 @@ class _EventDetailState extends State<EventDetail> {
       
     return Padding(
       padding: EdgeInsets.only(top: 10.0, bottom: 20.0),
-      child: ListView(children: <Widget>[ 
-          SizedBox(height: 20.0,),
+      child: ListView(children: <Widget>[
 
           StreamBuilder<String>(
             stream: eventProvider.getName,

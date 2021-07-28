@@ -97,7 +97,7 @@ class _ProfileState extends State<Profile> {
           builder: (context, snapshot) {
               
             return AppTextField(labelText: 'Name',
-              initialText: (userAuth != null) ? userAuth.firstName : (displayName[0] != null) ? displayName[0] : null,
+              initialText: (userAuth != null) ? userAuth.firstName : (displayName != null && displayName[0] != null) ? displayName[0] : null,
               onChanged: userProvider.setFirstName,
               errorText: snapshot.error,
             );
@@ -109,7 +109,7 @@ class _ProfileState extends State<Profile> {
           builder: (context, snapshot) {
             
             return AppTextField(labelText: 'Surname',
-              initialText: (userAuth != null) ? userAuth.lastName : (displayName[displayName.length -1] != null) ? displayName[displayName.length -1] : null,
+              initialText: (userAuth != null) ? userAuth.lastName : (displayName != null && displayName[displayName.length -1] != null) ? displayName[displayName.length -1] : null,
               onChanged: userProvider.setLastName,
               errorText: snapshot.error,
             );

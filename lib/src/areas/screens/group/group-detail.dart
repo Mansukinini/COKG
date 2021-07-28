@@ -70,10 +70,10 @@ class _GroupDetailState extends State<GroupDetail> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(icon: Icon(Icons.arrow_back), iconSize: 30.0, color: Colors.white, onPressed: () => Navigator.pop(context)),
+        leading: IconButton(icon: Icon(Icons.arrow_back), iconSize: 25.0, color: Colors.white, onPressed: () => Navigator.pop(context)),
         title: Center(child: Text(action, style: TextStyles.navTitle,)),
         actions: <Widget>[
-          (isEdit) ? IconButton(icon: Icon(Icons.check), iconSize: 35.0, color: Colors.white, 
+          (isEdit) ? IconButton(icon: Icon(Icons.check), iconSize: 25.0, color: Colors.white, 
           onPressed: () async {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Adding Group ...')));
 

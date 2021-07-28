@@ -22,7 +22,7 @@ class _SignupState extends State<Signup> {
   final authenticate = Provider.of<Authentication>(context, listen: false);
     userSubscription = authenticate.user.listen((user) {
       if (user != null)
-        Navigator.pushReplacementNamed(context, "/home");
+        Navigator.pushNamed(context, '/home');
     });
    super.initState();
  }
@@ -114,7 +114,7 @@ class _SignupState extends State<Signup> {
               if (user != null && user.email.isNotEmpty) {
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 ScaffoldMessenger.of(context).showSnackBar(ShowSnabar.snackBar(user.displayName + ' Successfully Logged'));
-                Navigator.pushReplacementNamed(context, "/home");
+                Navigator.pushNamed(context, '/home');
               }
             });
           },
@@ -131,7 +131,7 @@ class _SignupState extends State<Signup> {
               authenticate.createUser(userData.user).whenComplete(() {
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 ScaffoldMessenger.of(context).showSnackBar(ShowSnabar.snackBar(userData.user.displayName + ' Successfully Logged'));
-                Navigator.pushReplacementNamed(context, "/home");
+                Navigator.pushNamed(context, '/home');
               });
             });
           }

@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 abstract class TextStyles {
   static TextStyle get navTitle {
     return GoogleFonts.roboto(
-      textStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.w400));
+      textStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.w400, fontSize: 18.0));
   }
 
   static TextStyle get navTitleMaterial {
@@ -18,7 +18,7 @@ abstract class TextStyles {
         textStyle: TextStyle(
             color: AppColors.straw,
             fontWeight: FontWeight.w500,
-            fontSize: 18.0));
+            fontSize: 16.0));
   }
 
   static TextStyle get blackTitle {
@@ -34,22 +34,22 @@ abstract class TextStyles {
         textStyle: TextStyle(
             color: AppColors.black,
             fontWeight: FontWeight.w400,
-            fontSize: 14.0));
+            fontSize: 12.0));
   }
 
   static TextStyle get body {
     return GoogleFonts.roboto(
-        textStyle: TextStyle(color: AppColors.black, fontSize: 20.0, height: 1.4));
+        textStyle: TextStyle(color: AppColors.black, fontSize: 16.0, height: 1.4));
   }
 
   static TextStyle get suggestion {
     return GoogleFonts.roboto(
-        textStyle: TextStyle(color: AppColors.black, fontSize: 14.0));
+        textStyle: TextStyle(color: AppColors.black, fontSize: 12.0));
   }
 
   static TextStyle get placeholder {
     return GoogleFonts.roboto(
-        textStyle: TextStyle(color: AppColors.brown, fontSize: 16.0));
+        textStyle: TextStyle(color: AppColors.brown, fontSize: 12.0));
   }
 
   static TextStyle get actionText {
@@ -71,7 +71,7 @@ abstract class TextStyles {
   static TextStyle get buttonTextBlack {
     return GoogleFonts.roboto(
       textStyle: TextStyle(
-        fontSize: 20.0, fontWeight: FontWeight.w500));
+        fontSize: 16.0, fontWeight: FontWeight.w500));
   }
 
   static TextStyle get buttonText {

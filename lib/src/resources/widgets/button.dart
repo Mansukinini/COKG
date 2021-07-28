@@ -104,8 +104,9 @@ class _AppButtonState extends State<AppButton> {
         style: ElevatedButton.styleFrom(
           primary: Colors.brown,
           onPrimary: Colors.white,
-          minimumSize: Size(double.infinity, 45),
+          minimumSize: Size(double.infinity, 25),
           shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+          
         ),
         icon: widget.icon,
         onPressed: widget.onPressed,
@@ -116,4 +117,3 @@ class _AppButtonState extends State<AppButton> {
 }
 
 enum ButtonType {LightBlue, Disabled }
-// enum ButtonType {LightBlue, Straw, Disabled, DarkGray, DarkBlue }
