@@ -2,7 +2,7 @@
     package="com.example.cokg">
     <uses-permission android:name="android.permission.INTERNET" />
    <application
-        android:label="Cokg"
+        android:label="Christourking Global"
         android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/ic_launcher">
         <activity

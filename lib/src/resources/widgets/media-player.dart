@@ -60,7 +60,7 @@ class _MediaPlayerState extends State<MediaPlayer> {
             
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center, 
               children: <Widget>[
                 IconButton(iconSize: 25.0, color: Colors.blue,
                   onPressed: () {},

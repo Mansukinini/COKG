@@ -27,7 +27,7 @@ class AppListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    
     return Container(
       child: Row(
         children: <Widget>[
@@ -37,8 +37,8 @@ class AppListTile extends StatelessWidget {
                 radius: 30.0,
                 backgroundImage: (imageUrl != null) ? NetworkImage(imageUrl) : AssetImage('assets/images/user.jpg'),
               ),
-              title: Text(title ?? '', style: TextStyles.title),
-              subtitle: Text(subtitle ?? '', style: TextStyles.subtitle),
+              title: Text(title.length > 22 ? '${title.substring(0, 22)}...' : title, style: TextStyles.title),
+              subtitle: Text(subtitle != null && subtitle.length > 35 ? '${subtitle.substring(0,35)}...' : subtitle, style: TextStyles.subtitle),
               onTap: onTap,
               onLongPress: onLongPress,
             ),
@@ -56,7 +56,7 @@ class AppListTile extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: BaseStyles.listFieldHorizontal),
             child: Divider(color:AppColors.lightgray),
           ),
-          Divider(height: 1, thickness: 1, color: Colors.blueGrey[900])
+          // Divider(height: 1, thickness: 1, color: Colors.blueGrey[900])
         ],
       ),
       

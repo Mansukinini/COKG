@@ -132,12 +132,12 @@ class _HomeState extends State<Home> {
           onTap: () => Navigator.pushNamed(context, '/login'),
         ),
 
-        SizedBox(height: MediaQuery.of(context).size.height * .12),
+        // SizedBox(height: MediaQuery.of(context).size.height * .12),
 
-        Padding(
-          padding: const EdgeInsets.only(top:12.0, left: 10.0, right: 25.0, bottom: 15.0),
-          child: Text('Version 0.0.1', textAlign: TextAlign.right, style: TextStyle(fontSize: 13.0)),
-        )
+        // Padding(
+        //   padding: const EdgeInsets.only(top:12.0, left: 10.0, right: 25.0, bottom: 15.0),
+        //   child: Text('Version 0.0.1', textAlign: TextAlign.right, style: TextStyle(fontSize: 13.0)),
+        // )
       ]),
     );
   }

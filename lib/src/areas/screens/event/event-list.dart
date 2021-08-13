@@ -21,7 +21,7 @@ class EventList extends StatelessWidget {
 
   SliverAppBar headerSilverAppBar() {
     return SliverAppBar(
-      expandedHeight: 150.0,
+      expandedHeight: 160.0,
       collapsedHeight: kToolbarHeight+1,
       flexibleSpace: FlexibleSpaceBar(background: Image.asset('assets/images/main.jpg', fit: BoxFit.fill)),
     );
@@ -37,7 +37,7 @@ class EventList extends StatelessWidget {
         return ListView.builder(
           itemCount: event.data.length,
           itemBuilder: (context, index) {
-
+                      
             return AppListTile(
               title: event.data[index].name,
               subtitle: event.data[index].description ?? event.data[index].name,
