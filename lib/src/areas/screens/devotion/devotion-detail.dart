@@ -33,6 +33,7 @@ class _DevotionDetailState extends State<DevotionDetail> {
     }
     super.initState();
   }
+  
   @override
   Widget build(BuildContext context) {
     var devotionProvider = Provider.of<DevotionRepositry>(context);

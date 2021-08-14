@@ -1,4 +1,5 @@
 import 'package:cokg/src/resources/widgets/list-tile.dart';
+import 'package:cokg/src/resources/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -11,23 +12,25 @@ class EventList extends StatelessWidget {
   Widget build(BuildContext context) {
     final eventProvider = Provider.of<EventProvider>(context);
     
-    return Scaffold(
-      body: NestedScrollView(
-        headerSliverBuilder: (context, _) => [headerSilverAppBar()],
-        body: _pageBody(context, eventProvider)
-      ),
-    );
+    // return Scaffold(
+    //   body: NestedScrollView(
+    //     headerSliverBuilder: (context, _) => [headerSilverAppBar()],
+    //     body: _pageBody(context, eventProvider)
+    //   ),
+    // );
+
+    return AppScaffold.scaffold(pageBody(eventProvider));
   }
 
-  SliverAppBar headerSilverAppBar() {
-    return SliverAppBar(
-      expandedHeight: 160.0,
-      collapsedHeight: kToolbarHeight+1,
-      flexibleSpace: FlexibleSpaceBar(background: Image.asset('assets/images/main.jpg', fit: BoxFit.fill)),
-    );
-  }
+  // SliverAppBar headerSilverAppBar() {
+  //   return SliverAppBar(
+  //     expandedHeight: 160.0,
+  //     collapsedHeight: kToolbarHeight+1,
+  //     flexibleSpace: FlexibleSpaceBar(background: Image.asset('assets/images/main.jpg', fit: BoxFit.fill)),
+  //   );
+  // }
   
-  StreamBuilder<List<Event>> _pageBody(BuildContext context, EventProvider eventProvider) {
+  StreamBuilder<List<Event>> pageBody(EventProvider eventProvider) {
 
     return StreamBuilder<List<Event>>(
       stream: eventProvider.events,

@@ -1,6 +1,7 @@
 import 'package:cokg/src/areas/models/group.dart';
 import 'package:cokg/src/areas/services/providers/groupProvider.dart';
 import 'package:cokg/src/resources/widgets/list-tile.dart';
+import 'package:cokg/src/resources/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -9,23 +10,25 @@ class GroupList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var groupProvider =  Provider.of<GroupProvider>(context);
-    return Scaffold(
-      body: NestedScrollView(
-        headerSliverBuilder: (context, _){
-          return [
-            SliverAppBar(
-              expandedHeight: 160.0,
-              collapsedHeight: kToolbarHeight+1,
-              flexibleSpace: FlexibleSpaceBar(background: Image.asset('assets/images/logo0.jpg', fit: BoxFit.fill)),
-            )
-          ];
-        },
-        body: _pageBody(context, groupProvider),
-      ),
-    );
+
+    // return Scaffold(
+    //   body: NestedScrollView(
+    //     headerSliverBuilder: (context, _){
+    //       return [
+    //         SliverAppBar(
+    //           expandedHeight: 160.0,
+    //           collapsedHeight: kToolbarHeight+1,
+    //           flexibleSpace: FlexibleSpaceBar(background: Image.asset('assets/images/logo0.jpg', fit: BoxFit.fill)),
+    //         )
+    //       ];
+    //     },
+    //     body: _pageBody(context, groupProvider),
+    //   ),
+    // );
+    return AppScaffold.scaffold(_pageBody(groupProvider)); 
   }
 
-  StreamBuilder<List<Group>> _pageBody(BuildContext context, GroupProvider groupProvider) {
+  StreamBuilder<List<Group>> _pageBody(GroupProvider groupProvider) {
     
     return StreamBuilder<List<Group>>(
       stream: groupProvider.groups(),

@@ -1,5 +1,6 @@
 import 'package:cokg/src/areas/models/devotion.dart';
 import 'package:cokg/src/areas/services/providers/devotionRepositry.dart';
+import 'package:cokg/src/resources/widgets/scaffold.dart';
 import 'package:cokg/src/styles/text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,21 +15,22 @@ class _DevotionListState extends State<DevotionList> {
   Widget build(BuildContext context) {
     var devotionProvider = Provider.of<DevotionRepositry>(context);
 
-    return Scaffold(
-      body: NestedScrollView(
-         headerSliverBuilder: (context, _) {
-          return [
-            SliverAppBar(
-              expandedHeight: 160.0,
-              collapsedHeight: kToolbarHeight+1,
-              flexibleSpace: FlexibleSpaceBar(background: Image.asset('assets/images/logo0.jpg', fit: BoxFit.fill)),
-            )
-          ];
-        },
+    // Scaffold(
+    //   body: NestedScrollView(
+    //      headerSliverBuilder: (context, _) {
+    //       return [
+    //         SliverAppBar(
+    //           expandedHeight: 160.0,
+    //           collapsedHeight: kToolbarHeight+1,
+    //           flexibleSpace: FlexibleSpaceBar(background: Image.asset('assets/images/logo0.jpg', fit: BoxFit.fill)),
+    //         )
+    //       ];
+    //     },
         
-        body: _pageBody(devotionProvider),
-      ),
-    );
+    //     body: _pageBody(devotionProvider),
+    //   ),
+    // );
+    return AppScaffold.scaffold(_pageBody(devotionProvider)); 
   }
 
   StreamBuilder _pageBody(DevotionRepositry devotionProvider) {

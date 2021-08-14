@@ -56,20 +56,24 @@ class _MediaPlayerState extends State<MediaPlayer> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
+
             _sliderContainer(),
-            
+             
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center, 
               children: <Widget>[
-                IconButton(iconSize: 25.0, color: Colors.blue,
+                IconButton(iconSize: 45.0, color: Colors.black,
                   onPressed: () {},
                   icon: Icon(Icons.skip_previous),
                 ),
 
                 _payAndPauseButton(devotionProvider),
 
-                IconButton(iconSize: 25.0,color: Colors.blue, onPressed: () {}, icon: Icon(Icons.skip_next)),
+                IconButton(iconSize: 45.0,color: Colors.black, 
+                  onPressed: () {}, 
+                  icon: Icon(Icons.skip_next)
+                ),
               ]
             )
           ],
@@ -87,7 +91,7 @@ class _MediaPlayerState extends State<MediaPlayer> {
         if (!snapshot.hasData && snapshot.data == null)
           return Center(child: CircularProgressIndicator());
         
-        return IconButton(iconSize: 62.0, color: Colors.blue[800],
+        return IconButton(iconSize: 62.0, color: Colors.black,
           onPressed: () async {
             if (!isPlaying) {
               await audioPlayer.play(snapshot.data.url);
@@ -122,7 +126,7 @@ class _MediaPlayerState extends State<MediaPlayer> {
           ),
 
           slider(),
-
+          
           Text("${musicLength.inMinutes}:${musicLength.inSeconds.remainder(60)}",
             style: TextStyle(fontSize: 14.0),
           ),
@@ -135,9 +139,9 @@ class _MediaPlayerState extends State<MediaPlayer> {
   Widget slider() {
     
     return Container(
-      width: 300.0,
+      width: 280.0,
       child: Slider.adaptive(
-        activeColor: Colors.blue[800],
+        activeColor: Colors.black,
         inactiveColor: Colors.grey[350],
         value: position.inSeconds.toDouble(),
         max: musicLength.inSeconds.toDouble(),
