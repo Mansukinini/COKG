@@ -14,21 +14,23 @@ class FirebaseStorageService {
 
       return await storegeRef.ref.getDownloadURL();
     } catch (e) {
-      print(e.toString());
+      print(e);
       return null;
     }
   }
 
-  static Future<void> downloadAudioFromUrl(String url) async {
+  static Future<void> downloadAudioFromUrl(Reference ref) async {
+    print(ref);
     Directory appDocDir = await getApplicationDocumentsDirectory();
-    File downloadToFile = File('${appDocDir.path}');
-
+    
+    File downloadToFile = File('${appDocDir.path}/${ref.name}');
+    print(downloadToFile);
     try {
-     await FirebaseStorage.instance
-          .ref(url)
-          .writeToFile(downloadToFile);
+     await ref.writeToFile(downloadToFile);
       print('completed');
-    } catch (e) { }
+    } catch (e) {
+      print(e);
+     }
   }
 
   static Future<List<FirebaseFile>> downloadAudio(String url) async{

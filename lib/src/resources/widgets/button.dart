@@ -106,11 +106,12 @@ class _AppButtonState extends State<AppButton> {
           onPrimary: Colors.white,
           minimumSize: Size(double.infinity, 25),
           shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-          
+          fixedSize: Size(MediaQuery.of(context).size.width,ButtonStyles.buttonHeight),
+          textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         icon: widget.icon,
         onPressed: widget.onPressed,
-        label: Text(widget.labelText, style: fontStyle)
+        label: Text(widget.labelText, style: fontStyle),
       ),
     );
   }

@@ -102,7 +102,7 @@ class _LoginState extends State<Login> {
                 await authenticate.login().then((user) {
                   if (user != null) {
                     ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                    ScaffoldMessenger.of(context).showSnackBar(ShowSnabar.snackBar(user.firstName + ' Logged'));
+                    ScaffoldMessenger.of(context).showSnackBar(ShowSnabar.snackBar('${user.firstName} Logged'));
                     Navigator.pushNamed(context, '/home');
                   }
                 });
@@ -112,8 +112,8 @@ class _LoginState extends State<Login> {
         ),
 
         AppButton(
-          labelText: 'Sign In with Google',
           icon: FaIcon(FontAwesomeIcons.google, color: Colors.red),
+          labelText: 'Sign In with Google',
           isAnimatedButton: false, 
           onPressed: () async {
             ScaffoldMessenger.of(context).showSnackBar(ShowSnabar.loadingSnackBar('Loggin In...'));

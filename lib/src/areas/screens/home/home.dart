@@ -106,6 +106,12 @@ class _HomeState extends State<Home> {
         ),
 
         ListTile(
+          title: Text('Vision', textAlign: TextAlign.left, style: TextStyles.buttonTextBlack),
+          leading: Icon(Icons.info_outline, size: 25.0, color: Colors.black),
+          onTap: () => Navigator.pushNamed(context, '#'),
+        ),
+
+        ListTile(
           title: Text('About', textAlign: TextAlign.left, style: TextStyles.buttonTextBlack),
           leading: Icon(Icons.info_outline, size: 25.0, color: Colors.black),
           onTap: () => Navigator.pushNamed(context, '/about'),

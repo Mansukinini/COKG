@@ -173,15 +173,13 @@ class _DevotionDetailState extends State<DevotionDetail> {
                 children: <Widget>[
                   SizedBox(height: 30.0),
 
-                  (snapshot.hasData) ? FutureBuilder(
+                  (snapshot.hasData) ? FutureBuilder<List<FirebaseFile>>(
                     future: fileList,
                     builder: (context, snapshot) {
 
-                      print(snapshot.data);
-
                       return AppButton(labelText: 'Download',
                         onPressed: () async {
-                          await FirebaseStorageService.downloadAudioFromUrl(snapshot.data);
+                          await FirebaseStorageService.downloadAudioFromUrl(snapshot.data.first.ref);
                           // Todo: pass the file reference
                         // await FirebaseStorageService.downloadFile(reference);
                         },

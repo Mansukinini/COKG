@@ -113,7 +113,7 @@ class _SignupState extends State<Signup> {
             await authenticate.signup().then((user) {
               if (user != null && user.email.isNotEmpty) {
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                ScaffoldMessenger.of(context).showSnackBar(ShowSnabar.snackBar(user.displayName + ' Successfully Logged'));
+                ScaffoldMessenger.of(context).showSnackBar(ShowSnabar.snackBar('${user.displayName} Successfully Logged'));
                 Navigator.pushNamed(context, '/home');
               }
             });
@@ -130,7 +130,7 @@ class _SignupState extends State<Signup> {
             await authenticate.signInWithGoogle().then((userData) {
               authenticate.createUser(userData.user).whenComplete(() {
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                ScaffoldMessenger.of(context).showSnackBar(ShowSnabar.snackBar(userData.user.displayName + ' Successfully Logged'));
+                ScaffoldMessenger.of(context).showSnackBar(ShowSnabar.snackBar('${userData.user.displayName} Successfully Logged'));
                 Navigator.pushNamed(context, '/home');
               });
             });

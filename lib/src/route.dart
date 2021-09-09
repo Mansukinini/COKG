@@ -12,6 +12,7 @@ import 'package:cokg/src/areas/screens/home/drawer/profile.dart';
 import 'package:cokg/src/areas/screens/home/drawer/about.dart';
 import 'package:flutter/material.dart';
 
+import 'areas/screens/devotion/devotion-preview.dart';
 import 'areas/screens/home/drawer/sign-up.dart';
 
 
@@ -34,6 +35,8 @@ abstract class Routes {
         return MaterialPageRoute(builder: (context) => GroupDetail());
       case "/devotionDetail":
         return MaterialPageRoute(builder: (context) => DevotionDetail());
+      case "/devotionPreview":
+        return MaterialPageRoute(builder: (context) => DevotionPreview());
       case "/download":
         return MaterialPageRoute(builder: (context) => Download());
       case "/inbox":

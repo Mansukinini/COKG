@@ -74,7 +74,7 @@ class _DevotionSubPageState extends State<DevotionSubPage> {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30.0),
             image: DecorationImage(
-              image: AssetImage("assets/images/audio.jpg"),
+              image: AssetImage("assets/images/cokg_icon.PNG"),
             )),
       ),
     );
