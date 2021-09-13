@@ -1,4 +1,4 @@
-import 'package:cokg/src/areas/models/Event.dart';
+import 'package:cokg/src/areas/models/event.dart';
 import 'package:cokg/src/areas/services/providers/event-provider.dart';
 import 'package:cokg/src/config.dart';
 import 'package:cokg/src/resources/utils/circularProgressIndicator.dart';
