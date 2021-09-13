@@ -71,6 +71,7 @@ class DevotionRepositry {
       setCreatedOn(DateTime.now());
 
       var audioUrl = await FirebaseStorageService.uploadAudio(File(path), uuid.v4());
+      print(audioUrl);
       
       if (audioUrl != null) {
         setUrl(audioUrl);

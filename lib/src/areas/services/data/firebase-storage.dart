@@ -20,7 +20,7 @@ class FirebaseStorageService {
   }
 
   static Future<void> downloadAudioFromUrl(Reference ref) async {
-    print(ref);
+    // final downloadDir = await getDownloadsDirectory();
     Directory appDocDir = await getApplicationDocumentsDirectory();
     
     File downloadToFile = File('${appDocDir.path}/${ref.name}');
