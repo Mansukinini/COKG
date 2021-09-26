@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cokg/src/areas/models/firebase-file.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
 class FirebaseStorageService {
@@ -49,12 +50,12 @@ class FirebaseStorageService {
     return Future.wait(refs.map((e) => e.getDownloadURL()).toList());
   }
 
-  static Future downloadFile(Reference reference) async {
+  /*static Future downloadFile(Reference reference) async {
     final dir = await getApplicationDocumentsDirectory();
     final file = File('${dir.path}/${reference.name}');
 
     await reference.writeToFile(file);
-  }
+  }*/
 
   static Future<String> uploadEventImage(File file, String filename) async {
     var storegeRef = await FirebaseStorage.instance.ref()
@@ -71,4 +72,21 @@ class FirebaseStorageService {
 
     return await storegeRef.ref.getDownloadURL();
   }
+
+  static  Future<void> downloadFile(Reference ref, BuildContext context) async {
+    final Directory systemTempDir = Directory.systemTemp;
+    final File tempFile = File('${systemTempDir.path}/temp-${ref.name}');
+    if (tempFile.existsSync()) await tempFile.delete();
+
+    await ref.writeToFile(tempFile);
+    
+    // ignore: deprecated_member_use
+    Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text(
+      'Success!\n Downloaded ${ref.name} \n from bucket: ${ref.bucket}\n '
+      'at path: ${ref.fullPath} \n'
+      'Wrote "${ref.fullPath}" to tmp-${ref.name}.txt',
+    )));
+  }
+
 }

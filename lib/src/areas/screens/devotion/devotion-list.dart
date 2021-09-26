@@ -53,8 +53,8 @@ class _DevotionListState extends State<DevotionList> {
                       subtitle: Text((devotion.data[index].description != null && devotion.data[index].description.length > 40) 
                       ? '${devotion.data[index].description.substring(0, 45)}...' 
                       : devotion.data[index].description ?? devotion.data[index].title, style: TextStyles.subtitle),
-                      // onTap: () => Navigator.of(context).pushNamed("/devotionPreview"),
-                      onTap: () => Navigator.of(context).pushNamed("/devotionSubPage/${devotion.data[index].id}"),
+                      onTap: () => Navigator.of(context).pushNamed("/devotionPreview"),
+                      // onTap: () => Navigator.of(context).pushNamed("/devotionSubPage/${devotion.data[index].id}"),
                       onLongPress: () => Navigator.of(context).pushNamed("/devotionDetail/${devotion.data[index].id}"),
                     ),
                   )

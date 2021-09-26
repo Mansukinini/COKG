@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cokg/src/areas/models/Event.dart';
+import 'package:cokg/src/areas/models/event.dart';
 import 'package:cokg/src/areas/models/devotion.dart';
 import 'package:cokg/src/areas/models/group.dart';
 import 'package:cokg/src/areas/models/user.dart';

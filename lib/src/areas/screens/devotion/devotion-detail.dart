@@ -179,9 +179,9 @@ class _DevotionDetailState extends State<DevotionDetail> {
 
                       return AppButton(labelText: 'Download',
                         onPressed: () async {
-                          await FirebaseStorageService.downloadAudioFromUrl(snapshot.data.first.ref);
+                          // await FirebaseStorageService.downloadAudioFromUrl(snapshot.data.first.ref);
                           // Todo: pass the file reference
-                        // await FirebaseStorageService.downloadFile(reference);
+                          await FirebaseStorageService.downloadFile(snapshot.data.first.ref, context);
                         },
                       );
                     }
