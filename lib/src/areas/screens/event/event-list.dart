@@ -1,4 +1,5 @@
 import 'package:cokg/src/resources/widgets/list-tile.dart';
+import 'package:cokg/src/resources/widgets/navigatorBar.dart';
 import 'package:cokg/src/resources/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -13,6 +14,12 @@ class EventList extends StatelessWidget {
     final eventProvider = Provider.of<EventProvider>(context);
 
     return AppScaffold.scaffold(pageBody(eventProvider));
+    // return Scaffold(
+    //   body: NestedScrollView(
+    //     headerSliverBuilder: (context, _) => [AppNavbar.materialNavBar(title: 'navTitle', pinned: false)],
+    //     body: pageBody(eventProvider)
+    //   ),
+    // );
   }
   
   StreamBuilder<List<Event>> pageBody(EventProvider eventProvider) {

@@ -13,6 +13,10 @@ abstract class AppNavbar {
       pinned: (pinned == null) ? true : pinned,
       snap: true,
       // actions: <Widget>[menuButton],
+      // expandedHeight: 160.0,
+      // collapsedHeight: kToolbarHeight+1,
+      // flexibleSpace: FlexibleSpaceBar(
+      //   background: Image.asset('assets/images/main.jpg', fit: BoxFit.fill)),
     );
   }
 }

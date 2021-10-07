@@ -43,12 +43,21 @@ class _HomeState extends State<Home> {
 
     return Scaffold(
       drawer: drawer(context),
-      body: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[AppNavbar.materialNavBar(title: '', pinned: false)];
-        },
-        body: _children[_selectedIndex]
-      ),
+      body: Container(
+        child: NestedScrollView(
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[AppNavbar.materialNavBar(title: '', pinned: true)];
+          },
+          body: _children[_selectedIndex]
+        ),
+      )
+      // NestedScrollView(
+      //   headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+      //     return <Widget>[AppNavbar.materialNavBar(title: '', pinned: false)];
+      //   },
+      //   body: _children[_selectedIndex]
+      // )
+      ,
 
       floatingActionButton: (user != null && user.email == Config.admin) ? 
         AppFloatingActionButton(tapNo: _selectedIndex) : null,

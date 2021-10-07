@@ -15,22 +15,22 @@ class _DevotionListState extends State<DevotionList> {
   Widget build(BuildContext context) {
     var devotionProvider = Provider.of<DevotionRepositry>(context);
 
-    // Scaffold(
-    //   body: NestedScrollView(
-    //      headerSliverBuilder: (context, _) {
-    //       return [
-    //         SliverAppBar(
-    //           expandedHeight: 160.0,
-    //           collapsedHeight: kToolbarHeight+1,
-    //           flexibleSpace: FlexibleSpaceBar(background: Image.asset('assets/images/logo0.jpg', fit: BoxFit.fill)),
-    //         )
-    //       ];
-    //     },
+    return Scaffold(
+      body: NestedScrollView(
+         headerSliverBuilder: (context, _) {
+          return [
+            SliverAppBar(
+              expandedHeight: 160.0,
+              collapsedHeight: kToolbarHeight+1,
+              flexibleSpace: FlexibleSpaceBar(background: Image.asset('assets/images/logo0.jpg', fit: BoxFit.fill)),
+            )
+          ];
+        },
         
-    //     body: _pageBody(devotionProvider),
-    //   ),
-    // );
-    return AppScaffold.scaffold(_pageBody(devotionProvider)); 
+        body: _pageBody(devotionProvider),
+      ),
+    );
+    // return AppScaffold.scaffold(_pageBody(devotionProvider)); 
   }
 
   StreamBuilder _pageBody(DevotionRepositry devotionProvider) {
