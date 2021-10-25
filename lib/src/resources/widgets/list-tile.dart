@@ -33,10 +33,20 @@ class AppListTile extends StatelessWidget {
         children: <Widget>[
           Expanded(
             child: ListTile(
-              leading: CircleAvatar(
+              leading: 
+              CircleAvatar(
                 radius: 30.0,
-                backgroundImage: (imageUrl != null) ? NetworkImage(imageUrl) : AssetImage('assets/images/user.jpg'),
-              ),
+                // backgroundImage: AssetImage('assets/images/user.jpg'),
+                // backgroundImage: (imageUrl != null) ? Image.network(imageUrl, fit: BoxFit.cover) : AssetImage('assets/images/user.jpg'),
+              //   // child: Image.network(imageUrl, fit: BoxFit.cover),
+                child: Container(
+                  width: 300.0,
+                  height: 250.0,
+                  decoration: BoxDecoration(image: DecorationImage(
+                    image: (imageUrl != null) ? NetworkImage(imageUrl) : AssetImage('assets/images/user.jpg'), fit: BoxFit.cover))
+                  ),
+              )
+              ,
               title: Text(title.length > 22 ? '${title.substring(0, 22)}...' : title, style: TextStyles.title),
               subtitle: Text(subtitle != null && subtitle.length > 35 ? '${subtitle.substring(0,35)}...' : subtitle, style: TextStyles.subtitle),
               onTap: onTap,

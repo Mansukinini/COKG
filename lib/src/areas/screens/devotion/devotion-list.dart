@@ -1,6 +1,5 @@
 import 'package:cokg/src/areas/models/devotion.dart';
 import 'package:cokg/src/areas/services/providers/devotionRepositry.dart';
-import 'package:cokg/src/resources/widgets/scaffold.dart';
 import 'package:cokg/src/styles/text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +10,15 @@ class DevotionList extends StatefulWidget {
 }
 
 class _DevotionListState extends State<DevotionList> {
+  ScrollController _controller;
+  String message = "";
+
+  @override
+  void initState() {
+    _controller = ScrollController();
+    _controller.addListener(_scrollListener);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     var devotionProvider = Provider.of<DevotionRepositry>(context);
@@ -34,18 +42,21 @@ class _DevotionListState extends State<DevotionList> {
   }
 
   StreamBuilder _pageBody(DevotionRepositry devotionProvider) {
+
     return StreamBuilder<List<Devotion>>(
       stream: devotionProvider.devotion,
       builder: (context, devotion) {
         if (!devotion.hasData) return Center(child: CircularProgressIndicator());
         
         return ListView.builder(
+          controller: _controller,
           itemCount: devotion.data.length,
           itemBuilder: (context, index) {
 
             return Container(
               child: Row(
-                children: <Widget>[
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[ 
                   Expanded(
                     child: ListTile(
                       leading: Icon(Icons.headphones_rounded, size: 35.0, color: Colors.black),
@@ -53,8 +64,8 @@ class _DevotionListState extends State<DevotionList> {
                       subtitle: Text((devotion.data[index].description != null && devotion.data[index].description.length > 40) 
                       ? '${devotion.data[index].description.substring(0, 45)}...' 
                       : devotion.data[index].description ?? devotion.data[index].title, style: TextStyles.subtitle),
-                      onTap: () => Navigator.of(context).pushNamed("/devotionPreview"),
-                      // onTap: () => Navigator.of(context).pushNamed("/devotionSubPage/${devotion.data[index].id}"),
+                      // onTap: () => Navigator.of(context).pushNamed("/devotionPreview"),
+                      onTap: () => Navigator.of(context).pushNamed("/devotionSubPage/${devotion.data[index].id}"),
                       onLongPress: () => Navigator.of(context).pushNamed("/devotionDetail/${devotion.data[index].id}"),
                     ),
                   )
@@ -67,5 +78,20 @@ class _DevotionListState extends State<DevotionList> {
         );
       }
     );
+  }
+
+  _scrollListener() {
+    if (_controller.offset >= _controller.position.maxScrollExtent &&
+        !_controller.position.outOfRange) {
+      setState(() {
+        message = "reach the bottom";
+      });
+    }
+    if (_controller.offset <= _controller.position.minScrollExtent &&
+        !_controller.position.outOfRange) {
+      setState(() {
+        message = "reach the top";
+      });
+    }
   }
 }

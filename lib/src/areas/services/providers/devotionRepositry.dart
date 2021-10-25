@@ -1,9 +1,5 @@
-import 'dart:io';
 import 'package:cokg/src/areas/models/devotion.dart';
 import 'package:cokg/src/areas/services/data/firestore.dart';
-import 'package:cokg/src/areas/services/data/firebase-storage.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:path/path.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:uuid/uuid.dart';
 
@@ -63,23 +59,26 @@ class DevotionRepositry {
  Future<Devotion> getDevotionById(String id) => _firestoreService.getDevotionById(id);
 
   Future uploadFile() async {
-    var path = await FilePicker.getFilePath(type: FileType.AUDIO);
+    // var path = await FilePicker.getFilePath(type: FileType.AUDIO);
     
-    if (path != null) {
-      setId(uuid.v4());
-      _isUploaded.sink.add(true);
-      setCreatedOn(DateTime.now());
 
-      var audioUrl = await FirebaseStorageService.uploadAudio(File(path), uuid.v4());
-      print(audioUrl);
+    // FilePickerResult result = await FilePicker.platform.pickFiles();
+    
+    // if (path != null) {
+    //   setId(uuid.v4());
+    //   _isUploaded.sink.add(true);
+    //   setCreatedOn(DateTime.now());
+
+    //   var audioUrl = await FirebaseStorageService.uploadAudio(File(path), uuid.v4());
+    //   print(audioUrl);
       
-      if (audioUrl != null) {
-        setUrl(audioUrl);
-        setFileName(basename(audioUrl));
-      }
+    //   if (audioUrl != null) {
+    //     setUrl(audioUrl);
+    //     setFileName(basename(audioUrl));
+    //   }
       
-      return audioUrl;
-    }
+    //   return audioUrl;
+    // }
     return null;
   }
 
