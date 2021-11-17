@@ -23,7 +23,7 @@ class Download {
     var bodyBytes = downloadData.bodyBytes;
     final String name = ref.name;
     final String path = ref.fullPath;
-    print(url);
+    
     // _scaffoldKey.currentState.showSnackBar(
     //   SnackBar(
     //     backgroundColor: Colors.white,

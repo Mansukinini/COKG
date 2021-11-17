@@ -40,7 +40,8 @@ class _AppState extends State<App> {
         
         home: Home(),
         onGenerateRoute: Routes.materialRoutes,
-    ));
+      )
+    );
   }
 
   @override 

@@ -25,9 +25,6 @@ class EventList extends StatelessWidget {
         return CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
-            // pinned: _pinned,
-            // snap: _snap,
-            // floating: _floating,
             expandedHeight: 160.0,
             flexibleSpace: FlexibleSpaceBar(
               // title: Text('SliverAppBar'),
@@ -53,7 +50,6 @@ class EventList extends StatelessWidget {
           ),
         ],
       ); 
-      },
-    );
+    });
   }
 }

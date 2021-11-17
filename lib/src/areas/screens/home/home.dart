@@ -1,7 +1,7 @@
 import 'package:cokg/src/areas/screens/devotion/devotion-list.dart';
 import 'package:cokg/src/areas/screens/event/event-list.dart';
 import 'package:cokg/src/areas/screens/group/groups-list.dart';
-import 'package:cokg/src/areas/screens/home/drawer/profile.dart';
+import 'package:cokg/src/areas/screens/video/video-info.dart';
 import 'package:cokg/src/areas/services/providers/authentication.dart';
 import 'package:cokg/src/resources/utils/circularProgressIndicator.dart';
 import 'package:cokg/src/resources/utils/floatingActionButton.dart';
@@ -28,8 +28,7 @@ class _HomeState extends State<Home> {
     EventList(),
     GroupList(),
     DevotionList(),
-    Profile()
-    // Center(child: Text('Live'))
+    VideoInfo()
   ];
 
   @override
@@ -50,14 +49,7 @@ class _HomeState extends State<Home> {
           },
           body: _children[_selectedIndex]
         ),
-      )
-      // NestedScrollView(
-      //   headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-      //     return <Widget>[AppNavbar.materialNavBar(title: '', pinned: false)];
-      //   },
-      //   body: _children[_selectedIndex]
-      // )
-      ,
+      ),
 
       floatingActionButton: (user != null && user.email == Config.admin) ? 
         AppFloatingActionButton(tapNo: _selectedIndex) : null,
@@ -91,9 +83,9 @@ class _HomeState extends State<Home> {
         ),
         
         ListTile(
-          title: Text('ChristOurKing', textAlign: TextAlign.left, style: TextStyles.buttonTextBlack),
+          title: Text('ChristOurKing Global', textAlign: TextAlign.left, style: TextStyles.buttonTextBlack),
           leading: Icon(Icons.public_rounded, size: 25.0, color: Colors.black),
-          onTap: () => Navigator.pushNamed(context, '/home'),
+          onTap: () => Navigator.pushNamed(context, '/vision'),
         ),
 
         ListTile(
@@ -114,11 +106,11 @@ class _HomeState extends State<Home> {
           onTap: () => Navigator.pushNamed(context, '/giving'),
         ),
 
-        ListTile(
-          title: Text('Vision', textAlign: TextAlign.left, style: TextStyles.buttonTextBlack),
-          leading: Icon(Icons.info_outline, size: 25.0, color: Colors.black),
-          onTap: () => Navigator.pushNamed(context, '#'),
-        ),
+        // ListTile(
+        //   title: Text('Vision', textAlign: TextAlign.left, style: TextStyles.buttonTextBlack),
+        //   leading: Icon(Icons.info_outline, size: 25.0, color: Colors.black),
+        //   onTap: () => Navigator.pushNamed(context, '/vision'),
+        // ),
 
         ListTile(
           title: Text('About', textAlign: TextAlign.left, style: TextStyles.buttonTextBlack),
@@ -181,7 +173,7 @@ class _HomeState extends State<Home> {
 
             BottomNavigationBarItem(
               icon: Icon(Icons.account_circle_outlined),
-              label: 'Profile'
+              label: 'Media'
             ),
           ],
 

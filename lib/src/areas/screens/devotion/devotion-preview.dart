@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-
+ 
 class DevotionPreview extends StatelessWidget {
   const DevotionPreview({Key key}) : super(key: key);
 
@@ -33,7 +33,7 @@ class DevotionPreview extends StatelessWidget {
 
   Widget titleSection() {
     return Container(
-      padding: const EdgeInsets.all(32),
+      padding: const EdgeInsets.all(25),
       child: Row(
         children: [
           Expanded(
@@ -58,12 +58,9 @@ class DevotionPreview extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _buildButtonColumn(color, FaIcon(FontAwesomeIcons.download, color: Colors.black), 'Download'),
-        _buildButtonColumn(color, FaIcon(FontAwesomeIcons.headphones, color: Colors.black), 'Listen'),
-        _buildButtonColumn(color, FaIcon(FontAwesomeIcons.share, color: Colors.black), 'SHARE'),
-        // _buildButtonColumn(color, Icons.download_for_offline_outlined, 'Download'),
-        // _buildButtonColumn(color, Icons.headphones_outlined, 'Listen'),
-        // _buildButtonColumn(color, Icons.share, 'SHARE'),
+        _buildButtonColumn(color, FaIcon(FontAwesomeIcons.download, color: Colors.black), 'Download', () {}),
+        _buildButtonColumn(color, FaIcon(FontAwesomeIcons.headphones, color: Colors.black), 'Listen', () {}),
+        _buildButtonColumn(color, FaIcon(FontAwesomeIcons.share, color: Colors.black), 'SHARE', () {}),
       ],
     );
   } 
@@ -83,7 +80,7 @@ class DevotionPreview extends StatelessWidget {
     );
   }  
 
-  Column _buildButtonColumn(Color color, Widget icon, String label) {
+  Column _buildButtonColumn(Color color, Widget icon, String label, Function onPressed) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -100,18 +97,17 @@ class DevotionPreview extends StatelessWidget {
           //   ),
           // ),)
         // ),
-        TextButton.icon(onPressed: (){}, icon: icon, 
+        TextButton.icon(onPressed: onPressed, icon: icon, 
           label: Text(
-              label,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
-                color: color,
-              ),
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              color: color,
             ),
-          ), 
+          ),
+        ), 
       ],
     );
   }
 }
-

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cokg/src/styles/base.dart';
 import 'package:cokg/src/styles/color.dart';
 import 'package:cokg/src/styles/text.dart';
@@ -36,17 +37,8 @@ class AppListTile extends StatelessWidget {
               leading: 
               CircleAvatar(
                 radius: 30.0,
-                // backgroundImage: AssetImage('assets/images/user.jpg'),
-                // backgroundImage: (imageUrl != null) ? Image.network(imageUrl, fit: BoxFit.cover) : AssetImage('assets/images/user.jpg'),
-              //   // child: Image.network(imageUrl, fit: BoxFit.cover),
-                child: Container(
-                  width: 300.0,
-                  height: 250.0,
-                  decoration: BoxDecoration(image: DecorationImage(
-                    image: (imageUrl != null) ? NetworkImage(imageUrl) : AssetImage('assets/images/user.jpg'), fit: BoxFit.cover))
-                  ),
-              )
-              ,
+                backgroundImage: (imageUrl != null) ? CachedNetworkImageProvider(imageUrl) : AssetImage('assets/images/user.jpg'),
+              ),
               title: Text(title.length > 22 ? '${title.substring(0, 22)}...' : title, style: TextStyles.title),
               subtitle: Text(subtitle != null && subtitle.length > 35 ? '${subtitle.substring(0,35)}...' : subtitle, style: TextStyles.subtitle),
               onTap: onTap,

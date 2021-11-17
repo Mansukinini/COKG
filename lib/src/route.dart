@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 
 import 'areas/screens/devotion/devotion-preview.dart';
 import 'areas/screens/home/drawer/sign-up.dart';
+import 'areas/screens/home/drawer/vision.dart';
 
 
 abstract class Routes {
@@ -45,6 +46,8 @@ abstract class Routes {
         return MaterialPageRoute(builder: (context) => Giving());
       case "/about":
         return MaterialPageRoute(builder: (context) => About());
+      case "/vision":
+        return MaterialPageRoute(builder: (context) => Vision());
       
       default:
         var routeArray = route.name.split("/");

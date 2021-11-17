@@ -32,7 +32,7 @@ class _LoginState extends State<Login> {
       appBar: AppBar(
         leading: IconButton(icon: Icon(Icons.arrow_back), iconSize: 30.0, color: Colors.white, onPressed: () => Navigator.pop(context)),
       ),
-       body: _pageBody(context)
+      body: _pageBody(context)
     );
   }
 
