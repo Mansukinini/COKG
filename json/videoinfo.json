@@ -1,0 +1,21 @@
+[
+  {
+    "title": "ChristOurKing Global",
+    "time": "55 seconds",
+    "thumbnail": "assets/images/main.jpg",
+    "videoUrl": "https://img.bslmeiyu.com/uploads/20170706/The%20Bananas%20Song%20%20Counting%20Bananas%20%20Super%20Simple%20Songs.mp4"
+  },
+  {
+    "title": "ChristOurKing Global",
+    "time": "60 seconds",
+    "thumbnail": "assets/images/user.jpg",
+    "videoUrl": "https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4"
+  },
+  {
+    "title": "ChristOurKing Global",
+    "time": "120 seconds",
+    "thumbnail": "assets/images/logo0.jpg",
+    "videoUrl": "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4"
+  }
+
+]
