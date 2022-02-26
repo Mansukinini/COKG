@@ -111,11 +111,6 @@ exports.onUpdateEvent = functions.firestore
             .doc(userId)
             .collection('userFollowers');
 
-        const userFollowers = admin.firestore()
-            .collection('followers')
-            .doc(userId)
-            .collection('userFollowers');
-
         const querySnapshot = await userFollowers.get();
 
         // 2) update each post in each folloers timeline
@@ -141,11 +136,6 @@ exports.onDeleteEvent = functions.firestore
 
         const userId = context.params.userId;
         const eventId = context.params.eventId;
-
-        const userFollowers = admin.firestore()
-            .collection('followers')
-            .doc(userId)
-            .collection('userFollowers');
 
         const userFollowers = admin.firestore()
             .collection('followers')

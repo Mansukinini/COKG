@@ -36,10 +36,10 @@ class FirebaseStorageService {
     Directory appDocDir = await getApplicationDocumentsDirectory();
     
     File downloadToFile = File('${appDocDir.path}/${ref.name}');
-    print(downloadToFile);
+    // print(downloadToFile);
     try {
      await ref.writeToFile(downloadToFile);
-      print('completed');
+      // print('completed');
     } catch (e) {
      }
   }
@@ -77,7 +77,7 @@ class FirebaseStorageService {
 
   // static Future<String> uploadEventImage(File file, String filename) async {
   //   print('$file uploaded');
-  //   var storegeRef = await FirebaseStorage.instance.ref()
+  //   var storegeRef = await FirebaseStorage.instance.ref()s
   //       .child('eventImages')
   //       .putFile(file);
 

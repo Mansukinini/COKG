@@ -3,7 +3,6 @@ import 'package:cokg/src/areas/models/user.dart';
 import 'package:cokg/src/areas/screens/devotion/devotion-list.dart';
 import 'package:cokg/src/areas/screens/home/drawer/activity-feed.dart';
 import 'package:cokg/src/areas/screens/home/drawer/createAccount.dart';
-import 'package:cokg/src/areas/screens/home/drawer/editProfile.dart';
 import 'package:cokg/src/areas/screens/home/drawer/profile.dart';
 import 'package:cokg/src/areas/screens/timeline.dart';
 import 'package:cokg/src/areas/screens/video/video.dart';
@@ -60,7 +59,7 @@ class _HomeState extends State<Home> {
     googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
       handleSignIn(account);
     }, onError: (err) {
-      print('Error signing in: $err');
+      // print('Error signing in: $err');
     });
     
     // Reauthenticate user when app is opened
@@ -68,7 +67,7 @@ class _HomeState extends State<Home> {
       .then((account) {
         handleSignIn(account);
       }).catchError((err) {
-        print('Error signing in: $err');
+        // print('Error signing in: $err');
       });
   }
 
@@ -209,7 +208,7 @@ class _HomeState extends State<Home> {
                           style: TextButton.styleFrom(primary: Colors.brown),
                           onPressed: () async {
                             final username = await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateAccount()));
-                            print(username);
+                            // print(username);
                           },
                         )
                       ]
@@ -300,12 +299,13 @@ class _HomeState extends State<Home> {
     final form = _formKey.currentState;
 
     try {
+      
       UserCredential userCredential = await auth.signInWithEmailAndPassword(
         email: usernameController.text,
         password: passwordController.text
       );
+
       authUser = userCredential.user;
-      print('User Sign In: ${authUser.uid}');
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         scaffoldMessenger(context,'No user found for that email.');

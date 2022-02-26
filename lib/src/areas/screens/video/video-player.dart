@@ -37,7 +37,7 @@ class VideoPlayer extends StatefulWidget {
           controller: _controller,
           showVideoProgressIndicator: true,
           onReady: () {
-            print('Player is ready.');
+            // print('Player is ready.');
             _isPlayerReady = true;
           },
           

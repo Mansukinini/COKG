@@ -227,6 +227,10 @@ class _DevotionalSeriesState extends State<DevotionalSeries> {
     );
   }
 
+  payAndStopButton() {
+
+  }
+
   buildPlayingContainer() {
     return Column(
       children: <Widget>[
@@ -239,7 +243,7 @@ class _DevotionalSeriesState extends State<DevotionalSeries> {
           child: Row(
             children: <Widget>[
               IconButton(
-                onPressed: () => print('paying'),
+                onPressed: () => payAndStopButton(),
                 icon: Icon(audioPlayer.state == AudioPlayerState.PLAYING ? Icons.pause_circle_outline_outlined : Icons.play_circle_outline_outlined)
               ),
 

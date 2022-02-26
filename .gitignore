@@ -10,6 +10,9 @@
 .svn/
 *.jks
 
+# Key Properties File
+key.Properties
+
 # IntelliJ related
 *.iml
 *.ipr
