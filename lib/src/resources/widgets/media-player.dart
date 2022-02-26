@@ -157,10 +157,10 @@ class _MediaPlayerState extends State<MediaPlayer> {
  
   @override
   void dispose() {
-   super.dispose();
-   audioPlayer.dispose();
+    super.dispose();
+    audioPlayer.dispose();
 
-   payButton = Icons.play_arrow;
-   isPlaying = false;
- }
+    payButton = Icons.play_arrow;
+    isPlaying = false;
+  }
 }

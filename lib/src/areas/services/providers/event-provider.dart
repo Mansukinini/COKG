@@ -1,19 +1,24 @@
 import 'dart:io';
 import 'dart:async';
+import 'package:cokg/src/areas/screens/home/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:cokg/src/areas/models/event.dart';
 import 'package:cokg/src/areas/services/data/firestore.dart';
 import 'package:cokg/src/areas/services/data/firebase-storage.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
+import 'package:image/image.dart' as Img;
 
 
 class EventProvider {
   final FirestoreService _firestoreService = FirestoreService.instance;
   final _auth = FirebaseAuth.instance;
-  var uuid = Uuid();
+  var uuid = Uuid().v4();
+  String medialUrl;
+  PickedFile file;
  
   // declaretion
   final _id = BehaviorSubject<String>();
@@ -87,24 +92,55 @@ class EventProvider {
 
   Future pickImage() async {
     //Get image from Device
-    PickedFile  image = await ImagePicker().getImage(source: ImageSource.gallery);
-
+    file = await ImagePicker().getImage(source: ImageSource.gallery);
+    
     //Upload to Firebase
-    if (image != null) {
-      var imageUrlDb = await FirebaseStorageService.uploadEventImage(File(image.path), uuid.v4());
-      if (imageUrlDb != null) {
-        setImageUrl(imageUrlDb);
-        _isUploaded.sink.add(true);
-      }
+    if (file.path.isNotEmpty) {
+      File compressFile = await compressImage();
+      medialUrl = await FirebaseStorageService.uploadImage(compressFile, uuid);
+      setImageUrl(medialUrl);
+      _isUploaded.sink.add(true);
+
+      return compressFile;
     } else {
-      print('No path Received');
-    }
+      return 'No path Received';
+    }                                             
+  }
+
+  compressImage() async {
+    final tempDir = await getTemporaryDirectory();
+    final path = tempDir.path;
+
+    Img.Image imageFile = Img.decodeImage(List.from(await file.readAsBytes()));
+
+    final compressedImageFile = File('$path/img_$uuid.jpg')..writeAsBytesSync(Img.encodeJpg(imageFile, quality: 85));
+    
+    return compressedImageFile;
+  }
+
+  Future<void> createEvent(String caption, String userId) {
+    var initialValues = Event(
+      id: _id.hasValue ? _id.value : uuid, 
+      name: _name.hasValue ? _name.value : null, 
+      description: caption.isNotEmpty ? caption : null,
+      date: _dateTime.hasValue ? _dateTime.value.toIso8601String() : null,
+      imageUrl: medialUrl != null ? medialUrl : null, 
+      isUploaded: _isUploaded.hasValue ? _isUploaded.value : false, 
+      createdBy: currentUser.id, 
+      createdOn: DateTime.now().toIso8601String()
+    );
+
+    _id.sink.add(Uuid().v4());
+
+    return _firestoreService.saveEvent(initialValues)
+      .then((value) => _isEventSaved.sink.add(true))
+      .catchError((error) => _isEventSaved.sink.add(false));
   }
 
   Future<void> saveEvent() {
 
     var initialValues = Event(
-      id: _id.value ?? uuid.v4(), 
+      id: _id.value ?? uuid, 
       name: _name.value, 
       description: _description.hasValue ? _description.value : null,
       date: (_dateTime.hasValue && _dateTime.value != null) ? _dateTime.value.toIso8601String() : null,

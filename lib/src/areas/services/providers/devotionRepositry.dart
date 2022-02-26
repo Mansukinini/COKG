@@ -58,30 +58,6 @@ class DevotionRepositry {
 
  Future<Devotion> getDevotionById(String id) => _firestoreService.getDevotionById(id);
 
-  Future uploadFile() async {
-    // var path = await FilePicker.getFilePath(type: FileType.AUDIO);
-    
-
-    // FilePickerResult result = await FilePicker.platform.pickFiles();
-    
-    // if (path != null) {
-    //   setId(uuid.v4());
-    //   _isUploaded.sink.add(true);
-    //   setCreatedOn(DateTime.now());
-
-    //   var audioUrl = await FirebaseStorageService.uploadAudio(File(path), uuid.v4());
-    //   print(audioUrl);
-      
-    //   if (audioUrl != null) {
-    //     setUrl(audioUrl);
-    //     setFileName(basename(audioUrl));
-    //   }
-      
-    //   return audioUrl;
-    // }
-    return null;
-  }
-
   Future<void> saveDevotion() async {
 
     Devotion devotion = Devotion(

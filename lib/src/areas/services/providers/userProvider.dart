@@ -17,6 +17,7 @@ class UserProvider {
   final _id = BehaviorSubject<String>();
   final _firstName = BehaviorSubject<String>();
   final _lastName = BehaviorSubject<String>();
+  final _username = BehaviorSubject<String>();
   final _contactNo = BehaviorSubject<String>();
   final _email = BehaviorSubject<String>();
   final _imageUrl = BehaviorSubject<String>();
@@ -26,12 +27,13 @@ class UserProvider {
   final _lastUpdatedBy = BehaviorSubject<String>();
   final _lastUpdatedOn = BehaviorSubject<DateTime>();
 
-  final _userAuth = BehaviorSubject<UserAuth>();
+  final _userAuth = BehaviorSubject<AuthUser>();
 
   //Get Data
   Stream<String> get getId => _id.stream;
   Stream<String> get getFirstName => _firstName.stream;
   Stream<String> get getLastName => _lastName.stream;
+  Stream<String> get getUsername => _username.stream;
   Stream<String> get getContactNo => _contactNo.stream;
   Stream<String> get getEmail => _email.stream;
   Stream<String> get getImageUrl => _imageUrl.stream;
@@ -41,12 +43,13 @@ class UserProvider {
   Stream<String> get getLastUpdatedBy => _lastUpdatedBy.stream;
   Stream<DateTime> get getLastUpdatedOn => _lastUpdatedOn.stream;
 
-  Stream<UserAuth> get getUserAuth => _userAuth.stream;
+  Stream<AuthUser> get getUserAuth => _userAuth.stream;
 
   //Set Data
   Function(String) get setId => _id.sink.add;
   Function(String) get setFirstName => _firstName.sink.add;
   Function(String) get setLastName => _lastName.sink.add;
+  Function(String) get setUsername => _username.sink.add;
   Function(String) get setContactNo => _contactNo.sink.add;
   Function(String) get setEmail => _email.sink.add;
   Function(String) get setImageUrl => _imageUrl.sink.add;
@@ -56,19 +59,18 @@ class UserProvider {
   Function(String) get setLastUpdatedBy => _lastUpdatedBy.sink.add;
   Function(DateTime) get setLastUpdatedOn => _lastUpdatedOn.sink.add;
 
-  Function(UserAuth) get setUsers => _userAuth.sink.add;
+  Function(AuthUser) get setUsers => _userAuth.sink.add;
 
-  void setUser(UserAuth userAuth, String id) {
+  void setUser(AuthUser authUser, String id) {
     setId(id);
 
     if (id != null) {
-      setFirstName(userAuth.firstName);
-      setLastName(userAuth.lastName);
-      setContactNo(userAuth.contactNo);
-      setEmail(userAuth.email);
+      setFirstName(authUser.displayName);
+      setContactNo(authUser.contactNo);
+      setEmail(authUser.email);
 
-      if (userAuth != null && userAuth.imageUrl != null) {
-        setImageUrl(userAuth.imageUrl);
+      if (authUser != null && authUser.photoUrl != null) {
+        setImageUrl(authUser.photoUrl);
       }
 
     } else {
@@ -80,14 +82,9 @@ class UserProvider {
     }
   }
 
-  Future<UserAuth> getUserData(String id) async {
-    var result;
-
-    await _firestoreService.getUserById(id).then((value) {
-      result = value;
-    });
-    print(result);
-    return result;
+  Future<AuthUser> getUserData(String id) async {
+    
+    return await _firestoreService.getUserById(id);
   }
 
   Future pickImage() async {
@@ -107,13 +104,12 @@ class UserProvider {
 
   Future saveProfile() async {
     try {
-        UserAuth user = UserAuth(
+        AuthUser user = AuthUser(
         id: FirebaseAuth.instance.currentUser.uid ?? uuid.v4(), 
-        firstName: _firstName.value ?? null, 
-        lastName: _lastName.value ?? null, 
+        displayName: _firstName.value ?? null, 
         contactNo: _contactNo.value ?? null, 
-        imageUrl: _imageUrl.value ?? null, 
-        isValid: true, 
+        photoUrl: _imageUrl.value ?? null, 
+        isActive: true, 
         email: _email.value ?? null
       );
 
@@ -127,6 +123,7 @@ class UserProvider {
     _id.close();
     _firstName.close();
     _lastName.close();
+    _username.close();
     _contactNo.close();
     _email.close();
     _imageUrl.close();

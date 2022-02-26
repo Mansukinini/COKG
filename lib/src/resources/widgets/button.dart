@@ -105,7 +105,7 @@ class _AppButtonState extends State<AppButton> {
           primary: Colors.brown,
           onPrimary: Colors.white,
           minimumSize: Size(double.infinity, 25),
-          shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+          shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(7.0)),
           fixedSize: Size(MediaQuery.of(context).size.width,ButtonStyles.buttonHeight),
           textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
