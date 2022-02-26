@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 abstract class AppScaffold {
   static Scaffold scaffold(Widget pageBody){
-      return Scaffold(
+
+    return Scaffold(
       body: pageBody
       // body: Container(child: pageBody)
       

@@ -38,8 +38,8 @@ dependencies:
   uuid: ^2.2.2
   google_fonts: ^1.1.1
   provider: ^4.3.2+3
-  intl: ^0.16.1
-  permission_handler: ^5.0.1+1
+  # intl: ^0.16.1
+  # permission_handler: ^5.0.1+1
   fluttertoast: ^8.0.7
   font_awesome_flutter: ^8.10.1
   audioplayers: ^0.16.1
@@ -48,11 +48,16 @@ dependencies:
   google_sign_in: ^4.5.1
   flutter_datetime_picker: ^1.5.0
   datetime_picker_formfield: ^1.0.0
-  http: ^0.12.2
   dio: ^3.0.10
-  cached_network_image: ^2.0.0
   file_picker: ^2.1.7
-  firebase_core: ^0.5.3
+  flutter_svg: ^0.19.3
+  cached_network_image: ^2.0.0
+  animator: ^2.0.2
+  timeago: ^2.0.17
+  get: ^4.6.1
+  video_player: ^2.2.10
+  youtube_player_flutter: ^8.0.0
+  http: ^0.12.2
 
 
 dev_dependencies:
@@ -81,6 +86,7 @@ flutter:
   assets:
     - assets/
     - assets/images/
+    - assets/videos/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -94,10 +100,10 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
+  fonts:
+    - family: Signatra
+      fonts:
+        - asset: assets/fonts/Signatra.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

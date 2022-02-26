@@ -12,6 +12,7 @@ class AppTextFormField extends StatefulWidget {
   final int maxLines;
   final bool readOnly;
   final void Function(String) onChanged;
+  final void Function(String) onSaved;
 
   AppTextFormField({
     this.hintText,
@@ -22,6 +23,7 @@ class AppTextFormField extends StatefulWidget {
     this.obscureText = false,
     this.maxLines = 1,
     this.onChanged,
+    this.onSaved,
     this.errorText,
     this.readOnly = false
   });
@@ -55,18 +57,16 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top:12.0, left: 10.0, right: 10.0, bottom: 12.0),
-      child: TextFormField(
-        maxLines: widget.maxLines,
-        keyboardType: widget.textInputType,
-        onChanged: widget.onChanged,
-        decoration: TextFieldStyles.materialDecoration(widget.labelText, widget.hintText, widget.materialIcon, widget.errorText),
-        style: TextFieldStyles.text,
-        obscureText: widget.obscureText,
-        controller: _controller,
-        readOnly: widget.readOnly,
-      ),
+    return TextFormField(
+      maxLines: widget.maxLines,
+      keyboardType: widget.textInputType,
+      onChanged: widget.onChanged,
+      decoration: TextFieldStyles.materialDecoration(widget.labelText, widget.hintText, widget.materialIcon, widget.errorText),
+      style: TextFieldStyles.text,
+      obscureText: widget.obscureText,
+      controller: _controller,
+      readOnly: widget.readOnly,
+      onSaved: widget.onSaved,
     );
   }
 
