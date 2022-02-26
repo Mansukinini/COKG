@@ -1,4 +1,7 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cokg/src/areas/screens/home/drawer/createAccount.dart';
+import 'package:cokg/src/areas/screens/home/home.dart';
 import 'package:cokg/src/areas/services/providers/authentication.dart';
 import 'package:cokg/src/resources/utils/circularProgressIndicator.dart';
 import 'package:cokg/src/resources/widgets/button.dart';
@@ -6,7 +9,9 @@ import 'package:cokg/src/resources/widgets/textfield.dart';
 import 'package:cokg/src/styles/text.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
+
 
 class Login extends StatefulWidget {
   @override
@@ -14,7 +19,9 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final _formKey = GlobalKey<FormState>();
   StreamSubscription userSubscription;
+  String username;
 
   @override
   void initState() {
@@ -36,6 +43,10 @@ class _LoginState extends State<Login> {
     );
   }
 
+  submit() {
+    _formKey.currentState.save();
+  }
+
   Widget _pageBody(BuildContext context) {
     final authenticate = Provider.of<Authentication>(context);
     
@@ -47,6 +58,7 @@ class _LoginState extends State<Login> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+            
               Padding(
                 padding: const EdgeInsets.only(left:14.0),
                 child: Text("Sign In", style: TextStyles.blackTitle),
@@ -102,7 +114,7 @@ class _LoginState extends State<Login> {
                 await authenticate.login().then((user) {
                   if (user != null) {
                     ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                    ScaffoldMessenger.of(context).showSnackBar(ShowSnabar.snackBar('${user.firstName} Logged'));
+                    ScaffoldMessenger.of(context).showSnackBar(ShowSnabar.snackBar('${user.displayName} Logged'));
                     Navigator.pushNamed(context, '/home');
                   }
                 });
@@ -118,6 +130,8 @@ class _LoginState extends State<Login> {
           onPressed: () async {
             ScaffoldMessenger.of(context).showSnackBar(ShowSnabar.loadingSnackBar('Loggin In...'));
             
+            // await createUserInFirestore();
+
             await authenticate.signInWithGoogle().then((userData) {
               authenticate.createUser(userData.user).whenComplete(() {
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -129,6 +143,32 @@ class _LoginState extends State<Login> {
         )
       ],
     );
+  }
+
+  createUserInFirestore() async {
+    // 1) check if the user exists in users collection in database (according tp their id)
+    final GoogleSignInAccount user = GoogleSignIn().currentUser;
+    
+    if (user != null) {
+      final DocumentSnapshot doc = await userRef.doc(user.id).get();  
+
+      // 2) If the user doesn't exists, then we want to take them to the create account page
+      if (!doc.exists) {
+        final username = Navigator.push(context, MaterialPageRoute(builder: (context) => CreateAccount()));
+
+        // 3) get username from create account, use it to make new user document in users collection
+        userRef.doc(user.id).set({
+          "id": user.id,
+          "username": username,
+          "photoUrl": user.photoUrl,
+          "email": user.email,
+          "displayName": user.displayName,
+          "bio": null, 
+          "createdBy": null,
+          "createdOn": timestamp
+        });
+      }
+    }
   }
 
   @override

@@ -21,14 +21,14 @@ class _SearchState extends State<Search> {
     super.initState();
     // handleSearch();
   }
-
+// DO NOT DELETE ANYTHING IN HANDLESEARCH FUNCTION
   handleSearch() async{
     
     // Future<QuerySnapshot> users = userRef.where('username', isGreaterThanOrEqualTo: query).get();
     QuerySnapshot users = await userRef.get();
-    setState(() {
+    // setState(() {
       // searchResultsFuture = users;
-    });
+    // });
     return users;
   }
 
@@ -39,9 +39,9 @@ class _SearchState extends State<Search> {
   AppBar buildSearchField() {
 
     return AppBar(
-      leading: IconButton(onPressed: () => Navigator.pop(context), icon: Icon(Icons.arrow_back, size: 25.0, color: Colors.brown)),
-      backgroundColor: Colors.white,
-      title: Text("Members", style: TextStyle(color: Colors.brown),)
+      leading: IconButton(onPressed: () => Navigator.pop(context), icon: Icon(Icons.arrow_back, size: 25.0, color: Colors.white)),
+      backgroundColor: Colors.brown,
+      title: Text("Members", style: TextStyle(color: Colors.white),)
       // TextFormField(
       //   decoration: InputDecoration(hintText: "Search for a user...", filled: true,
       //     prefixIcon: Icon(Icons.account_box, size: 28.0),
@@ -54,14 +54,13 @@ class _SearchState extends State<Search> {
 
   Container buildNoContent() {
     final Orientation orientation = MediaQuery.of(context).orientation;
+
     return Container(
       child: Center(
         child: ListView(
           shrinkWrap: true,
           children: <Widget>[
-
-            SvgPicture.asset('assets/images/search.svg', 
-              height: orientation == Orientation.portrait ? 300.0 : 200.0),
+            SvgPicture.asset('assets/images/search.svg', height: orientation == Orientation.portrait ? 300.0 : 200.0),
 
             Text('Find Users', textAlign: TextAlign.center, style: 
               TextStyle(
@@ -85,6 +84,7 @@ class _SearchState extends State<Search> {
         if(!snapshot.hasData) return circularProgress();
 
         List<UserResult> searchResults = [];
+
         snapshot.data.docs.forEach((doc) {
           AuthUser user = AuthUser.fromDocument(doc);
           searchResults.add(UserResult(user));
@@ -98,7 +98,7 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.brown.withOpacity(0.8),
+      backgroundColor: Colors.grey[100],
       appBar: buildSearchField(),
       body: handleSearch() == null ? buildNoContent() : buildSearchResults(),
     );
@@ -111,8 +111,10 @@ class UserResult extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return Container(
-      color: Theme.of(context).primaryColor.withOpacity(0.7),
+      // color: Theme.of(context).primaryColor.withOpacity(0.7),
+      color: Colors.white54,
       child: Column(
         children: <Widget>[
           GestureDetector(
@@ -122,21 +124,11 @@ class UserResult extends StatelessWidget {
                 backgroundColor: Colors.grey,
                 backgroundImage: CachedNetworkImageProvider(user.photoUrl),
               ),
-              title: Text(
-                user.displayName,
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              ),
-              subtitle: Text(
-                user.username,
-                style: TextStyle(color: Colors.white),
-              ),
+              title: Text(user.displayName, style: TextStyle(fontWeight: FontWeight.bold)),
+              subtitle: Text(user.username, style: TextStyle( fontSize: 14.0, color: Colors.black)),
             ),
           ),
-          Divider(
-            height: 2.0,
-            color: Colors.white54,
-          ),
+          Divider(height: 2.0, color: Colors.white54),
         ],
       ),
     );

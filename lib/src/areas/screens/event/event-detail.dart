@@ -1,17 +1,14 @@
-import 'package:cokg/src/areas/models/event.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cokg/src/areas/screens/home/home.dart';
 import 'package:cokg/src/areas/services/providers/event-provider.dart';
 import 'package:cokg/src/config.dart';
-import 'package:cokg/src/resources/utils/circularProgressIndicator.dart';
+import 'package:cokg/src/resources/utils/progress.dart';
 import 'package:cokg/src/resources/widgets/button.dart';
-import 'package:cokg/src/resources/widgets/dateTimePicker.dart';
-import 'package:cokg/src/resources/widgets/textfield.dart';
-import 'package:cokg/src/styles/base.dart';
 import 'package:cokg/src/styles/text.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
-final _auth = FirebaseAuth.instance;
 
 class EventDetail extends StatefulWidget {
   final String id;
@@ -22,73 +19,83 @@ class EventDetail extends StatefulWidget {
 }
 
 class _EventDetailState extends State<EventDetail> {
+  TextEditingController captionController = TextEditingController();
+  var mediaUrl;
   bool isEdit = false;
-  User user;
-
-  @override
-  void initState() {
-    user = _auth.currentUser;
-    super.initState();
-  }
+  bool isUploading = false;
 
   @override
   Widget build(BuildContext context)  {
     var eventProvider = Provider.of<EventProvider>(context);
-    
-    if (widget.id != null) {
-     return _editEvent(context, eventProvider);
-    } else {
-      return _addEvent(context, eventProvider);
-    }
-  }
-
-  StreamBuilder _addEvent(BuildContext context, EventProvider eventProvider) {
-    isEdit = true;
-
-    return StreamBuilder<Event>(
-      stream: eventProvider.getEvent,
-      builder: (context, event) => _scafford(context, eventProvider, event),
-    );
-  }
-
-  FutureBuilder _editEvent(BuildContext context, EventProvider eventProvider) {
-    
-    return FutureBuilder<Event>(
-      future: eventProvider.getEventById(widget.id),
-      builder: (context, event) {
-
-      if (!event.hasData && widget.id != null) 
-        return Center(child: CircularProgressIndicator());
-
-      return  _scafford(context, eventProvider, event);
-    });
-  }
-
-  Scaffold _scafford(BuildContext context, EventProvider eventProvider, AsyncSnapshot<Event> event) {
-    var action = event.data != null ? (isEdit) ? "Edit Event" : "" : "Add Event";
-    
-    eventProvider.setEvent(event.data, widget.id);
-
+   
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(icon: Icon(Icons.arrow_back), iconSize: 25.0, color: Colors.white, onPressed: () => Navigator.pop(context)),
-        title: Center(child: Text(action, style: TextStyles.navTitle)),
+        title: Center(child: Text('Capture Post', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20.0))),
         actions: <Widget>[
-          // Save button
-          (isEdit) ? IconButton(icon: Icon(Icons.check), iconSize: 25.0, color: Colors.white, 
-          onPressed: () async {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Adding event ...')));
+          
+          TextButton(
+            child: Text("Post", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20.0)),
+            onPressed: () {
+              eventProvider.createEvent(captionController.text, currentUser.id).whenComplete(() {
+                setState(() {
+                  captionController.clear();
+                });
+                Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+              });
+            }
+          ),
 
-            await eventProvider.saveEvent().whenComplete(() {
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Added an Event'), backgroundColor: Colors.green));
-              Navigator.pushNamed(context, '/home');
-            });
-          }) : Container(),
-          (user != null && user.email == Config.admin) ? !(isEdit) ? popupMenuButton(context) : Container() : Container(),
+          // (currentUser != null && currentUser.email == Config.admin) ? !(isEdit) ? popupMenuButton(context) : Container() : Container(),
         ]
       ),
-      body: _pageBody(context, eventProvider, event.data),
+      body: ListView(
+          children: <Widget>[
+            isUploading ? linearProgress() : Text(''),
+        
+            ListTile(
+              leading: CircleAvatar(
+                radius: 30.0,
+                backgroundImage: (currentUser != null && currentUser.photoUrl != null) ? 
+                CachedNetworkImageProvider(currentUser.photoUrl) : AssetImage('assets/images/user.jpg'),
+              ),
+              title: Container(
+                width: 250.0,
+                child: TextField(
+                  controller: captionController,
+                  decoration: InputDecoration(hintText: "Write a Caption...", border: InputBorder.none),
+                ),
+              ),
+            ),
+
+            Padding(padding: EdgeInsets.only(top: 10.0)),
+
+            (mediaUrl == null) ?
+            GestureDetector(
+              onTap: () => uploadImage(eventProvider),
+              child: Container(
+                height: 220.0,
+                width: MediaQuery.of(context).size.width * 0.8,
+                child: AspectRatio(
+                  aspectRatio: 16 / 9,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(fit: BoxFit.fitHeight, image: AssetImage('assets/images/upload.jpg'))
+                    ),
+                  ),
+                ),
+              )
+            ) 
+            : handleImageUpload(eventProvider),
+
+            AppButton(
+              icon: FaIcon(FontAwesomeIcons.cloudUploadAlt, color: Colors.white),
+              labelText: 'Upload Image',
+              isAnimatedButton: false, 
+              onPressed: () => uploadImage(eventProvider),
+            )
+          ],
+      )
     );
   }
 
@@ -96,99 +103,53 @@ class _EventDetailState extends State<EventDetail> {
 
     return PopupMenuButton<String>(
       itemBuilder: (context) =>
-        Config.menuList.map((e) => PopupMenuItem<String>(value: e, child: Text(e, style: TextStyles.suggestion,))).toList(),
+        Config.menuList.map((e) => PopupMenuItem<String>(value: e, child: Text(e, style: TextStyles.suggestion))).toList(),
       onSelected: _itemSelected,
     );
   }
 
-  Widget _pageBody(BuildContext context, EventProvider eventProvider, Event event) {
-      
-    return Padding(
-      padding: EdgeInsets.only(top: 10.0, bottom: 20.0),
-      child: ListView(children: <Widget>[
-
-          StreamBuilder<String>(
-            stream: eventProvider.getName,
-            builder: (context, snapshot) {
-                
-              return AppTextField(
-                labelText: 'Title',
-                initialText: (event != null && event.name != null) ? event.name : null,
-                onChanged: eventProvider.setName,
-                errorText: snapshot.error,
-                readOnly: !isEdit,
-              );
-            }
-          ),
-            
-          StreamBuilder<String>(
-            stream: eventProvider.getDescription,
-            builder: (context, snapshot) {
-                
-              return AppTextField(
-                labelText: 'Enter Description',
-                maxLines: 2,
-                initialText: (event != null && event.description != null) ? event.description : null,
-                onChanged: eventProvider.setDescription,
-                errorText: snapshot.error,
-                readOnly: !isEdit,
-              );
-            }
-          ),
-            
-          StreamBuilder<DateTime>(
-            stream: eventProvider.getDateTime,
-            builder: (context, snapshot) {
-              
-              return AppDateTimePicker(
-                dateLabelText: 'Date & Time', 
-                initialValue: (event != null && event.date != null) ? DateTime.parse(event.date) : null,
-                onChanged: eventProvider.setDateTime,
-                readyOnly: !isEdit,
-              );
-            }
-          ),
-
-          StreamBuilder<String>(
-            stream: eventProvider.getImageUrl,
-            builder: (context, snapshot) {
-              
-              if (!snapshot.hasData || snapshot.data == "") {
-                return AppButton(
-                  labelText: 'Add Image', 
-                  onPressed: () => uploadImage(eventProvider)
-                );
-              }
-              
-              return Column(
-                children: <Widget>[
-                  Padding(padding: BaseStyles.listPadding, child: Image.network(snapshot.data)),
-
-                  (isEdit) ? AppButton(labelText: 'Change Image',
-                    onPressed: () => uploadImage(eventProvider),
-                  ) : Container()
-                ],
-              );
-            }
-          ),
-        ],
-      ),
-    );
-  }
-
   void _itemSelected(String item) {
-    var eventProvider = Provider.of<EventProvider>(context, listen: false);
-    if (item == Config.edit) {
-      setState(() => isEdit = true);
-    } else
-    if(item == Config.delete) {
-      eventProvider.deleteEvent(widget.id).then((value) => Navigator.pop(context));
+      var eventProvider = Provider.of<EventProvider>(context, listen: false);
+      if (item == Config.edit) {
+        setState(() => isEdit = true);
+      } else
+      if(item == Config.delete) {
+        eventProvider.deleteEvent(widget.id).then((value) => Navigator.pop(context));
+      }
     }
-  }
 
   void uploadImage(EventProvider eventProvider) {
-    eventProvider.pickImage().whenComplete(() {
-      ScaffoldMessenger.of(context).showSnackBar(ShowSnabar.loadingSnackBar('Uploading...'));
+    setState(() {isUploading = true;});
+
+    eventProvider.pickImage().then((result) {
+      setState(() {
+        mediaUrl = result;
+        result = null;
+      });
+    }).whenComplete(() {
+      setState(() { isUploading = false;  });
     });
+  }
+
+  handleImageUpload(EventProvider eventProvider) {
+    setState(() {
+      isUploading = false;
+    });
+
+    return GestureDetector(
+      onTap: () => uploadImage(eventProvider),
+      child: Container(
+        height: 220.0,
+        width: MediaQuery.of(context).size.width * 0.8,
+        child: AspectRatio(
+          aspectRatio: 16 / 9,
+          child: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(fit: BoxFit.fitHeight, image: FileImage(mediaUrl))
+            ),
+          ),
+        ),
+      )
+    );
   }
 }

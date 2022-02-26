@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cokg/src/areas/models/user.dart';
 import 'package:cokg/src/areas/services/data/firestore.dart';
 import 'package:cokg/src/resources/utils/strings.dart';
@@ -29,7 +30,7 @@ class Authentication {
   final _email = BehaviorSubject<String>();
   final _password = BehaviorSubject<String>();
   final _confirmPassword = BehaviorSubject<String>();
-  final _user = BehaviorSubject<UserAuth>();
+  final _user = BehaviorSubject<AuthUser>();
 
   //setters
   Function(String) get setFirstName => _firstName.sink.add;
@@ -44,14 +45,14 @@ class Authentication {
   Stream<String> get email => _email.stream.transform(_validateEmail);
   Stream<String> get password => _password.stream.transform(_validatePassword);
   Stream<String> get confirmPassword => _confirmPassword.stream;
-  Stream<UserAuth> get user => _user.stream;
+  Stream<AuthUser> get user => _user.stream;
   Stream<bool> get isValid => CombineLatestStream.combine2(email, password, (email, password) => true);
 
   Stream<User> authStateChanges() => _firebaseAuth.authStateChanges();
 
   User get currentUser => _firebaseAuth.currentUser;
 
-  Future<UserAuth> login() async {
+  Future<AuthUser> login() async {
     try{
       UserCredential userCredential = await _firebaseAuth.signInWithEmailAndPassword(email: _email.value, password: _password.value);
      
@@ -96,8 +97,8 @@ class Authentication {
         userCredential = await _firebaseAuth.createUserWithEmailAndPassword(email: _email.value, password: _password.value);
           
         if (userCredential != null && userCredential.user.uid.isNotEmpty) {
-          return await _firestoreService.createUser(UserAuth(id: userCredential.user.uid, firstName: _firstName.value.trim(), lastName: _lastName.value.trim(),
-            email: _email.value.trim(), createdOn: DateTime.now().toIso8601String()));
+          return await _firestoreService.createUser(AuthUser(id: userCredential.user.uid, displayName: _firstName.value.trim(),
+            email: _email.value.trim()));
         }
       }
         
@@ -132,14 +133,13 @@ class Authentication {
 
   Future<User> createUser(User userData) async {
    
-    final userAuth = await _firestoreService.getUserById(userData.uid);
+    final authUser = await _firestoreService.getUserById(userData.uid);
 
-    if (userAuth != null && userAuth.firstName == userData.displayName) {
-      return _firestoreService.createUser(UserAuth(id: userData.uid, firstName: userData.displayName, 
-              email: userData.email, contactNo: userData.phoneNumber, imageUrl: userData.photoURL,
-              createdOn: DateTime.now().toIso8601String())).then((value) => null);
+    if (authUser != null && authUser.displayName == userData.displayName) {
+      return _firestoreService.createUser(AuthUser(id: userData.uid, displayName: userData.displayName, 
+              email: userData.email, contactNo: userData.phoneNumber, photoUrl: userData.photoURL)).then((value) => null);
 
-              // _user.sink.add(UserAuth(id: userData.uid, firstName: userData.displayName, 
+              // _user.sink.add(AuthUser(id: userData.uid, firstName: userData.displayName, 
               // email: userData.email, contactNo: userData.phoneNumber, imageUrl: userData.photoURL,
               // createdOn: DateTime.now().toIso8601String()));
     }

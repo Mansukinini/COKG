@@ -19,6 +19,7 @@ class Event {
   });
 
   factory Event.fromFirestore(Map<String, dynamic> firestore) {
+
     return Event(
       id: firestore['id'],
       name: firestore['name'],
@@ -34,6 +35,7 @@ class Event {
   }
 
   Map <String, dynamic> toMap() {
+    
     return {
       'id': id,
       'name': name,

@@ -1,132 +1,115 @@
-import 'package:cokg/src/areas/models/devotion.dart';
-import 'package:cokg/src/areas/services/providers/devotionRepositry.dart';
-import 'package:cokg/src/resources/widgets/scaffold.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cokg/src/areas/screens/devotion/devotion-preview.dart';
+import 'package:cokg/src/areas/screens/home/home.dart';
+import 'package:cokg/src/resources/utils/progress.dart';
+import 'package:cokg/src/resources/widgets/header.dart';
 import 'package:cokg/src/styles/text.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
 
 class DevotionList extends StatefulWidget {
+  final String id;
+  final String title;
+  final String description;
+  final String mediaUrl;
+  final bool isUploaded;
+  final String createdBy;
+  final Timestamp createdOn;
+
+  DevotionList({
+    this.id,
+    this.title,
+    this.description,
+    this.mediaUrl,
+    this.isUploaded,
+    this.createdBy,
+    this.createdOn
+  });
+
+  factory DevotionList.fromDocument(DocumentSnapshot doc) {
+
+    return DevotionList(
+      id: doc.data()['id'],
+      title: doc.data()['title'],
+      description: doc.data()['description'],
+      mediaUrl: doc.data()['mediaUrl'],
+      isUploaded: doc.data()['isUploaded'],
+      createdBy: doc.data()['createdBy'],
+      createdOn: doc.data()['createdOn']
+    );
+  }
   @override
-  _DevotionListState createState() => _DevotionListState();
+  _DevotionListState createState() => _DevotionListState(
+    id: this.id,
+    title: this.title,
+    description: this.description,
+    mediaUrl: this.mediaUrl,
+    isUploaded: this.isUploaded,
+    createdBy: this.createdBy,
+    createdOn: this.createdOn
+  );
 }
 
 class _DevotionListState extends State<DevotionList> {
-  ScrollController _controller;
-  String message = "";
+  final String id;
+  final String title; 
+  final String description;
+  final String mediaUrl;
+  final bool isUploaded;
+  final String createdBy;
+  final Timestamp createdOn;
+
+  _DevotionListState({
+    this.id,
+    this.title,
+    this.description,
+    this.mediaUrl,
+    this.isUploaded,
+    this.createdBy,
+    this.createdOn
+  });
 
   @override
   void initState() {
-    _controller = ScrollController();
-    _controller.addListener(_scrollListener);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    var devotionProvider = Provider.of<DevotionRepositry>(context);
 
-    // return Scaffold(
-    //   body: NestedScrollView(
-    //     headerSliverBuilder: (context, _) {
-
-    //       return [
-    //         SliverAppBar(
-    //           expandedHeight: 160.0,
-    //           collapsedHeight: kToolbarHeight+1,
-    //           flexibleSpace: FlexibleSpaceBar(background: Image.asset('assets/images/logo0.jpg', fit: BoxFit.fill)),
-    //         )
-    //       ];
-    //     },
-        
-    //     body: _pageBody(devotionProvider),
-    //   ),
-    // );
-    return AppScaffold.scaffold(_pageBody(devotionProvider)); 
+    return Scaffold(
+      appBar: header(context, titleText: "Devotion", removeNackButton: true),
+      body: _pageBody()
+    );
   }
 
-  // StreamBuilder _pageBody(DevotionRepositry devotionProvider) {
+  _pageBody() {
 
-  //   return StreamBuilder<List<Devotion>>(
-  //     stream: devotionProvider.devotion,
-  //     builder: (context, devotion) {
-  //       if (!devotion.hasData) return Center(child: CircularProgressIndicator());
+    return StreamBuilder(
+      stream: devotionRef.snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return circularProgress();
         
-  //       return ListView.builder(
-  //         controller: _controller,
-  //         itemCount: devotion.data.length,
-  //         itemBuilder: (context, index) {
+        List<DevotionList> devotionResults = [];
 
-  //           return Container(
-  //             child: Row(
-  //               mainAxisAlignment: MainAxisAlignment.start,
-  //               children: <Widget>[ 
-  //                 Expanded(
-  //                   child: ListTile(
-  //                     leading: Icon(Icons.headphones_rounded, size: 35.0, color: Colors.black),
-  //                     title: Text(devotion.data[index].title.length > 30 ? '${devotion.data[index].title.substring(0, 30)}...' : devotion.data[index].title ?? '', style: TextStyles.title),
-  //                     subtitle: Text((devotion.data[index].description != null && devotion.data[index].description.length > 40) 
-  //                     ? '${devotion.data[index].description.substring(0, 45)}...' 
-  //                     : devotion.data[index].description ?? devotion.data[index].title, style: TextStyles.subtitle),
-  //                     // onTap: () => Navigator.of(context).pushNamed("/devotionPreview"),
-  //                     onTap: () => Navigator.of(context).pushNamed("/devotionSubPage/${devotion.data[index].id}"),
-  //                     onLongPress: () => Navigator.of(context).pushNamed("/devotionDetail/${devotion.data[index].id}"),
-  //                   ),
-  //                 )
-  //               ]
-  //             ),
+        snapshot.data.docs.forEach((doc){
+          devotionResults.add(DevotionList.fromDocument(doc));
+        });
 
-  //             decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black26)))
-  //           ); 
-  //         }
-  //       );
-  //     }
-  //   );
-  // }
-
-  StreamBuilder _pageBody(DevotionRepositry devotionProvider) {
-
-    return StreamBuilder<List<Devotion>>(
-      stream: devotionProvider.devotion,
-      builder: (context, devotion) {
-        if (!devotion.hasData) return Center(child: CircularProgressIndicator());
-        
         return CustomScrollView(
           slivers: <Widget>[
             SliverAppBar(
               expandedHeight: 160.0,
-              flexibleSpace: FlexibleSpaceBar(
-                // title: Text('SliverAppBar'),
-                background: Image.asset('assets/images/main.jpg', fit: BoxFit.fill),
-              ),
+              flexibleSpace: FlexibleSpaceBar(background: Image.asset('assets/images/main.jpg', fit: BoxFit.fitWidth)),
             ),
 
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 (BuildContext context, int index) {
 
-                  return Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[ 
-                          Expanded(
-                            child: ListTile(
-                              leading: Icon(Icons.headphones_rounded, size: 35.0, color: Colors.black),
-                              title: Text(devotion.data[index].title.length > 30 ? '${devotion.data[index].title.substring(0, 30)}...' : devotion.data[index].title ?? '', style: TextStyles.title),
-                              subtitle: Text((devotion.data[index].description != null && devotion.data[index].description.length > 40) 
-                              ? '${devotion.data[index].description.substring(0, 45)}...' 
-                              : devotion.data[index].description ?? devotion.data[index].title, style: TextStyles.subtitle),
-                              onTap: () => Navigator.of(context).pushNamed("/devotionPreview"),
-                              // onTap: () => Navigator.of(context).pushNamed("/devotionSubPage/${devotion.data[index].id}"),
-                              onLongPress: () => Navigator.of(context).pushNamed("/devotionDetail/${devotion.data[index].id}"),
-                            ),
-                          )
-                        ]
-                      ),
-
-                    decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black26)))
-                  ); 
+                  return DevotionResult(devotionResults[index]);
                 },
-                childCount: devotion.data.length,
+                childCount: devotionResults.length,
               ),
             ),
           ],
@@ -134,19 +117,40 @@ class _DevotionListState extends State<DevotionList> {
       }
     );
   }
+}
 
-  _scrollListener() {
-    if (_controller.offset >= _controller.position.maxScrollExtent &&
-        !_controller.position.outOfRange) {
-      setState(() {
-        message = "reach the bottom";
-      });
-    }
-    if (_controller.offset <= _controller.position.minScrollExtent &&
-        !_controller.position.outOfRange) {
-      setState(() {
-        message = "reach the top";
-      });
-    }
+class DevotionResult extends StatelessWidget {
+  final DevotionList devotion;
+  DevotionResult(this.devotion);
+
+  @override
+  Widget build(BuildContext context) {
+    
+    return Column(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.only(left: 10.0, right: 10.0),
+          child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[ 
+                    Expanded(
+                      child: ListTile(
+                        leading: Icon(Icons.headphones_rounded, size: 35.0, color: Colors.black),
+                        title: Text(devotion.title, style: TextStyles.title, overflow: TextOverflow.ellipsis,),
+                        subtitle: Text(devotion.description ?? devotion.title, style: TextStyles.subtitle, overflow: TextOverflow.ellipsis,),
+                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => DevotionPreview(devotion))),
+                        onLongPress: () => Navigator.of(context).pushNamed("/devotionDetail/${devotion.id}"),
+                      ),
+                    )
+                  ]
+                ),
+        ),
+
+        Padding(
+          padding: EdgeInsets.only(left: 25.0, right: 25.0),
+          child: Divider(),
+        ),
+      ],
+    );
   }
 }

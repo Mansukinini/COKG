@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cokg/src/areas/models/user.dart';
 import 'package:cokg/src/areas/screens/home/home.dart';
+import 'package:cokg/src/areas/screens/timeline.dart';
+import 'package:cokg/src/config.dart';
 import 'package:cokg/src/resources/utils/progress.dart';
 import 'package:flutter/material.dart';
 
@@ -20,6 +22,7 @@ class _EditProfileState extends State<EditProfile> {
   TextEditingController aboutController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController locationController = TextEditingController();
+
   bool _displayNameValid = true;
   bool isLoading = false;
   AuthUser user;
@@ -55,12 +58,14 @@ class _EditProfileState extends State<EditProfile> {
       key: _scafforldKey,
       appBar: AppBar(
         backgroundColor: Colors.brown,
-        leading: IconButton(
+        leading: Config.admin == currentUser.email ? 
+        IconButton(
           icon: Icon(Icons.arrow_back), iconSize: 25.0, color: Colors.white,
           onPressed: () { 
             updateProfileData();
-            Navigator.pop(context);
-          }),
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Timeline(currentUser)));
+          }
+        ) : null,
         title: Center(child: Text("Edit Profile", style: TextStyle(color: Colors.white))),
         actions: <Widget>[
           IconButton(onPressed: () => Navigator.pop(context), icon: Icon(Icons.done, size: 30.0, color: Colors.green))
@@ -86,11 +91,6 @@ class _EditProfileState extends State<EditProfile> {
                         buildDisplayNameField(),
                       ],
                     ),
-                  ),
-
-                  TextButton(
-                    onPressed: updateProfileData, 
-                    child: Text("Update Profile", style: TextStyle(color: Colors.brown, fontSize: 20.0, fontWeight: FontWeight.bold))
                   ),
                 ],
               ),

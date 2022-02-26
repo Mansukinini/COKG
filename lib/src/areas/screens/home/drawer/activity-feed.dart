@@ -16,7 +16,6 @@ class ActivityFeed extends StatefulWidget {
 }
 
 class _ActivityFeedState extends State<ActivityFeed> {
-  // final String currentUserId = 'xdc5kPEYmQXK1gihk3lC659sCzQ2';
   
   getActivityFeed() async {
     QuerySnapshot snapshot = await activityFeedRef.doc(currentUser.id)
@@ -37,8 +36,8 @@ class _ActivityFeedState extends State<ActivityFeed> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      backgroundColor: Colors.brown,
-      appBar: header(context, titleText: "Activity Feed"),
+      backgroundColor: Colors.grey[100],
+      appBar: header(context, titleText: "Activity Feed", removeNackButton: true),
       body: Container(
         child: FutureBuilder(
           future: getActivityFeed(),
@@ -59,7 +58,6 @@ Widget mediaPreview;
 String activityItemText;
 
 class ActivityFeedItem extends StatelessWidget {
-  // final String currentUserId = 'xdc5kPEYmQXK1gihk3lC659sCzQ2';
   final String userId;
   final String postId;
   final String username;
@@ -136,7 +134,6 @@ class ActivityFeedItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final String currentUserId = 'xdc5kPEYmQXK1gihk3lC659sCzQ2';
     configureMediaPreview(context);
 
     return Padding(
@@ -148,11 +145,11 @@ class ActivityFeedItem extends StatelessWidget {
             onTap: () => showProfile(context, profileId: currentUser.id),
             child: RichText(
               overflow: TextOverflow.ellipsis,
-              text: TextSpan(style: TextStyle( fontSize: 14.0, color: Colors.black,),
-              children: [
-                TextSpan(text: username, style: TextStyle(fontWeight: FontWeight.bold)),
-                TextSpan(text: '$activityItemText', style: TextStyle(fontWeight: FontWeight.bold))
-              ]
+              text: TextSpan(style: TextStyle(fontSize: 14.0, color: Colors.black,),
+                children: [
+                  TextSpan(text: username, style: TextStyle(fontWeight: FontWeight.bold)),
+                  TextSpan(text: '$activityItemText', style: TextStyle(fontWeight: FontWeight.bold))
+                ]
               ),
             ),
           ),
@@ -170,4 +167,3 @@ class ActivityFeedItem extends StatelessWidget {
 showProfile(BuildContext context, {String profileId}) {
   Navigator.push(context, MaterialPageRoute(builder: (context) => Profile(id: profileId)));
 }
-

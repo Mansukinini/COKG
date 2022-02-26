@@ -6,16 +6,27 @@ import 'package:path_provider/path_provider.dart';
 
 class FirebaseStorageService {
 
-  static Future<String> uploadAudio(File file , String filename) async {
+  static Future<String> uploadImage(imageFile, filename) async {
+    TaskSnapshot uploadTask = await FirebaseStorage.instance.ref()
+        .child('eventImages/$filename.jpg')
+        .putFile(imageFile);
 
+      String downloadUrl = await uploadTask.ref.getDownloadURL();
+
+    return downloadUrl;
+  }
+
+  static Future<String> uploadAudio(File file , String filename) async {
+     
     try {
-      var storegeRef = await FirebaseStorage.instance.ref()
+      TaskSnapshot uploadAudioTask = await FirebaseStorage.instance.ref()
         .child('audio/$filename' + '.mp3')
         .putFile(file);
 
-      return await storegeRef.ref.getDownloadURL();
+        String downloadAudioUrl = await uploadAudioTask.ref.getDownloadURL();
+
+      return downloadAudioUrl;
     } catch (e) {
-      print(e);
       return null;
     }
   }
@@ -30,7 +41,6 @@ class FirebaseStorageService {
      await ref.writeToFile(downloadToFile);
       print('completed');
     } catch (e) {
-      print(e);
      }
   }
 
@@ -59,11 +69,20 @@ class FirebaseStorageService {
 
   static Future<String> uploadEventImage(File file, String filename) async {
     var storegeRef = await FirebaseStorage.instance.ref()
-        .child('eventImages/$filename' + '.mp3')
+        .child('eventImages/$filename')
         .putFile(file);
 
     return await storegeRef.ref.getDownloadURL();
   }
+
+  // static Future<String> uploadEventImage(File file, String filename) async {
+  //   print('$file uploaded');
+  //   var storegeRef = await FirebaseStorage.instance.ref()
+  //       .child('eventImages')
+  //       .putFile(file);
+
+  //   return await storegeRef.ref.getDownloadURL();
+  // }
 
   static Future<String> uploadProfileImage(File file, String filename) async {
     var storegeRef = await FirebaseStorage.instance.ref()
@@ -88,5 +107,4 @@ class FirebaseStorageService {
       'Wrote "${ref.fullPath}" to tmp-${ref.name}.txt',
     )));
   }
-
 }

@@ -1,46 +1,89 @@
-class UserAuth {
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class AuthUser {
   final String id;
-  final String firstName;
-  final String lastName;
+  final String authUserRoleId;
+  final String eventId;
+  final String groupId;
+  final String devotionId;
+  final String username;
+  final String displayName;
+  final String bio;
   final String contactNo;
   final String email;
-  final String imageUrl;
-  final bool isValid;
+  final String photoUrl;
+  final bool isActive;
   final String createdBy;
-  final String createdOn;
-  final String lastUploadBy;
-  final String lastUploadOn;
+  final Timestamp createdOn;
 
-  UserAuth({this.id, this.firstName, this.lastName, this.contactNo, this.email, this.imageUrl, this.isValid, this.createdBy, this.createdOn,
-    this.lastUploadBy, this.lastUploadOn});
-
+  AuthUser({
+    this.id, 
+    this.authUserRoleId,
+    this.eventId,
+    this.groupId,
+    this.devotionId,
+    this.username,
+    this.displayName,
+    this.bio,
+    this.contactNo, 
+    this.email, 
+    this.photoUrl, 
+    this.isActive, 
+    this.createdBy, 
+    this.createdOn 
+  });
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'firstName': firstName,
-      'lastName': lastName,
+      'authUserRoleId' : authUserRoleId,
+      'eventId': eventId,
+      'groupId': groupId,
+      'devotionId': devotionId,
+      'username': username,
+      'bio': bio,
       'contactNo': contactNo,
       'email': email,
-      'imageUrl': imageUrl,
-      'isValid': isValid,
+      'photoUrl': photoUrl,
+      'isActive': isActive,
       'createdBy': createdBy,
       'createdOn': createdOn,
-      'lastUpdatedBy': lastUploadBy,
-      'lastUpdatedOn': lastUploadOn
     };
   }
 
-  UserAuth.fromFirestore(Map<String, dynamic> user)
+  factory AuthUser.fromDocument(DocumentSnapshot doc){
+
+    return AuthUser(
+      id: doc.data()['id'],
+      // authUserRoleId: doc.data()['authUserRoleId'],
+      // eventId: doc.data()['eventId'],
+      // groupId: doc.data()['groupId'],
+      // devotionId: doc.data()['devotionId'],
+      username: doc.data()['username'],
+      displayName: doc.data()['displayName'],
+      bio: doc.data()['bio'],
+      contactNo: doc.data()['contactNo'],
+      email: doc.data()['email'],
+      photoUrl: doc.data()['photoUrl'],
+      isActive: doc.data()['isActive'],
+      createdBy: doc.data()['createdBy'],
+      createdOn: doc.data()['createdOn']
+    );
+  }
+
+  AuthUser.fromFirestore(Map<String, dynamic> user)
     : id = user['id'],
-    firstName = user['firstName'],
-    lastName = user['lastName'],
+    authUserRoleId = user['authUserRoleId'],
+    eventId = user['eventId'],
+    groupId = user['groupId'],
+    devotionId = user['devotionId'],
+    username = user['username'],
+    displayName = user['displayName'],
+    bio = user['bio'],
     contactNo = user['contactNo'],
     email = user['email'],
-    imageUrl = user['imageUrl'],
-    isValid = user['isValid'],
+    photoUrl = user['photoUrl'],
+    isActive = user['isActive'],
     createdBy = user['createdBy'],
-    createdOn = user['createdOn'],
-    lastUploadBy = user['lastUpdatedBy'],
-    lastUploadOn = user['lastUpdatedOn'];
+    createdOn = user['createdOn'];
 }

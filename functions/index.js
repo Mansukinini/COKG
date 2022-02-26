@@ -154,7 +154,7 @@ exports.onDeleteEvent = functions.firestore
 
         const querySnapshot = await userFollowers.get();
 
-        // 2) delete each post in each folloers timeline
+        // 2) delete each post in each followers timeline
         querySnapshot.forEach(doc => {
             const followerId = doc.id; 
 

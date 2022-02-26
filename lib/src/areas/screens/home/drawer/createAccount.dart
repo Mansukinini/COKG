@@ -10,18 +10,19 @@ class CreateAccount extends StatefulWidget {
 }
 
 class _CreateAccountState extends State<CreateAccount> {
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
   String username;
+  String password;
 
   submit() {
     final form = _formKey.currentState;
     
     if (form.validate()) {
       form.save();
-      // SnackBar snackBar = SnackBar(content: Text("Welcome $username"));
-      // ignore: deprecated_member_use
-      // _scaffoldKey.currentState.showSnackBar(snackBar);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Welcome $username')),
+      );
 
       Timer(Duration(seconds: 2), () {
         Navigator.pop(context, username);    
@@ -51,24 +52,47 @@ class _CreateAccountState extends State<CreateAccount> {
                   child: Container(
                     child: Form(
                       autovalidateMode: AutovalidateMode.always, key: _formKey,
-                      child: TextFormField(
-                        validator: (val) {
-                          if (val.trim().length < 3 || val.isEmpty) {
-                            return 'Username too short';
-                          } else if(val.trim().length > 12) {
-                            return "Username too long";
-                          } else {
-                            return null;
-                          }
-                        },
-                        onSaved: (val) => username = val,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: "Username",
-                          labelStyle: TextStyle(fontSize: 15.0),
-                          hintText: "Must be at least 3 characters",
-                        ),
-                      ),
+                      child: Column(
+                        children: <Widget>[
+                          TextFormField(
+                            validator: (val) {
+                              if (val.trim().length < 3 || val.isEmpty) {
+                                return 'Username too short';
+                              } else if(val.trim().length > 12) {
+                                return "Username too long";
+                              } else {
+                                return null;
+                              }
+                            },
+                            onSaved: (val) => username = val,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: "Username",
+                              labelStyle: TextStyle(fontSize: 15.0),
+                              hintText: "Must be at least 3 characters",
+                            ),
+                          ),
+                          
+                          TextFormField(
+                            validator: (val) {
+                              if (val.trim().length < 3 || val.isEmpty) {
+                                return 'Username too short';
+                              } else if(val.trim().length > 12) {
+                                return "Username too long";
+                              } else {
+                                return null;
+                              }
+                            },
+                            onSaved: (val) => password = val,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: "Password",
+                              labelStyle: TextStyle(fontSize: 15.0),
+                              hintText: "Must be at least 3 characters",
+                            ),
+                          ),
+                        ],
+                      ), 
                     ),
                   ),
                 ),

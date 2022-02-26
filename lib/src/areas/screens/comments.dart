@@ -18,7 +18,7 @@ class Comments extends StatefulWidget {
 }
 
 class CommentsState extends State<Comments> {
-  final String currentUserId = 'xdc5kPEYmQXK1gihk3lC659sCzQ2';
+  // final String currentUserId = 'xdc5kPEYmQXK1gihk3lC659sCzQ2';
   TextEditingController commentController = TextEditingController();
   final String postId;
   final String postCreatedBy;
@@ -37,40 +37,43 @@ class CommentsState extends State<Comments> {
         List<Comment> comments = [];
 
         snapshot.data.docs.forEach((doc) {
-          comments.add(Comment.fromDoment(doc));
+          comments.add(Comment.fromDocument(doc));
         });
 
         return ListView(children: comments);
-      });
+      }
+    );
   }
 
   addComment() {
     commetsRef.doc(postId).collection("comments")
-    .add({
-      "userId": currentUserId,
-      "username": null,
-      "avatarUrl": null,
-      "comment": commentController.text,
-      "createdBy": currentUserId,
-      "createdOn": timestamp,
-    });
+      .add({
+        "userId": currentUser.id,
+        "username": currentUser.username,
+        "avatarUrl": currentUser.photoUrl,
+        "comment": commentController.text,
+        "createdBy": currentUser.id,
+        "createdOn": timestamp,
+      });
 
     activityFeedRef.doc(postCreatedBy).collection("feedItems")
-        .add({
-          "userId": currentUserId,
-          "postId": postId,
-          "username": null,
-          "userProfileImg": null, // currentUser.image
-          "type": "comment",
-          "comment": commentController.text,
-          "mediaUrl": postMediaUrl,
-          "createdOn": timestamp,
-        });
+      .add({
+        "userId": currentUser.id,
+        "postId": postId,
+        "username": currentUser.username,
+        "userProfileImg": currentUser.photoUrl, // currentUser.image
+        "type": "comment",
+        "comment": commentController.text,
+        "mediaUrl": postMediaUrl,
+        "createdOn": timestamp,
+      });
+
     commentController.clear();
   }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: header(context, titleText: "Comments"),
       body: Column(
@@ -109,7 +112,7 @@ class Comment extends StatelessWidget {
     this.createdOn,
   });
 
-  factory Comment.fromDoment(DocumentSnapshot doc){
+  factory Comment.fromDocument(DocumentSnapshot doc){
     return Comment(
       userId: doc['userId'],
       username: doc['username'],
@@ -121,6 +124,7 @@ class Comment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return Column(
       children: <Widget>[
         ListTile(

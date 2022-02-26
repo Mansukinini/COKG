@@ -2,12 +2,11 @@ import 'package:cokg/src/areas/services/providers/authentication.dart';
 import 'package:cokg/src/areas/services/providers/event-provider.dart';
 import 'package:cokg/src/areas/services/providers/groupProvider.dart';
 import 'package:cokg/src/areas/services/providers/userProvider.dart';
-import 'package:cokg/src/route.dart';
+import 'package:cokg/src/config.dart';
 import 'package:flutter/material.dart';
 import 'package:cokg/src/areas/screens/home/home.dart';
 import 'package:provider/provider.dart';
 import 'areas/services/providers/devotionRepositry.dart';
-
 
 final authentication = Authentication();
 final userProvider = UserProvider();
@@ -37,9 +36,10 @@ class _AppState extends State<App> {
         theme: ThemeData(
           primarySwatch: Colors.brown,
         ),
-        
+
+        title: 'ChristOurKing Global',
         home: Home(),
-        onGenerateRoute: Routes.materialRoutes,
+        onGenerateRoute: Config.materialRoutes,
       )
     );
   }

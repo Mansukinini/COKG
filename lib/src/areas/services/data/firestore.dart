@@ -3,6 +3,7 @@ import 'package:cokg/src/areas/models/event.dart';
 import 'package:cokg/src/areas/models/devotion.dart';
 import 'package:cokg/src/areas/models/group.dart';
 import 'package:cokg/src/areas/models/user.dart';
+import 'package:cokg/src/areas/screens/home/home.dart';
 import 'package:uuid/uuid.dart';
 
 class FirestoreService {
@@ -17,7 +18,7 @@ class FirestoreService {
   static FirestoreService get instance => _service;
    
   //create user
-  Future createUser(UserAuth userApp) {
+  Future createUser(AuthUser userApp) {
     final CollectionReference collection = _firebaseFirestore.collection('user');
     
     return collection
@@ -25,28 +26,37 @@ class FirestoreService {
       .then((user) => user);
   }
 
-  // Future updateUser(UserAuth userApp) {
+  // Future updateUser(AuthUser userApp) {
   //   final CollectionReference collection = _firebaseFirestore.collection('user');
     
   //   return FirebaseAuth.instance.currentUser.updateProfile(displayName: userApp.firstName, photoURL: userApp.imageUrl)
   //     .whenComplete(() => collection.doc(userApp.id).set(userApp.toMap(), SetOptions(merge: true)));
   // }
 
-  Future<UserAuth> getUserById(String id) {
+  Future<AuthUser> getUserById(String id) {
     final CollectionReference collection = _firebaseFirestore.collection('user');
 
     return collection.doc(id).get()
-          .then((user) => UserAuth.fromFirestore(user.data()));
+         .then((user) => AuthUser.fromFirestore(user.data()));
   }
 
   // Create
   Future<void> saveEvent(Event event) {
-    final CollectionReference collection = _firebaseFirestore.collection('event');
-    var option = SetOptions(merge: true);
     
-    return collection
+    return eventRef
+      .doc(event.createdBy)
+      .collection('userEvents')
       .doc(event.id)
-      .set(event.toMap(), option);
+      .set({
+        "id": event.id,
+        "description": event.description,
+        "mediaUrl": event.imageUrl,
+        "location": null,
+        "isUploaded": event.isUploaded,
+        "likes": {},
+        "createdBy": event.createdBy,
+        "createdOn": event.createdOn
+      });
   }
 
   // Get Event

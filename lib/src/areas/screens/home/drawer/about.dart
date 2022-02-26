@@ -1,6 +1,4 @@
-
-
-import 'package:cokg/src/styles/text.dart';
+import 'package:cokg/src/resources/widgets/header.dart';
 import 'package:flutter/material.dart';
 
 class About extends StatelessWidget {
@@ -8,7 +6,7 @@ class About extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('About ChristOurKing', style: TextStyles.navTitle)),
+      appBar: header(context, titleText: "About"),
       body: _pageBody(context),
     );
   }

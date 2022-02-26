@@ -1,17 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cokg/src/areas/models/Event.dart';
 import 'package:cokg/src/areas/models/user.dart';
 import 'package:cokg/src/areas/screens/event/event-list.dart';
 import 'package:cokg/src/areas/screens/home/drawer/search.dart';
 import 'package:cokg/src/areas/screens/home/home.dart';
 import 'package:cokg/src/resources/utils/progress.dart';
 import 'package:cokg/src/resources/widgets/header.dart';
-import 'package:cokg/src/resources/widgets/navigatorBar.dart';
 import 'package:flutter/material.dart';
+
 
 class Timeline extends StatefulWidget {
   final AuthUser currentUser;
-  const Timeline({ this.currentUser });
+  const Timeline( this.currentUser );
 
   @override
   _TimelineState createState() => _TimelineState();
@@ -73,7 +72,8 @@ class _TimelineState extends State<Timeline> {
           return circularProgress();
         }
 
-        List<UserResult> userResults = []; 
+        List<UserResult> userResults = [];
+         
         snapshot.data.docs.forEach((doc) {
           AuthUser user = AuthUser.fromDocument(doc);
           final bool isAuthUser = currentUser.id == user.id;
@@ -115,7 +115,7 @@ class _TimelineState extends State<Timeline> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: header(context, isAppTitle: true),
+      appBar: header(context, isAppTitle: true, removeNackButton: true),
       body: RefreshIndicator(
         onRefresh: () => getTimeline(),
         child: buildTimeline(),
@@ -123,13 +123,3 @@ class _TimelineState extends State<Timeline> {
     );
   }
 }
-
-
-// body: Container(
-      //   child: NestedScrollView(
-      //     headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-      //       return <Widget>[AppNavbar.materialNavBar(title: '', pinned: false)];
-      //     },
-
-      //   ),
-      // ),
