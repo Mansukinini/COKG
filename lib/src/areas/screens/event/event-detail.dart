@@ -27,7 +27,8 @@ class _EventDetailState extends State<EventDetail> {
   @override
   Widget build(BuildContext context)  {
     var eventProvider = Provider.of<EventProvider>(context);
-   
+    print(widget.id);
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(icon: Icon(Icons.arrow_back), iconSize: 25.0, color: Colors.white, onPressed: () => Navigator.pop(context)),
@@ -45,56 +46,54 @@ class _EventDetailState extends State<EventDetail> {
               });
             }
           ),
-
-          // (currentUser != null && currentUser.email == Config.admin) ? !(isEdit) ? popupMenuButton(context) : Container() : Container(),
         ]
       ),
       body: ListView(
-          children: <Widget>[
-            isUploading ? linearProgress() : Text(''),
-        
-            ListTile(
-              leading: CircleAvatar(
-                radius: 30.0,
-                backgroundImage: (currentUser != null && currentUser.photoUrl != null) ? 
-                CachedNetworkImageProvider(currentUser.photoUrl) : AssetImage('assets/images/user.jpg'),
-              ),
-              title: Container(
-                width: 250.0,
-                child: TextField(
-                  controller: captionController,
-                  decoration: InputDecoration(hintText: "Write a Caption...", border: InputBorder.none),
-                ),
+        children: <Widget>[
+          isUploading ? linearProgress() : Text(''),
+      
+          ListTile(
+            leading: CircleAvatar(
+              radius: 30.0,
+              backgroundImage: (currentUser != null && currentUser.photoUrl != null) ? 
+              CachedNetworkImageProvider(currentUser.photoUrl) : AssetImage('assets/images/user.jpg'),
+            ),
+            title: Container(
+              width: 250.0,
+              child: TextField(
+                controller: captionController,
+                decoration: InputDecoration(hintText: "Write a Caption...", border: InputBorder.none),
               ),
             ),
+          ),
 
-            Padding(padding: EdgeInsets.only(top: 10.0)),
+          Padding(padding: EdgeInsets.only(top: 10.0)),
 
-            (mediaUrl == null) ?
-            GestureDetector(
-              onTap: () => uploadImage(eventProvider),
-              child: Container(
-                height: 220.0,
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: AspectRatio(
-                  aspectRatio: 16 / 9,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(fit: BoxFit.fitHeight, image: AssetImage('assets/images/upload.jpg'))
-                    ),
+          (mediaUrl == null) ?
+          GestureDetector(
+            onTap: () => uploadImage(eventProvider),
+            child: Container(
+              height: 220.0,
+              width: MediaQuery.of(context).size.width * 0.8,
+              child: AspectRatio(
+                aspectRatio: 16 / 9,
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(fit: BoxFit.fitHeight, image: AssetImage('assets/images/upload.jpg'))
                   ),
                 ),
-              )
-            ) 
-            : handleImageUpload(eventProvider),
-
-            AppButton(
-              icon: FaIcon(FontAwesomeIcons.cloudUploadAlt, color: Colors.white),
-              labelText: 'Upload Image',
-              isAnimatedButton: false, 
-              onPressed: () => uploadImage(eventProvider),
+              ),
             )
-          ],
+          ) 
+          : handleImageUpload(eventProvider),
+
+          AppButton(
+            icon: FaIcon(FontAwesomeIcons.cloudUploadAlt, color: Colors.white),
+            labelText: 'Upload Image',
+            isAnimatedButton: false, 
+            onPressed: () => uploadImage(eventProvider),
+          )
+        ],
       )
     );
   }
@@ -119,10 +118,10 @@ class _EventDetailState extends State<EventDetail> {
     }
 
   void uploadImage(EventProvider eventProvider) {
-    setState(() {isUploading = true;});
-
+    
     eventProvider.pickImage().then((result) {
       setState(() {
+        isUploading = true;
         mediaUrl = result;
         result = null;
       });
@@ -151,5 +150,11 @@ class _EventDetailState extends State<EventDetail> {
         ),
       )
     );
+  }
+
+  @override
+  void dispose() {
+    captionController.dispose();
+    super.dispose();
   }
 }

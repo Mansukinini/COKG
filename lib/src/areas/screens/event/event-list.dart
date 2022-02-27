@@ -109,7 +109,6 @@ class _EventListState extends State<EventList> {
   @override
   Widget build(BuildContext context) {
     isLiked = (likes[currentUserId] == true);
-    
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -137,8 +136,11 @@ class _EventListState extends State<EventList> {
         return ListTile(
           leading: CircleAvatar(
             backgroundColor: Colors.grey,
-            backgroundImage: (user != null && user.photoUrl != null) ? CachedNetworkImageProvider(user.photoUrl) : AssetImage('assets/images/user.jpg'),
+            backgroundImage: (user != null && user.photoUrl != null) 
+            ? CachedNetworkImageProvider(user.photoUrl) 
+            : AssetImage('assets/images/user.jpg'),
           ),
+
           title: GestureDetector(
             onTap: () => showProfile(context, profileId: createdBy),
             child: Text(user.displayName, style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
@@ -298,7 +300,7 @@ class _EventListState extends State<EventList> {
             tween: Tween(begin: 0.8, end: 1.4),
             curve: Curves.elasticInOut,
             cycles: 0,
-            builder: (context, anim, child) => Transform.scale(scale: anim.value, child:Icon(Icons.favorite, size: 80.0, color: Colors.red),),
+            builder: (context, anim, child) => Transform.scale(scale: anim.value, child:Icon(Icons.favorite, size: 80.0, color: Colors.red)),
           ) : Text(''),
           
         ],

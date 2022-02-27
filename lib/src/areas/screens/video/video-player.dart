@@ -12,12 +12,12 @@ class VideoPlayer extends StatefulWidget {
  
  class _VideoPlayerState extends State<VideoPlayer> {
   YoutubePlayerController _controller;
-  bool _isPlayerReady;
+  // bool _isPlayerReady;
 
   @override
   void initState() {
     super.initState();
-    _isPlayerReady = false;
+    // _isPlayerReady = false;
 
     _controller = YoutubePlayerController(
       initialVideoId: widget.videoItem.video.resourceId.videoId,
@@ -38,7 +38,7 @@ class VideoPlayer extends StatefulWidget {
           showVideoProgressIndicator: true,
           onReady: () {
             // print('Player is ready.');
-            _isPlayerReady = true;
+            // _isPlayerReady = true;
           },
           
         ),

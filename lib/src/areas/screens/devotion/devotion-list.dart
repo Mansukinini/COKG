@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cokg/src/areas/screens/devotion/devotion-detail.dart';
 import 'package:cokg/src/areas/screens/devotion/devotion-preview.dart';
 import 'package:cokg/src/areas/screens/home/home.dart';
 import 'package:cokg/src/resources/utils/progress.dart';
@@ -79,13 +80,7 @@ class _DevotionListState extends State<DevotionList> {
 
     return Scaffold(
       appBar: header(context, titleText: "Devotion", removeNackButton: true),
-      body: _pageBody()
-    );
-  }
-
-  _pageBody() {
-
-    return StreamBuilder(
+      body: StreamBuilder(
       stream: devotionRef.snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) return circularProgress();
@@ -115,6 +110,7 @@ class _DevotionListState extends State<DevotionList> {
           ],
         ); 
       }
+      )
     );
   }
 }
@@ -131,19 +127,19 @@ class DevotionResult extends StatelessWidget {
         Container(
           padding: EdgeInsets.only(left: 10.0, right: 10.0),
           child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[ 
-                    Expanded(
-                      child: ListTile(
-                        leading: Icon(Icons.headphones_rounded, size: 35.0, color: Colors.black),
-                        title: Text(devotion.title, style: TextStyles.title, overflow: TextOverflow.ellipsis,),
-                        subtitle: Text(devotion.description ?? devotion.title, style: TextStyles.subtitle, overflow: TextOverflow.ellipsis,),
-                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => DevotionPreview(devotion))),
-                        onLongPress: () => Navigator.of(context).pushNamed("/devotionDetail/${devotion.id}"),
-                      ),
-                    )
-                  ]
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[ 
+              Expanded(
+                child: ListTile(
+                  leading: Icon(Icons.headphones_rounded, size: 35.0, color: Colors.black),
+                  title: Text(devotion.title, style: TextStyles.title, overflow: TextOverflow.ellipsis,),
+                  subtitle: Text(devotion.description ?? devotion.title, style: TextStyles.subtitle, overflow: TextOverflow.ellipsis,),
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => DevotionPreview(devotion))),
+                  onLongPress: () => Navigator.push(context, MaterialPageRoute(builder: (context) => DevotionDetail(id: devotion.id))),
                 ),
+              )
+            ]
+          ),
         ),
 
         Padding(

@@ -104,7 +104,8 @@ class UserProvider {
 
   Future saveProfile() async {
     try {
-        AuthUser user = AuthUser(
+      
+      AuthUser user = AuthUser(
         id: FirebaseAuth.instance.currentUser.uid ?? uuid.v4(), 
         displayName: _firstName.value ?? null, 
         contactNo: _contactNo.value ?? null, 

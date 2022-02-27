@@ -19,9 +19,9 @@ class _ActivityFeedState extends State<ActivityFeed> {
   
   getActivityFeed() async {
     QuerySnapshot snapshot = await activityFeedRef.doc(currentUser.id)
-            .collection('feedItems')
-            .orderBy('createdOn', descending: true)
-            .limit(50).get();
+      .collection('feedItems')
+      .orderBy('createdOn', descending: true)
+      .limit(50).get();
 
       List<ActivityFeedItem> feedItems = [];
 

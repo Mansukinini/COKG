@@ -1,7 +1,6 @@
 import 'package:cokg/src/areas/screens/devotion/devotion-detail.dart';
 import 'package:cokg/src/areas/screens/event/event-detail.dart';
 import 'package:cokg/src/areas/screens/event/event-list.dart';
-import 'package:cokg/src/areas/screens/group/group-detail.dart';
 import 'package:cokg/src/areas/screens/home/drawer/about.dart';
 import 'package:cokg/src/areas/screens/home/drawer/download.dart';
 import 'package:cokg/src/areas/screens/home/drawer/editProfile.dart';
@@ -46,8 +45,6 @@ class Config {
         return MaterialPageRoute(builder: (context) => EventList());
       case "/eventDetail":
         return MaterialPageRoute(builder: (context) => EventDetail());
-      case "/groupDetail":
-        return MaterialPageRoute(builder: (context) => GroupDetail());
       case "/devotionDetail":
         return MaterialPageRoute(builder: (context) => DevotionDetail());
       case "/download":
@@ -76,10 +73,6 @@ class Config {
 
         if (route.name.contains("/eventDetail/")) {
           return MaterialPageRoute(builder: (context) => EventDetail(id: routeArray[2]));
-        }
-
-        if (route.name.contains("/groupDetail/")) {
-          return MaterialPageRoute(builder: (context) => GroupDetail(id: routeArray[2]));
         }
 
       return MaterialPageRoute(builder: (context) => Login());

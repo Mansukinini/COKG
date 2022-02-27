@@ -59,7 +59,7 @@ class _HomeState extends State<Home> {
     googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
       handleSignIn(account);
     }, onError: (err) {
-      // print('Error signing in: $err');
+      scaffoldMessenger(context, 'Error signing in: $err');
     });
     
     // Reauthenticate user when app is opened
@@ -67,11 +67,11 @@ class _HomeState extends State<Home> {
       .then((account) {
         handleSignIn(account);
       }).catchError((err) {
-        // print('Error signing in: $err');
+        scaffoldMessenger(context, 'Error signing in: $err');
       });
   }
 
-  handleSignIn(GoogleSignInAccount account) async{
+  handleSignIn(GoogleSignInAccount account) async {
     if (account != null) {
       await createUserInFirestore();
       setState(() {
@@ -156,7 +156,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return isAuth ? buildAuthScreen() : buildUnAuthScreen();
+    return !isAuth ? buildUnAuthScreen() : buildAuthScreen();
   }
 
   Scaffold buildAuthScreen() {
@@ -207,7 +207,7 @@ class _HomeState extends State<Home> {
                           child: Text('Create an account', style: TextStyle(fontSize: 16.0)),
                           style: TextButton.styleFrom(primary: Colors.brown),
                           onPressed: () async {
-                            final username = await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateAccount()));
+                            // final username = await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateAccount()));
                             // print(username);
                           },
                         )

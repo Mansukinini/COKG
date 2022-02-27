@@ -1,7 +1,5 @@
 import 'dart:io';
 import 'dart:async';
-import 'package:cokg/src/areas/screens/home/home.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart';
@@ -15,7 +13,6 @@ import 'package:image/image.dart' as Img;
 
 class EventProvider {
   final FirestoreService _firestoreService = FirestoreService.instance;
-  final _auth = FirebaseAuth.instance;
   var uuid = Uuid().v4();
   String medialUrl;
   PickedFile file;
@@ -71,25 +68,6 @@ class EventProvider {
     return _firestoreService.getEventById(id);
   }
 
-  void setEvent(Event event, String id) {
-    setId(id);
-    
-    if (id != null && event.toMap() != null) {
-      setName(event.name);
-      setDescription(event.description);
-      if (event.date != null)
-        setDateTime(DateTime.parse(event.date));
-
-        if (event != null && event.imageUrl != null)
-          setImageUrl(event.imageUrl);
-    } else {
-      setImageUrl(null);
-      setName(null);
-      setDescription(null);
-      setDateTime(null);
-    }
-  }
-
   Future pickImage() async {
     //Get image from Device
     file = await ImagePicker().getImage(source: ImageSource.gallery);
@@ -100,7 +78,9 @@ class EventProvider {
       medialUrl = await FirebaseStorageService.uploadImage(compressFile, uuid);
       setImageUrl(medialUrl);
       _isUploaded.sink.add(true);
-
+      
+      // reset
+      uuid = Uuid().v4();
       return compressFile;
     } else {
       return 'No path Received';
@@ -114,44 +94,31 @@ class EventProvider {
     Img.Image imageFile = Img.decodeImage(List.from(await file.readAsBytes()));
 
     final compressedImageFile = File('$path/img_$uuid.jpg')..writeAsBytesSync(Img.encodeJpg(imageFile, quality: 85));
-    
+
     return compressedImageFile;
   }
 
   Future<void> createEvent(String caption, String userId) {
+
     var initialValues = Event(
-      id: _id.hasValue ? _id.value : uuid, 
+      id: uuid, 
       name: _name.hasValue ? _name.value : null, 
       description: caption.isNotEmpty ? caption : null,
       date: _dateTime.hasValue ? _dateTime.value.toIso8601String() : null,
       imageUrl: medialUrl != null ? medialUrl : null, 
       isUploaded: _isUploaded.hasValue ? _isUploaded.value : false, 
-      createdBy: currentUser.id, 
+      createdBy: userId, 
       createdOn: DateTime.now().toIso8601String()
     );
 
-    _id.sink.add(Uuid().v4());
+    setId(null);
+    setName(null);
+    setDescription(null);
+    setImageUrl(null);
 
     return _firestoreService.saveEvent(initialValues)
-      .then((value) => _isEventSaved.sink.add(true))
-      .catchError((error) => _isEventSaved.sink.add(false));
-  }
-
-  Future<void> saveEvent() {
-
-    var initialValues = Event(
-      id: _id.value ?? uuid, 
-      name: _name.value, 
-      description: _description.hasValue ? _description.value : null,
-      date: (_dateTime.hasValue && _dateTime.value != null) ? _dateTime.value.toIso8601String() : null,
-      imageUrl: _imageUrl.hasValue ? _imageUrl.value : null, 
-      isUploaded: _isUploaded.hasValue ? _isUploaded.value : false, 
-      createdBy: _auth.currentUser.uid, 
-      createdOn: DateTime.now().toIso8601String()
-    );
-
-    return _firestoreService.saveEvent(initialValues)
-      .then((value) => _isEventSaved.sink.add(true))
+      .then((value) {
+      })
       .catchError((error) => _isEventSaved.sink.add(false));
   }
 

@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'package:http/http.dart' as http;
+// import 'package:http/http.dart' as http;
 import 'package:firebase_storage/firebase_storage.dart'; //as firebase_storage;
 
 class Download {
   Future<void> downloadFile(Reference ref) async {
-    final String url = await ref.getDownloadURL();
-    final http.Response downloadData = await http.get(url);
+    // final String url = await ref.getDownloadURL();
+    // final http.Response downloadData = await http.get(url);
     final Directory systemTempDir = Directory.systemTemp;
 
     final File tempFile = File('${systemTempDir.path}/tmp.jpg');
@@ -16,13 +16,13 @@ class Download {
     }
 
     await tempFile.create();
-    final Reference task = ref.writeToFile(tempFile) as Reference;
+    // final Reference task = ref.writeToFile(tempFile) as Reference;
 
     //final int byteCount = (await task.future).totalByteCount;
 
-    var bodyBytes = downloadData.bodyBytes;
-    final String name = ref.name;
-    final String path = ref.fullPath;
+    // var bodyBytes = downloadData.bodyBytes;
+    // final String name = ref.name;
+    // final String path = ref.fullPath;
     
     // _scaffoldKey.currentState.showSnackBar(
     //   SnackBar(

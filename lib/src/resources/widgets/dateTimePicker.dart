@@ -70,6 +70,4 @@ class _AppDateTimePickerState extends State<AppDateTimePicker> {
       ),
     );
   }
-
-
 }

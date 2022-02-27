@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cokg/src/areas/models/event.dart';
 import 'package:cokg/src/areas/models/devotion.dart';
-import 'package:cokg/src/areas/models/group.dart';
 import 'package:cokg/src/areas/models/user.dart';
 import 'package:cokg/src/areas/screens/home/home.dart';
 import 'package:uuid/uuid.dart';
@@ -87,32 +86,6 @@ class FirestoreService {
       .delete()
       .then((value) => print("Event Deleted"))
       .catchError((error) => print("Failed to delete user: $error"));
-  }
-
-  // Get group
-  Stream<List<Group>> getGroups() {
-    final CollectionReference collection = _firebaseFirestore.collection('group');
-
-    return collection
-    .orderBy('name', descending: true)
-    .snapshots()
-    .map((group) => group.docs
-    .map((doc) => Group.fromFirestore(doc.data()))
-    .toList());
-  }
-
-  Future<Group> getGroupById(String id) {
-    final CollectionReference collection = _firebaseFirestore.collection('group');
-
-    return collection.doc(id)
-      .get().then((group) => Group.fromFirestore(group.data()));
-  }
-
-  Future saveGroup(Group group) {
-    final CollectionReference collection = _firebaseFirestore.collection('group');
-    var option = SetOptions(merge: true);
-
-    return collection.doc(group.id).set(group.toMap(), option);
   }
 
   Future<void> deleteGroup(String id) {

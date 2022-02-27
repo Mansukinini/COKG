@@ -22,5 +22,4 @@ class ShowSnabar {
   static Widget snackBar(String text) {
     return SnackBar(content: Text(text), backgroundColor: Colors.green);
   }
-
 }
